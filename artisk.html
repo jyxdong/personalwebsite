@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Artisk — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset ─────────────────────────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* ── Tokens ────────────────────────────────────────────────────────────
+   Flat, single-weight system: hierarchy comes from size, color and
+   spacing only — nothing here goes past regular (400).
+--------------------------------------------------------------------------- */
+:root{
+  --canvas:#D7D7D7;
+  --paper:#ffffff;
+  --ink:#111111;
+  --muted:#63625f;
+  --faint:#9a9a97;
+  --line:rgba(17,17,17,.10);
+
+  --sidegap:24px;
+  --midgap:8px;
+  --nav-h:56px;
+  --rail-w:280px;
+  --r-lg:40px;
+  --r-sm:10px;
+}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-weight:400;
+  color:var(--ink);
+  background:var(--canvas);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ── Nav (matches index.html, at a slimmer height) ───────────────────────── */
+#navWrap{flex-shrink:0;margin:calc(var(--sidegap) - 8px) var(--sidegap) 0 var(--sidegap)}
+nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px;padding:8px 10px}
+.nav-tabs{flex:1;display:flex;justify-content:center;gap:10px}
+.nav-tabs a{flex:1;max-width:260px;height:40px;border-radius:999px;border:none;cursor:pointer;font-size:20px;font-weight:400;background:#f4f4f4;color:#000;transition:background .2s;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.nav-tabs a:hover:not(.active){background:#e9e9e9}
+.nav-tabs a.tab-about.active{background:#CBFF71;color:#000}
+.nav-tabs a.tab-work.active{background:#FF8418;color:#000}
+.nav-tabs a.tab-play.active{background:#00D0FF;color:#000}
+.nav-icon-btn{flex:0 0 40px;width:40px;height:40px;border-radius:999px;border:none;cursor:pointer;background:#f4f4f4;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:background .2s;text-decoration:none}
+.nav-icon-btn svg{width:18px;height:18px}
+.nav-icon-btn:hover{background:#e9e9e9}
+
+/* ── Shell: a fixed viewport-height row. Neither the rail nor the content
+   frame ever move — each is its own independent scroll box, so momentum
+   / rubber-band scrolling stays contained to what's inside them. ───────── */
+.shell{flex:1;min-height:0;display:flex;gap:var(--midgap);padding:var(--midgap) var(--sidegap) var(--sidegap) var(--sidegap)}
+
+.rail-frame{
+  flex-shrink:0;
+  width:var(--rail-w);
+  background:var(--paper);
+  border-radius:var(--r-lg);
+  overflow:hidden;
+}
+.rail{
+  height:100%;
+  background:var(--paper);
+  padding:36px 30px;
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+}
+.rail-toc{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.rail-toc ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.rail-toc li a{
+  display:block;padding:7px 2px;
+  font-size:15px;color:var(--faint);text-decoration:none;
+  transition:color .15s,font-size .15s;
+}
+.rail-toc li a:hover{color:var(--ink)}
+.rail-toc li.active a{color:var(--ink);font-size:20px}
+.rail-home{
+  flex-shrink:0;margin-top:24px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:#e4e4e4;border-radius:999px;
+  padding:12px 20px;
+  font-size:20px;font-weight:400;color:var(--ink);text-decoration:none;
+  transition:background .2s;
+}
+.rail-home:hover{background:#dadada}
+.rail-home svg{flex-shrink:0}
+
+.content-frame{
+  position:relative;
+  flex:1;
+  min-width:0;
+  background:var(--paper);
+  border-radius:var(--r-lg);
+  overflow:hidden;
+}
+#pageScroll{
+  height:100%;
+  background:var(--paper);
+  overflow-y:auto;
+  scroll-behavior:smooth;
+}
+@media (prefers-reduced-motion:reduce){#pageScroll{scroll-behavior:auto}}
+.inner{padding:56px 64px 40px}
+
+/* ── Reading-progress ruler ──────────────────────────────────────────── */
+.progress-track{position:absolute;top:50%;right:24px;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:4px;z-index:5;pointer-events:none}
+.progress-track .tick{width:9px;height:2px;background:var(--line);transform-origin:right center;transition:transform .1s linear}
+.progress-track .tick.major{width:20px;background:var(--faint)}
+.progress-track .tick.end{width:20px;background:var(--faint);transition:transform .2s ease,background .2s ease}
+.progress-track .tick.end.active{background:var(--muted)}
+.progress-track .tick.on{background:var(--ink)}
+@media (max-width:960px){.progress-track{display:none}}
+
+/* ── Type scale — one heading tier for the whole page ─────────────────── */
+
+/* ── Breadcrumb (L5) ──────────────────────────────────────────────────── */
+.crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--faint)}
+.crumb a{color:var(--faint);text-decoration:none}
+.crumb a:hover{color:var(--ink)}
+.crumb span.sep{color:var(--line)}
+.crumb span.cur{color:var(--muted)}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+header.hero{margin-top:20px;max-width:900px}
+header.hero h2{font-family:'Source Serif 4',serif;font-style:normal;font-size:clamp(32px,4vw,44px);line-height:1.1;letter-spacing:-.015em;font-weight:400}
+header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--muted)}
+
+.meta{margin-top:34px;display:flex;flex-wrap:nowrap;justify-content:space-between;gap:36px}
+.meta-item{display:flex;flex-direction:column;gap:5px}
+.meta-item .k{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.meta-item .v{font-size:12.5px;color:var(--muted)}
+
+/* ── Placeholder image blocks ──────────────────────────────────────────── */
+.ph{
+  position:relative;
+  background:repeating-linear-gradient(45deg,#ececec 0 12px,#f4f4f4 12px 24px);
+  border-radius:var(--r-sm);
+  overflow:hidden;
+}
+.ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
+.ph-inline{margin-top:24px;width:100%;aspect-ratio:16/9}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .cap{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:34px 18px 14px;
+  background:linear-gradient(to top, rgba(17,17,17,.55), transparent);
+  color:#fff;font-size:12.5px;
+}
+
+/* ── Sections ──────────────────────────────────────────────────────────── */
+main{padding:8px 64px 8px}
+section.block{padding-top:clamp(64px,8vh,104px);scroll-margin-top:24px}
+section.block:first-of-type{padding-top:56px;border-top:1px solid var(--line);margin-top:48px}
+
+.sec-measure{max-width:900px}
+
+.sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
+.sec-grid + .sec-grid{margin-top:44px}
+.sec-body > p:first-child,
+.sec-body > ul:first-child{margin-top:0}
+.ph-inline + .sec-grid{margin-top:32px}
+
+.sec-head{position:relative}
+.sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
+.sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
+
+section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+
+.methods{margin-top:16px;font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:16px}
+
+/* ── Bento grids (key decisions) ──────────────────────────────────────── */
+.bento-1{margin-top:24px;display:grid;grid-template-columns:1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-1 .cell{padding:32px;border-top:1px solid var(--line)}
+.bento-1 .cell:first-child{border-top:none}
+.bento-1 .cell h3{font-size:15px;font-weight:400}
+.bento-1 .cell .ph{margin-top:16px;aspect-ratio:16/9}
+.bento-1 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+.bento-1 .cell .placeholder-note{margin-top:10px;font-size:12.5px;color:var(--faint);font-style:italic}
+
+.next-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:54ch}
+.next-list li{font-size:15px;line-height:1.5;color:#2b2b2b;padding-left:18px;position:relative}
+.next-list li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--line)}
+
+/* ── Scroll reveal ─────────────────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+@media (max-width:900px){
+  .sec-grid{grid-template-columns:1fr;row-gap:12px}
+}
+
+/* ── Mobile: drop the fixed app-shell, let the page scroll normally ─────── */
+@media (max-width:960px){
+  html,body{height:auto;overflow:visible}
+  body{display:block}
+  #navWrap{margin:16px 16px 0}
+  .shell{display:block;height:auto;padding:8px 16px 16px}
+  .rail-frame{width:auto;overflow:visible;border-radius:24px;margin-bottom:8px}
+  .rail{height:auto;overflow:visible;padding:22px 20px}
+  .rail-toc ul{flex-direction:row;flex-wrap:wrap;gap:4px 16px}
+  .rail-toc li a{padding:6px 0}
+  .content-frame{overflow:visible;border-radius:24px}
+  #pageScroll{height:auto;overflow:visible}
+  .inner,main{padding-left:24px;padding-right:24px}
+  .bento-1 .cell{border-top:1px solid var(--line)}
+  .bento-1 .cell:first-child{border-top:none}
+}
+</style>
+</head>
+<body>
+
+<div id="navWrap">
+  <nav>
+    <div class="nav-tabs">
+      <a href="index.html" class="tab-about">About</a>
+      <a href="work.html" class="tab-work active">Work</a>
+      <a href="play.html" class="tab-play">Play</a>
+    </div>
+    <a class="nav-icon-btn" href="https://drive.google.com/file/d/1VkgR9_d0P5G2in3TYsN-1l_7hXY_21DG/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="Resume">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <path d="M14 2v6h6"/>
+        <line x1="8" y1="13" x2="16" y2="13"/>
+        <line x1="8" y1="17" x2="16" y2="17"/>
+      </svg>
+    </a>
+  </nav>
+</div>
+
+<div class="shell">
+  <aside class="rail-frame" aria-label="Table of contents">
+   <div class="rail">
+    <div class="rail-toc">
+     <ul id="tocList">
+      <li data-target="problem"><a href="#problem">Problem</a></li>
+      <li data-target="insights"><a href="#insights">Insights</a></li>
+      <li data-target="process"><a href="#process">Process</a></li>
+      <li data-target="decisions"><a href="#decisions">Key decisions</a></li>
+      <li data-target="reflection"><a href="#reflection">Reflection & next steps</a></li>
+     </ul>
+    </div>
+    <a href="work.html" class="rail-home">
+      <span>Back to works</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </a>
+   </div>
+  </aside>
+
+  <div class="content-frame">
+   <div class="progress-track" id="progressTrack" aria-hidden="true"></div>
+   <div id="pageScroll">
+    <div class="inner">
+      <p class="crumb">
+        <a href="index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="work.html">Work</a>
+        <span class="sep">/</span>
+        <span class="cur">Artisk</span>
+      </p>
+
+      <header class="hero">
+        <h2>Artisk</h2>
+        <p class="dek">Applying a new liquid-glass brand system to two text-heavy pages — FAQ and About — without trading away readability.</p>
+
+        <div class="meta">
+          <div class="meta-item"><span class="k">Role</span><span class="v">UX / Visual Design</span></div>
+          <div class="meta-item"><span class="k">Team</span><span class="v">Team of 10+</span></div>
+          <div class="meta-item"><span class="k">Timeline</span><span class="v">Oct 25–Mar 26</span></div>
+          <div class="meta-item"><span class="k">Tools</span><span class="v">Figma, Nano Banana</span></div>
+        </div>
+
+        <div class="ph ph-hero"><img src="images/ArtiskHero.jpg" alt="Artisk hero"/></div>
+      </header>
+    </div>
+
+    <main>
+      <!-- Every block below is the same repeatable unit: a small tag, an H2,
+           and its paired body content in a two-column row. A section can
+           hold one block or several, back to back. -->
+      <section class="block reveal" id="problem">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Problem statement</div>
+              <h2>Brand without breaking two text-heavy pages</h2>
+            </div>
+            <div class="sec-body">
+              <p>Artisk is a company that builds AI-empowered design tools for brands. It rebranded from a loud, high-contrast look to a softer liquid-glass visual language built on translucency and depth. As part of the team redesign, I brought two text-heavy pages — FAQ and About — onto the new system.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="insights">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>Two pages, two jobs</h2>
+            </div>
+            <div class="sec-body">
+              <p>FAQ and About are task pages: one is where a user solves a specific question without contacting support, the other is where a user reads to decide whether to trust the product. Whatever the brand layer looked like, it couldn't get in the way of those two jobs.</p>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Insight</div>
+              <h2>Readability needs to be improved</h2>
+            </div>
+            <div class="sec-body">
+              <p>The neon-on-black look was high-contrast by default, so the About page's uniform wall of text still felt legible. Moving to a softer material removed that crutch and exposed the real issue: the information had no hierarchy, and nothing guided the eye.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="process">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Process</div>
+              <h2>Auditing each page against its job</h2>
+            </div>
+            <div class="sec-body">
+              <p>I audited both pages against what each is for — the FAQ against scannability, the About page against readability — then treated the glass material as a layering tool rather than a skin, deciding where it could earn its place and where it had to stay off the text. In parallel, I produced the banner imagery as one coordinated AI-generated set spanning both pages.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="decisions">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Key decisions</div>
+              <h2>Three decisions across two pages</h2>
+            </div>
+          </div>
+          <div class="bento-1">
+            <div class="cell">
+              <h3>FAQ: brand applied without breaking scannability</h3>
+              <div class="ph"><span class="cap">FAQ before / after</span></div>
+              <p>The FAQ already had its structure — search, categories, an accordion of answers. My work was bringing it onto the new visual system while protecting how scannable it was: keeping glass on the structural layer (search, category rail, cards) and answers on solid, high-contrast surfaces, so a user could still scan straight to the one question they came with.</p>
+              <p class="placeholder-note">[Placeholder — specific spacing / hierarchy / component-alignment adjustments]</p>
+            </div>
+            <div class="cell">
+              <h3>About: same information, made readable</h3>
+              <div class="ph"><span class="cap">About before / after</span></div>
+              <p>I didn't change what the page says; I changed how it's represented. Same information, rebuilt around a clear visual hierarchy — paced sections, a reading rhythm, defined weight — so a block people skim past became something they can actually read.</p>
+            </div>
+            <div class="cell">
+              <h3>One visual system across both pages</h3>
+              <div class="ph"><span class="cap">AI banner set (FAQ + About)</span></div>
+              <p>I created the banner imagery as one coordinated AI-generated set, so both pages open with a consistent signature and each gets an entry point that anchors the content. The same rule held throughout: translucency lowers text contrast, so glass carries depth and structure, never body copy.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="reflection">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Reflection & next steps</div>
+              <h2>Execution within an existing structure</h2>
+            </div>
+            <div class="sec-body">
+              <p>This was a team redesign, so my focus was execution within an existing structure — applying the brand system and protecting readability, not rebuilding the pages' architecture. Taking it further, the honest next steps are a contrast and accessibility audit (glass on text-heavy pages puts legibility most at risk) and testing on lower-end screens and in bright light, where translucency degrades most.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+   </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const scroller = document.getElementById('pageScroll');
+  const sections = Array.from(document.querySelectorAll('main section.block'));
+  const tocItems = Array.from(document.querySelectorAll('#tocList li'));
+  const tocMap = new Map(tocItems.map(li => [li.dataset.target, li]));
+
+  // Scroll-spy scoped to the content frame's own scrollbox, since the
+  // page itself no longer scrolls.
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const li = tocMap.get(entry.target.id);
+      if (!li) return;
+      if (entry.isIntersecting) {
+        tocItems.forEach(x => x.classList.remove('active'));
+        li.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  sections.forEach(s => spy.observe(s));
+
+  const reveal = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        reveal.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => reveal.observe(el));
+
+  // Reading-progress ruler: a fixed set of ticks; as #pageScroll moves, a
+  // soft gaussian bulge in tick WIDTH travels to sit over the current
+  // scroll position (colors stay static, only scaleX changes) — a minimap
+  // magnifier, not a fill bar. rAF-throttled so it never runs more than
+  // once per frame; the CSS transition on transform gives each tick its
+  // own slight catch-up lag as the bulge passes through it.
+  const track = document.getElementById('progressTrack');
+  const TICK_COUNT = 28;
+  const BULGE_SIGMA = 3;
+  const BULGE_AMPLITUDE = 0.8;
+  const ticks = [];
+  for (let i = 0; i < TICK_COUNT; i++) {
+    const t = document.createElement('div');
+    t.className = 'tick' + (i % 4 === 0 ? ' major' : '');
+    track.appendChild(t);
+    ticks.push(t);
+  }
+  // End-of-page marker: a separate long tick below the regular ruler that
+  // only stretches out once the reader has actually hit the bottom.
+  const endTick = document.createElement('div');
+  endTick.className = 'tick end';
+  track.appendChild(endTick);
+
+  let ticking = false;
+  function updateProgress(){
+    const max = scroller.scrollHeight - scroller.clientHeight;
+    const pct = max > 0 ? scroller.scrollTop / max : 0;
+    const center = pct * (TICK_COUNT - 1);
+    ticks.forEach((t, i) => {
+      const d = i - center;
+      const scale = 1 + BULGE_AMPLITUDE * Math.exp(-(d * d) / (2 * BULGE_SIGMA * BULGE_SIGMA));
+      t.style.transform = `scaleX(${scale.toFixed(3)})`;
+    });
+
+    const atBottom = pct >= 0.995;
+    endTick.classList.toggle('active', atBottom);
+    endTick.style.transform = atBottom ? 'scaleX(1.6)' : 'scaleX(1)';
+    ticking = false;
+  }
+  scroller.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(updateProgress); ticking = true; }
+  }, { passive: true });
+  updateProgress();
+})();
+</script>
+</body>
+</html>
