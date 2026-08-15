@@ -187,6 +187,26 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
 .bento-1 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .bento-1 .cell .placeholder-note{margin-top:10px;font-size:12.5px;color:var(--faint);font-style:italic}
 
+/* ── Toggle: flat segmented control, matching the site's flat aesthetic —
+   no shadows or gradients, just a gray track with a white active pill. ── */
+.carousel-toggle{margin-top:24px;display:inline-flex;background:#f4f4f4;border-radius:999px;padding:4px;gap:4px}
+.carousel-toggle .toggle-btn{border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13px;color:var(--muted);padding:6px 16px;border-radius:999px;transition:background .2s,color .2s}
+.carousel-toggle .toggle-btn:hover:not(.active){color:var(--ink)}
+.carousel-toggle .toggle-btn.active{background:#fff;color:var(--ink)}
+
+/* ── Carousel: two original-page screenshots, one visible at a time,
+   swapped with left/right arrow buttons or the toggle above. Slides sit
+   side by side in a flex track; changing the active index just slides
+   the whole track left/right, so the frame never changes height. ─────── */
+.carousel{position:relative;margin-top:12px;width:100%;aspect-ratio:1493/741;border-radius:var(--r-sm);overflow:hidden;background:#ececec}
+.carousel-track{display:flex;width:100%;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.carousel-slide{flex:0 0 100%;width:100%;height:100%;object-fit:cover;display:block}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:999px;border:none;cursor:pointer;background:rgba(17,17,17,.55);color:#fff;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2}
+.carousel-btn:hover{background:rgba(17,17,17,.8)}
+.carousel-btn svg{width:18px;height:18px}
+.carousel-btn.prev{left:16px}
+.carousel-btn.next{right:16px}
+
 .next-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:54ch}
 .next-list li{font-size:15px;line-height:1.5;color:#2b2b2b;padding-left:18px;position:relative}
 .next-list li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--line)}
@@ -336,6 +356,22 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
               <p>I audited both pages against what each is for — the FAQ against scannability, the About page against readability — then treated the glass material as a layering tool rather than a skin, deciding where it could earn its place and where it had to stay off the text. In parallel, I produced the banner imagery as one coordinated AI-generated set spanning both pages.</p>
             </div>
           </div>
+          <div class="carousel-toggle" id="processCarouselToggle" role="tablist" aria-label="Original page toggle">
+            <button class="toggle-btn active" data-index="0" role="tab" aria-selected="true">About</button>
+            <button class="toggle-btn" data-index="1" role="tab" aria-selected="false">FAQ</button>
+          </div>
+          <div class="carousel" id="processCarousel">
+            <div class="carousel-track">
+              <img class="carousel-slide" src="images/ArtiskOriginalAbout.jpg" alt="Original Artisk About page">
+              <img class="carousel-slide" src="images/ArtiskOriginalFAQ.jpg" alt="Original Artisk FAQ page">
+            </div>
+            <button class="carousel-btn prev" aria-label="Previous image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-btn next" aria-label="Next image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -460,6 +496,29 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
     if (!ticking) { requestAnimationFrame(updateProgress); ticking = true; }
   }, { passive: true });
   updateProgress();
+
+  // Process-section carousel: two original-page screenshots, slid left/right
+  // by translating the track, stepped with the arrow buttons or the
+  // About/FAQ toggle above. About is the default slide on first open.
+  const carousel = document.getElementById('processCarousel');
+  if (carousel) {
+    const track = carousel.querySelector('.carousel-track');
+    const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+    const toggleBtns = Array.from(document.querySelectorAll('#processCarouselToggle .toggle-btn'));
+    let idx = 0;
+    function showSlide(i){
+      idx = (i + slides.length) % slides.length;
+      track.style.transform = `translateX(-${idx * 100}%)`;
+      toggleBtns.forEach((b, n) => {
+        const on = n === idx;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-selected', on);
+      });
+    }
+    toggleBtns.forEach(b => b.addEventListener('click', () => showSlide(Number(b.dataset.index))));
+    carousel.querySelector('.carousel-btn.prev').addEventListener('click', () => showSlide(idx - 1));
+    carousel.querySelector('.carousel-btn.next').addEventListener('click', () => showSlide(idx + 1));
+  }
 })();
 </script>
 </body>
