@@ -250,6 +250,44 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
 .bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
+/* ── Before/after compare sliders (Iterations) — each block pairs an
+   image row with its own tag/H2/body stacked to the right of it (not the
+   page's usual two-column sec-grid); the second block's pair shares a
+   single dragged divider so both frames flip together, not one at a
+   time. ─────────────────────────────────────────────────────────────── */
+.iteration-block{margin-top:32px;display:flex;gap:40px;align-items:center;flex-wrap:wrap;--cmp-unit-w:220px}
+.iteration-block:first-child{margin-top:24px}
+.iteration-text{flex:1 1 260px;min-width:220px}
+.iteration-text .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.iteration-text h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em;padding-bottom:12px}
+.iteration-text p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+.iteration-text p:first-of-type{margin-top:0}
+.compare-row{display:flex;gap:16px;justify-content:flex-start;flex:0 0 auto}
+.compare-unit{display:flex;flex-direction:column;gap:8px;width:var(--cmp-unit-w,220px)}
+.compare-unit-paired{width:calc(var(--cmp-unit-w,220px) * 2 + 16px)}
+.cmp-header{display:flex;justify-content:space-between;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.cmp-header span{transition:opacity .25s ease}
+.cmp-header span.is-hidden{opacity:0}
+.compare-slider{
+  position:relative;display:flex;width:100%;
+  cursor:ew-resize;user-select:none;touch-action:none;
+}
+.compare-slider.single{aspect-ratio:375/764;border-radius:var(--r-sm);overflow:hidden}
+.compare-slider.paired{gap:16px;height:calc(var(--cmp-unit-w,220px) * 764 / 375)}
+.cmp-frame{position:relative;flex:1 1 0;height:100%;border-radius:var(--r-sm);overflow:hidden}
+.cmp-frame img,.cmp-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.cmp-after-video{object-position:44% 50%;transform:scale(1.06)}
+.cmp-before-wrap{position:absolute;inset:0;overflow:hidden}
+.cmp-handle{position:absolute;top:0;bottom:0;left:50%;width:0;z-index:3;pointer-events:none}
+.cmp-handle::before{content:"";position:absolute;top:0;bottom:0;left:-1px;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(17,17,17,.15)}
+.cmp-handle::after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:999px;background:#fff;text-align:center;line-height:30px;font-size:13px;color:var(--ink);box-shadow:0 2px 6px rgba(17,17,17,.22)}
+.cmp-caption{font-size:12.5px;color:var(--faint);text-align:center}
+
+@media (max-width:900px){
+  .iteration-block{flex-direction:column;gap:16px}
+  .compare-row{flex-wrap:wrap}
+}
+
 /* ── Pull quote: flat, no fill — a hairline rule carries it. Its size is
    intentionally its own, not one of the type-scale tiers, since it's a
    quoted aside, not running text, a heading, or a label. ──────────────── */
@@ -490,7 +528,7 @@ footer.pagefoot a:hover{color:var(--ink)}
               <h2>Putting the prototype in front of a parent</h2>
             </div>
             <div class="sec-body">
-              <p>We ran a moderated usability test of the app prototype with a parent of a four-year-old, using four task scenarios and a SUS-style rating. All tasks were completed, which told us the structure held. Three specific interactions did not.</p>
+              <p>We ran a moderated usability test of the app prototype with several parents of a four-year-old, using four task scenarios and a SUS-style rating. All tasks were completed, which told us the structure held. One walkthrough was recorded. Three specific interactions did not.</p>
             </div>
           </div>
           <div class="bento-3">
@@ -499,28 +537,74 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>The main screen didn't signal that more content was available, so it went unseen until prompted.</p>
             </div>
             <div class="cell">
-              <h3>Playback controls were hard to find</h3>
-              <p>Playback controls in the Story section weren't where the participant looked for them.</p>
+              <h3>Preview story is needed</h3>
+              <p>There was no way to know what a story contained before it reached the child. Parents need to preview the story contents first before adding them to a playlist.</p>
             </div>
             <div class="cell">
-              <h3>No confirmation of intercom connection</h3>
-              <p>The intercom gave no indication of which device was connected, making the participant hesitant to rely on it.</p>
+              <h3>No confirmation of device management</h3>
+              <p>Given the possibility that users may purchase multiple devices or change devices, there should be a section in settings to delete or connect devices.</p>
             </div>
           </div>
-          <p>One participant is a small sample. We treated these as directional signals worth acting on, not as validated findings.</p>
+          <p>A small sample of parents is still directional, not conclusive. We treated these as signals worth acting on, not as validated findings.</p>
         </div>
       </section>
 
       <section class="block reveal" id="iterations">
         <div class="sec-measure">
-          <div class="ph ph-inline"><span class="cap">Before / after, three iterations</span></div>
-          <div class="sec-grid">
-            <div class="sec-head">
-              <div class="tag">Iterations</div>
-              <h2>Adding a story preview</h2>
+          <div class="iteration-block">
+            <div class="compare-row">
+              <div class="compare-unit">
+                <div class="cmp-header"><span>Before</span><span>After</span></div>
+                <div class="compare-slider single" data-compare>
+                  <div class="cmp-frame">
+                    <img class="cmp-after" src="images/LuminalAfterPage1.png" alt="Home screen, after">
+                    <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage1.png" alt="Home screen, before"></div>
+                  </div>
+                  <div class="cmp-handle"></div>
+                </div>
+                <div class="cmp-caption">Home</div>
+              </div>
+              <div class="compare-unit">
+                <div class="cmp-header"><span>Before</span><span>After</span></div>
+                <div class="compare-slider single" data-compare>
+                  <div class="cmp-frame">
+                    <video class="cmp-after cmp-after-video" src="images/LuminalAfterPage2.mp4" muted loop playsinline preload="auto"></video>
+                    <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage2.png" alt="Story and Audio screen, before"></div>
+                  </div>
+                  <div class="cmp-handle"></div>
+                </div>
+                <div class="cmp-caption">Story &amp; Audio</div>
+              </div>
             </div>
-            <div class="sec-body">
-              <p>The participant hesitated to play audio, partly because there was no way to know what a story contained before it reached the child. We added a preview so parents can check content in advance, which turned playback from a commitment into a low-risk action.</p>
+            <div class="iteration-text">
+              <div class="tag">Page 1 &amp; 2 Iteration</div>
+              <h2>Light control and story settings</h2>
+              <p>Page 1: Added a peek of the next section and a soft gradient at the bottom edge, so the main screen signals there's more below. This turns the fold from a hard stop into an invitation to keep exploring.</p>
+              <p>Page 2: Moved the play button to where participants instinctively reached. A clearer preview page is created after clicking the button so parents can check content in advance and avoid risk.</p>
+            </div>
+          </div>
+          <div class="iteration-block">
+            <div class="compare-row">
+              <div class="compare-unit compare-unit-paired">
+                <div class="cmp-header"><span>Before</span><span>After</span></div>
+                <div class="compare-slider paired" data-compare>
+                  <div class="cmp-frame">
+                    <img class="cmp-after cmp-after-anim" src="images/LuminoAfterPage3.png" data-anim-base="images/LuminoAfterPage3.png" data-anim-a="images/LuminoAfterPage3-1.png" data-anim-b="images/LuminoAfterPage3-2.png" alt="Intercom screen, after">
+                    <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage3.png" alt="Intercom screen, before"></div>
+                  </div>
+                  <div class="cmp-frame">
+                    <img class="cmp-after" src="images/LuminalAfterPage4.png" alt="Profile screen, after">
+                    <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage4.png" alt="Profile screen, before"></div>
+                  </div>
+                  <div class="cmp-handle"></div>
+                </div>
+                <div class="cmp-caption">Intercom &amp; Profile</div>
+              </div>
+            </div>
+            <div class="iteration-text">
+              <div class="tag">Page 3 &amp; 4 Iteration</div>
+              <h2>Device and connection status</h2>
+              <p>To better manage devices and show connection status, I moved the connection status into Settings and expanded it into a full device management section, so parents can see, connect, and manage multiple Luminos in one place. On the Intercom page, I added a speaker illustration with a real-time Bluetooth status icon, and the illustration shifts between two states to reflect live call status.</p>
             </div>
           </div>
         </div>
@@ -643,6 +727,109 @@ footer.pagefoot a:hover{color:var(--ink)}
     if (!ticking) { requestAnimationFrame(updateProgress); ticking = true; }
   }, { passive: true });
   updateProgress();
+})();
+
+(function(){
+  // Before/after compare sliders. Each .compare-slider may hold one
+  // .cmp-frame (single) or two (paired) — the drag fraction is measured
+  // against the whole slider, then re-mapped into each frame's own local
+  // bounds, so a paired slider's single handle sweeps both frames at once
+  // instead of controlling them separately.
+  // Starting position (mostly "before"), and the two label thresholds:
+  // "After" only fades in once the handle has moved a further 10% past
+  // the starting point; "Before" fades out once its own side shrinks
+  // under 20% of the width — so the tags never explain interactions the
+  // reader hasn't done yet.
+  const INITIAL_FRAC = 0.85;
+  const AFTER_REVEAL_FRAC = INITIAL_FRAC - 0.10;
+  const BEFORE_HIDE_FRAC = 0.20;
+
+  // Swaps a still image between two "speaking" states every 2.5s once its
+  // frame is at least 20% revealed — a cheap stand-in for a live call
+  // indicator, without needing a real video for it.
+  function makeAnimSwap(img){
+    let timer = null, toggle = false;
+    // Preload both frames so the swap is an instant cut, not a flash of a
+    // still-decoding image.
+    [img.dataset.animA, img.dataset.animB].forEach(src => { const pre = new Image(); pre.src = src; });
+    return {
+      start(){
+        if (timer) return;
+        toggle = false;
+        timer = setInterval(() => {
+          toggle = !toggle;
+          img.src = toggle ? img.dataset.animA : img.dataset.animB;
+        }, 2500);
+      },
+      stop(){
+        if (!timer) return;
+        clearInterval(timer);
+        timer = null;
+        img.src = img.dataset.animBase;
+      }
+    };
+  }
+
+  function initComparer(root){
+    const frames = Array.from(root.querySelectorAll('.cmp-frame'));
+    const animControllers = frames.map(frame => {
+      const img = frame.querySelector('.cmp-after-anim');
+      return img ? makeAnimSwap(img) : null;
+    });
+    const handle = root.querySelector('.cmp-handle');
+    const header = root.previousElementSibling;
+    const beforeLabel = header && header.classList.contains('cmp-header') ? header.children[0] : null;
+    const afterLabel = header && header.classList.contains('cmp-header') ? header.children[1] : null;
+    let dragging = false;
+
+    function setFraction(frac){
+      frac = Math.min(1, Math.max(0, frac));
+      handle.style.left = (frac * 100) + '%';
+      const rootRect = root.getBoundingClientRect();
+      frames.forEach((frame, i) => {
+        const fr = frame.getBoundingClientRect();
+        const start = (fr.left - rootRect.left) / rootRect.width;
+        const end = (fr.right - rootRect.left) / rootRect.width;
+        let local = (frac - start) / (end - start);
+        local = Math.min(1, Math.max(0, local));
+        frame.querySelector('.cmp-before-wrap').style.clipPath = `inset(0 ${(1 - local) * 100}% 0 0)`;
+        const video = frame.querySelector('video');
+        if (video) {
+          if (local <= 0.5) { if (video.paused) video.play().catch(() => {}); }
+          else if (!video.paused) video.pause();
+        }
+        const anim = animControllers[i];
+        if (anim) {
+          if (1 - local >= 0.20) anim.start();
+          else anim.stop();
+        }
+      });
+      if (afterLabel) afterLabel.classList.toggle('is-hidden', frac > AFTER_REVEAL_FRAC);
+      if (beforeLabel) beforeLabel.classList.toggle('is-hidden', frac < BEFORE_HIDE_FRAC);
+    }
+
+    function fracFromEvent(e){
+      const rect = root.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      return (clientX - rect.left) / rect.width;
+    }
+
+    function onDown(e){ dragging = true; setFraction(fracFromEvent(e)); e.preventDefault(); }
+    function onMove(e){ if (dragging) setFraction(fracFromEvent(e)); }
+    function onUp(){ dragging = false; }
+
+    root.addEventListener('mousedown', onDown);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    root.addEventListener('touchstart', onDown, { passive: false });
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onUp);
+
+    setFraction(INITIAL_FRAC);
+    window.addEventListener('resize', () => setFraction(parseFloat(handle.style.left) / 100 || INITIAL_FRAC));
+  }
+
+  document.querySelectorAll('.compare-slider').forEach(initComparer);
 })();
 </script>
 </body>
