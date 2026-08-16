@@ -178,7 +178,7 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 .meta{margin-top:34px;display:flex;flex-wrap:nowrap;justify-content:space-between;gap:36px}
 .meta-item{display:flex;flex-direction:column;gap:5px}
 .meta-item .k{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.meta-item .v{font-size:12.5px;color:var(--muted)}
+.meta-item .v{font-size:12.5px;color:var(--muted);line-height:1.6}
 
 /* ── Placeholder image blocks (unchanged structurally; caption is L5) ──── */
 .ph{
@@ -250,6 +250,15 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
 .bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
+/* ── Insight cells — same tag/H2/body type as a normal sec-grid, just
+   boxed and run side by side instead of the full two-column width. ────── */
+.insight-cells{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.insight-cells .cell{padding:28px;border-left:1px solid var(--line)}
+.insight-cells .cell:first-child{border-left:none}
+.insight-cells .cell .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.insight-cells .cell h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
+.insight-cells .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+
 /* ── Before/after compare sliders (Iterations) — each block pairs an
    image row with its own tag/H2/body stacked to the right of it (not the
    page's usual two-column sec-grid); the second block's pair shares a
@@ -274,7 +283,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 }
 .compare-slider.single{aspect-ratio:375/764;border-radius:var(--r-sm);overflow:hidden}
 .compare-slider.paired{gap:16px;height:calc(var(--cmp-unit-w,220px) * 764 / 375)}
-.cmp-frame{position:relative;flex:1 1 0;height:100%;border-radius:var(--r-sm);overflow:hidden}
+.cmp-frame{position:relative;flex:1 1 0;height:100%;border-radius:var(--r-sm);overflow:hidden;cursor:ew-resize;user-select:none;touch-action:none}
 .cmp-frame img,.cmp-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .cmp-after-video{object-position:43.4% 50%;transform:scale(1.02)}
 .cmp-before-wrap{position:absolute;inset:0;overflow:hidden}
@@ -327,9 +336,9 @@ footer.pagefoot a:hover{color:var(--ink)}
   .content-frame{overflow:visible;border-radius:24px}
   #pageScroll{height:auto;overflow:visible}
   .inner,main{padding-left:24px;padding-right:24px}
-  .bento-2,.bento-3{grid-template-columns:1fr}
-  .bento-2 .cell,.bento-3 .cell{border-left:none;border-top:1px solid var(--line)}
-  .bento-2 .cell:first-child,.bento-3 .cell:first-child{border-top:none}
+  .bento-2,.bento-3,.insight-cells{grid-template-columns:1fr}
+  .bento-2 .cell,.bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
+  .bento-2 .cell:first-child,.bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
 }
 </style>
 </head>
@@ -358,8 +367,8 @@ footer.pagefoot a:hover{color:var(--ink)}
    <div class="rail">
     <div class="rail-toc">
      <ul id="tocList">
+      <li data-target="context"><a href="#context">Context</a></li>
       <li data-target="problem"><a href="#problem">Problem</a></li>
-      <li data-target="role"><a href="#role">My role</a></li>
       <li data-target="research"><a href="#research">Research to insight</a></li>
       <li data-target="system"><a href="#system">The system</a></li>
       <li data-target="decisions"><a href="#decisions">Key decisions</a></li>
@@ -392,9 +401,8 @@ footer.pagefoot a:hover{color:var(--ink)}
         <p class="dek">A companion that guides young children to sleep on their own.</p>
 
         <div class="meta">
-          <div class="meta-item"><span class="k">Role</span><span class="v">UX Research, App Interface Design</span></div>
-          <div class="meta-item"><span class="k">Team</span><span class="v">Team of 2</span></div>
-          <div class="meta-item"><span class="k">Timeline</span><span class="v">Spring 2026</span></div>
+          <div class="meta-item"><span class="k">Team &amp; Role</span><span class="v">Ginny Dong: UX Research and Interface Design<br>Kylinn Ding: CAD Design and Usability Testing</span></div>
+          <div class="meta-item"><span class="k">Timeline</span><span class="v">Mar 2026 - April 2026</span></div>
           <div class="meta-item"><span class="k">Tools</span><span class="v">Figma, Onshape</span></div>
         </div>
 
@@ -406,6 +414,20 @@ footer.pagefoot a:hover{color:var(--ink)}
       <!-- Every block below is the same repeatable unit: a small tag, an H2,
            and its paired body content in a two-column row. A section can
            hold one block or several, back to back. -->
+      <section class="block reveal" id="context">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Context</div>
+              <h2>What is Lumino?</h2>
+            </div>
+            <div class="sec-body">
+              <p>Lumino is a smart mushroom-shaped nightlight and companion app that supports young children through the transition to sleeping on their own. The nightlight offers soothing light to help a child self-settle, with a built-in speaker and mic that play parent-selected audio and enable a two-way intercom. Through the app, parents control the light and intercom and select or upload stories and audio.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="block reveal" id="problem">
         <div class="sec-measure">
           <div class="sec-grid">
@@ -418,20 +440,7 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>Most products built for this moment are designed for the parent: monitors, trackers, routine apps. We wanted to build a product that connects the child with the parent while making this stage easier for both.</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section class="block reveal" id="role">
-        <div class="sec-measure">
-          <div class="sec-grid">
-            <div class="sec-head">
-              <div class="tag">My role</div>
-              <h2>User flow and interface design</h2>
-            </div>
-            <div class="sec-body">
-              <p>I designed the user flow for the product and led the interface design for the app. Research was shared with my teammate, Kylinn Ding, who owns the physical product design.</p>
-            </div>
-          </div>
+          <div class="ph ph-inline"><img src="images/LuminoNoSleep.jpg" alt="Child unable to sleep alone at night"></div>
         </div>
       </section>
 
@@ -447,33 +456,16 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
-          <div class="sec-grid">
-            <div class="sec-head">
+          <div class="insight-cells">
+            <div class="cell">
               <div class="tag">Insight 1</div>
               <h2>Replacement of parent needed</h2>
+              <p>Children are afraid of the dark and of being alone — what they need most is their parent's presence. But parents reported re-entering the room one to two times a night, describing bedtime as moderately stressful. A replacement for parent presence is needed.</p>
             </div>
-            <div class="sec-body">
-              <p>The task analysis showed the child's hardest work is mentally processing the absence and managing fear of the dark alone. A brighter room could only account for part of that: children are missing the parent, not the light.</p>
-            </div>
-          </div>
-
-          <div class="sec-grid">
-            <div class="sec-head">
+            <div class="cell">
               <div class="tag">Insight 2</div>
-              <h2>Two users, one bedtime problem</h2>
-            </div>
-            <div class="sec-body">
-              <p>Parents reported re-entering the room one to two times per night and described bedtime as moderately stressful. They weren't choosing between responding and holding firm because one was better, they lacked a third option. Lumino had to be a two-sided system: a physical device for the child and a companion app for the parent, not one product with an accessory.</p>
-            </div>
-          </div>
-
-          <div class="sec-grid">
-            <div class="sec-head">
-              <div class="tag">Insight 3</div>
-              <h2>Security through simplicity</h2>
-            </div>
-            <div class="sec-body">
-              <p>Targeting 5-year-olds, every interaction had to be tactile, single step, and operable without turning on the room light.</p>
+              <h2>Operation with simplicity</h2>
+              <p>Targeting 5-year-olds, every interaction had to be tactile and single step. Anything harder to operate in the dark risks becoming its own source of frustration, undermining the sense of security the device is meant to give.</p>
             </div>
           </div>
         </div>
@@ -559,8 +551,8 @@ footer.pagefoot a:hover{color:var(--ink)}
                   <div class="cmp-frame">
                     <img class="cmp-after" src="images/LuminalAfterPage1.png" alt="Home screen, after">
                     <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage1.png" alt="Home screen, before"></div>
+                    <div class="cmp-handle"></div>
                   </div>
-                  <div class="cmp-handle"></div>
                 </div>
                 <div class="cmp-caption">Home</div>
               </div>
@@ -570,8 +562,8 @@ footer.pagefoot a:hover{color:var(--ink)}
                   <div class="cmp-frame">
                     <video class="cmp-after cmp-after-video" src="images/LuminalAfterPage2.mp4" muted loop playsinline preload="auto"></video>
                     <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage2.png" alt="Story and Audio screen, before"></div>
+                    <div class="cmp-handle"></div>
                   </div>
-                  <div class="cmp-handle"></div>
                 </div>
                 <div class="cmp-caption">Story &amp; Audio</div>
               </div>
@@ -591,12 +583,13 @@ footer.pagefoot a:hover{color:var(--ink)}
                   <div class="cmp-frame">
                     <img class="cmp-after cmp-after-anim" src="images/LuminoAfterPage3.png" data-anim-base="images/LuminoAfterPage3.png" data-anim-a="images/LuminoAfterPage3-1.png" data-anim-b="images/LuminoAfterPage3-2.png" alt="Intercom screen, after">
                     <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage3.png" alt="Intercom screen, before"></div>
+                    <div class="cmp-handle"></div>
                   </div>
                   <div class="cmp-frame">
                     <img class="cmp-after" src="images/LuminalAfterPage4.png" alt="Profile screen, after">
                     <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage4.png" alt="Profile screen, before"></div>
+                    <div class="cmp-handle"></div>
                   </div>
-                  <div class="cmp-handle"></div>
                 </div>
                 <div class="cmp-caption">Intercom &amp; Profile</div>
               </div>
@@ -768,45 +761,45 @@ footer.pagefoot a:hover{color:var(--ink)}
   }
 
   function initComparer(root){
-    const frames = Array.from(root.querySelectorAll('.cmp-frame'));
-    const animControllers = frames.map(frame => {
-      const img = frame.querySelector('.cmp-after-anim');
-      return img ? makeAnimSwap(img) : null;
-    });
-    const handle = root.querySelector('.cmp-handle');
+    // Every frame — even the two inside a "paired" slider — is dragged and
+    // revealed independently, each with its own handle and its own shared
+    // Before/After header response, so a paired slider is really just two
+    // single sliders that happen to share a frame and a caption.
     const header = root.previousElementSibling;
     const beforeLabel = header && header.classList.contains('cmp-header') ? header.children[0] : null;
     const afterLabel = header && header.classList.contains('cmp-header') ? header.children[1] : null;
+    const frames = Array.from(root.querySelectorAll('.cmp-frame'));
+    frames.forEach(frame => initFrame(frame, beforeLabel, afterLabel));
+  }
+
+  function initFrame(frame, beforeLabel, afterLabel){
+    const handle = frame.querySelector('.cmp-handle');
+    const beforeWrap = frame.querySelector('.cmp-before-wrap');
+    const video = frame.querySelector('video');
+    const animImg = frame.querySelector('.cmp-after-anim');
+    const anim = animImg ? makeAnimSwap(animImg) : null;
+    let lastFrac = INITIAL_FRAC;
     let dragging = false;
 
     function setFraction(frac){
       frac = Math.min(1, Math.max(0, frac));
-      handle.style.left = (frac * 100) + '%';
-      const rootRect = root.getBoundingClientRect();
-      frames.forEach((frame, i) => {
-        const fr = frame.getBoundingClientRect();
-        const start = (fr.left - rootRect.left) / rootRect.width;
-        const end = (fr.right - rootRect.left) / rootRect.width;
-        let local = (frac - start) / (end - start);
-        local = Math.min(1, Math.max(0, local));
-        frame.querySelector('.cmp-before-wrap').style.clipPath = `inset(0 ${(1 - local) * 100}% 0 0)`;
-        const video = frame.querySelector('video');
-        if (video) {
-          if (local <= 0.5) { if (video.paused) video.play().catch(() => {}); }
-          else if (!video.paused) video.pause();
-        }
-        const anim = animControllers[i];
-        if (anim) {
-          if (1 - local >= 0.20) anim.start();
-          else anim.stop();
-        }
-      });
+      lastFrac = frac;
+      if (handle) handle.style.left = (frac * 100) + '%';
+      beforeWrap.style.clipPath = `inset(0 ${(1 - frac) * 100}% 0 0)`;
+      if (video) {
+        if (frac <= 0.5) { if (video.paused) video.play().catch(() => {}); }
+        else if (!video.paused) video.pause();
+      }
+      if (anim) {
+        if (1 - frac >= 0.20) anim.start();
+        else anim.stop();
+      }
       if (afterLabel) afterLabel.classList.toggle('is-hidden', frac > AFTER_REVEAL_FRAC);
       if (beforeLabel) beforeLabel.classList.toggle('is-hidden', frac < BEFORE_HIDE_FRAC);
     }
 
     function fracFromEvent(e){
-      const rect = root.getBoundingClientRect();
+      const rect = frame.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       return (clientX - rect.left) / rect.width;
     }
@@ -815,15 +808,15 @@ footer.pagefoot a:hover{color:var(--ink)}
     function onMove(e){ if (dragging) setFraction(fracFromEvent(e)); }
     function onUp(){ dragging = false; }
 
-    root.addEventListener('mousedown', onDown);
+    frame.addEventListener('mousedown', onDown);
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
-    root.addEventListener('touchstart', onDown, { passive: false });
+    frame.addEventListener('touchstart', onDown, { passive: false });
     window.addEventListener('touchmove', onMove, { passive: false });
     window.addEventListener('touchend', onUp);
 
     setFraction(INITIAL_FRAC);
-    window.addEventListener('resize', () => setFraction(parseFloat(handle.style.left) / 100 || INITIAL_FRAC));
+    window.addEventListener('resize', () => setFraction(lastFrac));
   }
 
   document.querySelectorAll('.compare-slider').forEach(initComparer);
