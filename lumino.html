@@ -189,6 +189,8 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 }
 .ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
 .ph-inline{margin-top:24px;width:100%;aspect-ratio:16/9}
+.ph-row{margin-top:24px;display:flex;gap:16px}
+.ph-row .ph{margin-top:0;flex:1 1 0;aspect-ratio:16/9}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .ph .cap{
   position:absolute;left:0;right:0;bottom:0;
@@ -215,7 +217,8 @@ section.block:first-of-type{padding-top:56px;border-top:1px solid var(--line);ma
 .sec-grid + .sec-grid{margin-top:44px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
-.ph-inline + .sec-grid{margin-top:32px}
+.ph-inline + .sec-grid,
+.ph-row + .sec-grid{margin-top:32px}
 
 /* The tag floats above sec-head instead of taking up flow space, so
    sec-head's own top edge is the H2's top edge — that's what the grid's
@@ -295,6 +298,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 @media (max-width:900px){
   .iteration-block{flex-direction:column;gap:16px}
   .compare-row{flex-wrap:wrap}
+  .ph-row{flex-direction:column}
 }
 
 /* ── Pull quote: flat, no fill — a hairline rule carries it. Its size is
@@ -440,7 +444,10 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>Most products built for this moment are designed for the parent: monitors, trackers, routine apps. We wanted to build a product that connects the child with the parent while making this stage easier for both.</p>
             </div>
           </div>
-          <div class="ph ph-inline"><img src="images/LuminoNoSleep.jpg" alt="Child unable to sleep alone at night"></div>
+          <div class="ph-row">
+            <div class="ph"><img src="images/LuminoNoSleep.jpg" alt="Child unable to sleep alone at night"></div>
+            <div class="ph"><img src="images/LuminoNoSleep2Crop.jpg" alt="Child unable to sleep alone at night, close up"></div>
+          </div>
         </div>
       </section>
 
@@ -549,23 +556,23 @@ footer.pagefoot a:hover{color:var(--ink)}
                 <div class="cmp-header"><span>Before</span><span>After</span></div>
                 <div class="compare-slider single" data-compare>
                   <div class="cmp-frame">
-                    <img class="cmp-after" src="images/LuminalAfterPage1.png" alt="Home screen, after">
-                    <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage1.png" alt="Home screen, before"></div>
-                    <div class="cmp-handle"></div>
-                  </div>
-                </div>
-                <div class="cmp-caption">Home</div>
-              </div>
-              <div class="compare-unit">
-                <div class="cmp-header"><span>Before</span><span>After</span></div>
-                <div class="compare-slider single" data-compare>
-                  <div class="cmp-frame">
                     <video class="cmp-after cmp-after-video" src="images/LuminalAfterPage2.mp4" muted loop playsinline preload="auto"></video>
                     <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage2.png" alt="Story and Audio screen, before"></div>
                     <div class="cmp-handle"></div>
                   </div>
                 </div>
                 <div class="cmp-caption">Story &amp; Audio</div>
+              </div>
+              <div class="compare-unit">
+                <div class="cmp-header"><span>Before</span><span>After</span></div>
+                <div class="compare-slider single" data-compare>
+                  <div class="cmp-frame">
+                    <img class="cmp-after" src="images/LuminalAfterPage1.png" alt="Home screen, after">
+                    <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage1.png" alt="Home screen, before"></div>
+                    <div class="cmp-handle"></div>
+                  </div>
+                </div>
+                <div class="cmp-caption">Home</div>
               </div>
             </div>
             <div class="iteration-text">

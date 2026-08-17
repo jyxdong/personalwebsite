@@ -72,7 +72,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .no-intro-anim .intro-frame{animation:none;opacity:1;transform:none}
 
 .intro-name{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:19.5cqi;line-height:1.1;color:#111;white-space:nowrap}
-.intro-photo{margin-top:18px;width:100%;aspect-ratio:1/1;border-radius:16px;background:#d7d7d7}
+.intro-photo{margin-top:18px;width:100%;aspect-ratio:1/1;border-radius:16px;background:#d7d7d7;object-fit:cover;display:block}
 .intro-bio{font-size:16px;font-weight:400;line-height:1.2;color:#111}
 .intro-contact{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .intro-icons{display:flex;align-items:center;gap:10px}
@@ -144,7 +144,7 @@ if(sessionStorage.getItem('playFromAbout')){
   <div id="introRail" aria-label="About Ginny">
     <div class="intro-frame id">
       <div class="intro-name">Ginny Dong</div>
-      <div class="intro-photo" aria-hidden="true"></div>
+      <img class="intro-photo" src="images/PersonalImage.png" alt="Ginny Dong"/>
     </div>
     <div class="intro-frame bio">
       <p class="intro-bio">Ginny is a UX designer with a background in human factors psychology and visual arts. She studies how people think and decide, and turn that into interfaces that are clear and easy to trust.</p>
