@@ -188,10 +188,10 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
   overflow:hidden;
 }
 .ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
-.ph-inline{margin-top:24px;width:100%;aspect-ratio:16/9}
-.ph-row{margin-top:24px;display:flex;gap:16px}
+.ph-inline{margin-top:32px;width:100%;aspect-ratio:16/9}
+.ph-row{margin-top:32px;display:flex;gap:16px}
 .ph-row .ph{margin-top:0;flex:1 1 0;aspect-ratio:16/9}
-.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph img,.ph video{width:100%;height:100%;object-fit:cover;display:block}
 .ph .cap{
   position:absolute;left:0;right:0;bottom:0;
   padding:34px 18px 14px;
@@ -201,8 +201,8 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 
 /* ── Sections ──────────────────────────────────────────────────────────── */
 main{padding:8px 64px 8px}
-section.block{padding-top:clamp(64px,8vh,104px);scroll-margin-top:24px}
-section.block:first-of-type{padding-top:56px;border-top:1px solid var(--line);margin-top:48px}
+section.block{padding-top:clamp(88px,11vh,140px);scroll-margin-top:24px}
+section.block:first-of-type{padding-top:72px;border-top:1px solid var(--line);margin-top:48px}
 
 /* Reading column: capped at the same 900px measure as the header above,
    so paragraphs, grids, images and tables never run wider than the
@@ -214,11 +214,12 @@ section.block:first-of-type{padding-top:56px;border-top:1px solid var(--line);ma
    15px wider than the left column's own gap would need, so the right
    column reads narrower than the left column's raw width suggests. */
 .sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
-.sec-grid + .sec-grid{margin-top:44px}
+.sec-grid + .sec-grid{margin-top:56px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
 .ph-inline + .sec-grid,
-.ph-row + .sec-grid{margin-top:32px}
+.ph-row + .sec-grid,
+.stat-cells + .sec-grid{margin-top:44px}
 
 /* The tag floats above sec-head instead of taking up flow space, so
    sec-head's own top edge is the H2's top edge — that's what the grid's
@@ -240,14 +241,14 @@ ul.insights em{font-style:italic;color:var(--ink)}
 
 /* ── Bento grids (decisions / testing) — hairline only, headings are L3
    (h3, subordinate to the section's own H2), body copy is L4. ─────────── */
-.bento-2{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-2{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .bento-2 .cell{padding:32px;border-left:1px solid var(--line)}
 .bento-2 .cell:first-child{border-left:none}
 .bento-2 .cell h3{font-size:15px;font-weight:400}
 .bento-2 .cell .ph{margin-top:16px;aspect-ratio:4/3}
 .bento-2 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
-.bento-3{margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
 .bento-3 .cell:first-child{border-left:none}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
@@ -255,20 +256,42 @@ ul.insights em{font-style:italic;color:var(--ink)}
 
 /* ── Insight cells — same tag/H2/body type as a normal sec-grid, just
    boxed and run side by side instead of the full two-column width. ────── */
-.insight-cells{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.insight-cells{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .insight-cells .cell{padding:28px;border-left:1px solid var(--line)}
 .insight-cells .cell:first-child{border-left:none}
 .insight-cells .cell .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
 .insight-cells .cell h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
 .insight-cells .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
 
+/* ── Stat callouts (Research to insight) — three columns, a big H2-style
+   figure over a normal paragraph, sitting above the insight cells. ─────── */
+.stat-cells{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.stat-cells.stat-cells-2{grid-template-columns:repeat(2,1fr)}
+.stat-cells h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(28px,3.4vw,38px);line-height:1;letter-spacing:-.01em;color:var(--ink)}
+.stat-cells p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
+
+/* ── Metrics row (Final Design) — a stat on the left, same H2-style figure
+   as the research stats, and a bordered pull-quote on the right. ───────── */
+.metrics-row{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.metrics-row .stat h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em;color:var(--ink)}
+
+/* ── Highlight — a non-heading use of the serif face: upright, regular
+   weight, same size as whatever context it sits in. ────────────────────── */
+.highlight{font-family:'Source Serif 4',serif;font-style:normal;font-weight:400}
+.stat-cells h2.highlight,
+.metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
+.metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
+.metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
+.metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
+.metrics-row .quote cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:var(--faint)}
+
 /* ── Before/after compare sliders (Iterations) — each block pairs an
    image row with its own tag/H2/body stacked to the right of it (not the
    page's usual two-column sec-grid); the second block's pair shares a
    single dragged divider so both frames flip together, not one at a
    time. ─────────────────────────────────────────────────────────────── */
-.iteration-block{margin-top:32px;display:flex;gap:40px;align-items:center;flex-wrap:wrap;--cmp-unit-w:220px}
-.iteration-block:first-child{margin-top:24px}
+.iteration-block{margin-top:40px;display:flex;gap:40px;align-items:center;flex-wrap:wrap;--cmp-unit-w:220px}
+.iteration-block:first-child{margin-top:32px}
 .iteration-text{flex:1 1 260px;min-width:220px}
 .iteration-text .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
 .iteration-text h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em;padding-bottom:12px}
@@ -288,7 +311,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .compare-slider.paired{gap:16px;height:calc(var(--cmp-unit-w,220px) * 764 / 375)}
 .cmp-frame{position:relative;flex:1 1 0;height:100%;border-radius:var(--r-sm);overflow:hidden;cursor:ew-resize;user-select:none;touch-action:none}
 .cmp-frame img,.cmp-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
-.cmp-after-video{object-position:43.4% 50%;transform:scale(1.02)}
+.cmp-after-video{object-position:50% 50%;transform:scale(1.03)}
 .cmp-before-wrap{position:absolute;inset:0;overflow:hidden}
 .cmp-handle{position:absolute;top:0;bottom:0;left:50%;width:0;z-index:3;pointer-events:none}
 .cmp-handle::before{content:"";position:absolute;top:0;bottom:0;left:-1px;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(17,17,17,.15)}
@@ -343,6 +366,8 @@ footer.pagefoot a:hover{color:var(--ink)}
   .bento-2,.bento-3,.insight-cells{grid-template-columns:1fr}
   .bento-2 .cell,.bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
   .bento-2 .cell:first-child,.bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
+  .stat-cells{grid-template-columns:1fr;gap:20px}
+  .metrics-row{grid-template-columns:1fr;gap:20px}
 }
 </style>
 </head>
@@ -374,10 +399,10 @@ footer.pagefoot a:hover{color:var(--ink)}
       <li data-target="context"><a href="#context">Context</a></li>
       <li data-target="problem"><a href="#problem">Problem</a></li>
       <li data-target="research"><a href="#research">Research to insight</a></li>
-      <li data-target="system"><a href="#system">The system</a></li>
+      <li data-target="system"><a href="#system">System and User</a></li>
       <li data-target="decisions"><a href="#decisions">Key decisions</a></li>
-      <li data-target="testing"><a href="#testing">Testing</a></li>
-      <li data-target="iterations"><a href="#iterations">Iterations</a></li>
+      <li data-target="testing"><a href="#testing">Testing and iterations</a></li>
+      <li data-target="final-design"><a href="#final-design">Final Design</a></li>
       <li data-target="reflection"><a href="#reflection">Reflection</a></li>
      </ul>
     </div>
@@ -455,11 +480,40 @@ footer.pagefoot a:hover{color:var(--ink)}
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <h2>Research methods</h2>
+              <div class="tag">Research to insight</div>
+              <h2>Key Related Data</h2>
             </div>
-            <div class="sec-body">
-              <p>We ran a CLIMBER analysis, a caregiver questionnaire, and a two-sided task analysis covering both the child's and the parent's bedtime.</p>
-              <p class="methods">Methods: CLIMBER analysis, caregiver questionnaire (n=9), hierarchical task analysis.</p>
+          </div>
+
+          <div class="stat-cells">
+            <div class="stat">
+              <h2 class="highlight">30%</h2>
+              <p>of toddlers and preschoolers are affected by bedtime problems and night wakings.</p>
+            </div>
+            <div class="stat">
+              <h2 class="highlight">59%</h2>
+              <p>of 4-6-year-old children experience nighttime fears.</p>
+            </div>
+            <div class="stat">
+              <h2 class="highlight">Night waking</h2>
+              <p>is among the top sleep concerns parents raise with pediatricians.</p>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>Target Users</h2>
+            </div>
+          </div>
+
+          <div class="stat-cells stat-cells-2">
+            <div class="stat">
+              <h2 class="highlight">Primary users:</h2>
+              <p>Kids that fall within age 4-6, entering the stage of sleeping alone in their own room.</p>
+            </div>
+            <div class="stat">
+              <h2 class="highlight">Secondary users:</h2>
+              <p>Parents who have young children and want a second channel that helps keep their child's sleep more secure.</p>
             </div>
           </div>
 
@@ -482,11 +536,14 @@ footer.pagefoot a:hover{color:var(--ink)}
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">The system</div>
-              <h2>How the device and app work together</h2>
+              <div class="tag">System and User</div>
+              <h2>A digital and physical combined experience</h2>
             </div>
             <div class="sec-body">
-              <p>The device sits on a nightstand. The child pats the silicone top to start a breathing light, presses one side button to hear a story or white noise, and presses the other to call a parent. The app gives parents higher-level controls: light speed and color, story library and uploads, hold-to-talk intercom, and a calendar view of what happened each night.</p>
+              <p class="highlight">Why a physical product?</p>
+              <p>Our target users are 4- to 6-year-olds, so we wanted the experience to stay fully tangible and away from digital distractions.</p>
+              <p class="highlight">Why an app for control?</p>
+              <p>So parents can access the device wherever they are — a companion app is more portable than the device itself.</p>
             </div>
           </div>
           <div class="ph ph-inline"><span class="cap">Device + four app screens</span></div>
@@ -545,18 +602,14 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
           <p>A small sample of parents is still directional, not conclusive. We treated these as signals worth acting on, not as validated findings.</p>
-        </div>
-      </section>
 
-      <section class="block reveal" id="iterations">
-        <div class="sec-measure">
           <div class="iteration-block">
             <div class="compare-row">
               <div class="compare-unit">
                 <div class="cmp-header"><span>Before</span><span>After</span></div>
                 <div class="compare-slider single" data-compare>
                   <div class="cmp-frame">
-                    <video class="cmp-after cmp-after-video" src="images/LuminalAfterPage2.mp4" muted loop playsinline preload="auto"></video>
+                    <video class="cmp-after cmp-after-video" src="images/LuminoAfterPage2.mov" muted loop playsinline preload="auto"></video>
                     <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage2.png" alt="Story and Audio screen, before"></div>
                     <div class="cmp-handle"></div>
                   </div>
@@ -588,7 +641,7 @@ footer.pagefoot a:hover{color:var(--ink)}
                 <div class="cmp-header"><span>Before</span><span>After</span></div>
                 <div class="compare-slider paired" data-compare>
                   <div class="cmp-frame">
-                    <img class="cmp-after cmp-after-anim" src="images/LuminoAfterPage3.png" data-anim-base="images/LuminoAfterPage3.png" data-anim-a="images/LuminoAfterPage3-1.png" data-anim-b="images/LuminoAfterPage3-2.png" alt="Intercom screen, after">
+                    <video class="cmp-after cmp-after-video" src="images/LuminoAfterPage3.mov" muted loop playsinline preload="auto"></video>
                     <div class="cmp-before-wrap"><img src="images/LuminalOriginalPage3.png" alt="Intercom screen, before"></div>
                     <div class="cmp-handle"></div>
                   </div>
@@ -605,6 +658,36 @@ footer.pagefoot a:hover{color:var(--ink)}
               <div class="tag">Page 3 &amp; 4 Iteration</div>
               <h2>Device and connection status</h2>
               <p>To better manage devices and show connection status, I moved the connection status into Settings and expanded it into a full device management section, so parents can see, connect, and manage multiple Luminos in one place. On the Intercom page, I added a speaker illustration with a real-time Bluetooth status icon, and the illustration shifts between two states to reflect live call status.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="final-design">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Final Design</div>
+              <h2 style="white-space:nowrap">Meet Lumino, a sleep companion</h2>
+            </div>
+          </div>
+          <div class="ph ph-inline" style="background:none"><video id="happyPathVideo" src="images/LuminoHappyPath.mov" muted loop playsinline preload="auto"></video></div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>The design system</h2>
+            </div>
+          </div>
+          <div class="ph ph-inline" style="aspect-ratio:1366/591;background:none"><img src="images/LuminoDesignSystem.png" alt="Lumino design system assets"></div>
+
+          <div class="metrics-row">
+            <div class="stat">
+              <h2 class="highlight">97.5% task completion rate</h2>
+              <p>39 of 40 attempts completed across 5 participants and 8 tasks.</p>
+            </div>
+            <div class="quote">
+              <p>"Really great job on the thoughtful child-centered design. Strong needs analysis and thoughtful physical and anthropometric reasoning."</p>
+              <cite>— Professor Intriligator</cite>
             </div>
           </div>
         </div>
@@ -676,6 +759,19 @@ footer.pagefoot a:hover{color:var(--ink)}
     });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => reveal.observe(el));
+
+  // Happy path video: only plays once its section is actually on screen,
+  // rather than autoplaying the moment the page loads off-screen below.
+  const happyPathVideo = document.getElementById('happyPathVideo');
+  if (happyPathVideo) {
+    const happyPathObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) happyPathVideo.play().catch(() => {});
+        else happyPathVideo.pause();
+      });
+    }, { threshold: 0.3 });
+    happyPathObserver.observe(happyPathVideo);
+  }
 
   document.querySelectorAll('#backToTop, #backToTop2').forEach(el => {
     el.addEventListener('click', () => scroller.scrollTo({ top: 0, behavior: 'smooth' }));
