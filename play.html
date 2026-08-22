@@ -127,6 +127,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .img-card-caption{margin-top:12px;font-size:14px;line-height:1.5;color:var(--muted);
   opacity:0;transition:opacity .35s ease}
 .img-card-caption.visible{opacity:1}
+.img-card-caption a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 
 /* ── Mobile: drop the fixed app-shell, let the page scroll normally ─────── */
 @media (max-width:960px){
@@ -211,7 +212,7 @@ if(sessionStorage.getItem('playFromAbout')){
               <div class="ph-card img-card" id="playCard" style="aspect-ratio:9154/5945">
                 <img src="images/PlayStardewValley.webp" alt="Stardew Valley"/>
               </div>
-              <p class="img-card-caption">This is a paragraph.</p>
+              <p class="img-card-caption">I am a Stardew Valley player. I design and code my own mods when the game doesn't do what I want. Visit my nexus homepage: <a href="https://www.nexusmods.com/profile/jyxdong/mods" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">nexusmods.com/profile/jyxdong/mods</a></p>
             </div>
             <div class="ph-card h-sm"></div>
             <div class="ph-card h-md"></div>

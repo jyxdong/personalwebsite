@@ -252,6 +252,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
 .bento-3 .cell:first-child{border-left:none}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
+.bento-3 .cell h3.highlight{font-size:clamp(16px,1.6vw,18px)}
 .bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
 /* ── Insight cells — same tag/H2/body type as a normal sec-grid, just
@@ -281,6 +282,12 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .stat-cells h2.highlight,
 .metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
 .metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
+
+/* ── Highlight row (Reflection + Next Steps) — three centered cards, each
+   a larger centered "highlight" line over a normal paragraph. ──────────── */
+.highlight-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.highlight-item .highlight{display:block;text-align:center;font-size:clamp(16px,1.6vw,18px);line-height:1.3}
+.highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
 .metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
 .metrics-row .quote cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:var(--faint)}
@@ -368,6 +375,7 @@ footer.pagefoot a:hover{color:var(--ink)}
   .bento-2 .cell:first-child,.bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
   .stat-cells{grid-template-columns:1fr;gap:20px}
   .metrics-row{grid-template-columns:1fr;gap:20px}
+  .highlight-row{grid-template-columns:1fr;gap:24px}
 }
 </style>
 </head>
@@ -403,7 +411,7 @@ footer.pagefoot a:hover{color:var(--ink)}
       <li data-target="decisions"><a href="#decisions">Key decisions</a></li>
       <li data-target="testing"><a href="#testing">Testing and iterations</a></li>
       <li data-target="final-design"><a href="#final-design">Final Design</a></li>
-      <li data-target="reflection"><a href="#reflection">Reflection</a></li>
+      <li data-target="reflection"><a href="#reflection">Reflection and next steps</a></li>
      </ul>
     </div>
     <a href="work.html" class="rail-home">
@@ -431,7 +439,7 @@ footer.pagefoot a:hover{color:var(--ink)}
 
         <div class="meta">
           <div class="meta-item"><span class="k">Team &amp; Role</span><span class="v">Ginny Dong: UX Research and Interface Design<br>Kylinn Ding: CAD Design and Usability Testing</span></div>
-          <div class="meta-item"><span class="k">Timeline</span><span class="v">Mar 2026 - April 2026</span></div>
+          <div class="meta-item"><span class="k">Timeline</span><span class="v">Mar 2026 - Apr 2026</span></div>
           <div class="meta-item"><span class="k">Tools</span><span class="v">Figma, Onshape</span></div>
         </div>
 
@@ -546,7 +554,7 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>So parents can access the device wherever they are — a companion app is more portable than the device itself.</p>
             </div>
           </div>
-          <div class="ph ph-inline"><span class="cap">Device + four app screens</span></div>
+          <div class="ph ph-inline" style="aspect-ratio:2864/1270;background:none"><img src="images/LuminoFlowchart.png" alt="Lumino device and app flowchart"></div>
         </div>
       </section>
 
@@ -589,20 +597,19 @@ footer.pagefoot a:hover{color:var(--ink)}
           </div>
           <div class="bento-3">
             <div class="cell">
-              <h3>Content below the fold went unseen</h3>
+              <h3 class="highlight">Content below the fold unseen</h3>
               <p>The main screen didn't signal that more content was available, so it went unseen until prompted.</p>
             </div>
             <div class="cell">
-              <h3>Preview story is needed</h3>
+              <h3 class="highlight">Preview story is needed</h3>
               <p>There was no way to know what a story contained before it reached the child. Parents need to preview the story contents first before adding them to a playlist.</p>
             </div>
             <div class="cell">
-              <h3>No confirmation of device management</h3>
+              <h3 class="highlight">No device management</h3>
               <p>Given the possibility that users may purchase multiple devices or change devices, there should be a section in settings to delete or connect devices.</p>
             </div>
           </div>
-          <p>A small sample of parents is still directional, not conclusive. We treated these as signals worth acting on, not as validated findings.</p>
-
+          
           <div class="iteration-block">
             <div class="compare-row">
               <div class="compare-unit">
@@ -697,24 +704,23 @@ footer.pagefoot a:hover{color:var(--ink)}
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">Reflection</div>
-              <h2>From a better nightlight to a two-person system</h2>
-            </div>
-            <div class="sec-body">
-              <p>The biggest shift in this project was early. We started out designing a better nightlight and ended up designing a system for two people who need different things at the same moment.</p>
+              <div class="tag">Reflection + Next Steps</div>
+              <h2>How can Lumino be more comforting?</h2>
             </div>
           </div>
-          <div class="sec-grid">
-            <div class="sec-head">
-              <div class="tag">Next steps</div>
-              <h2>What I'd do next</h2>
+
+          <div class="highlight-row">
+            <div class="highlight-item">
+              <p class="highlight">Mapping the Flow Earlier</p>
+              <p class="highlight-body">Next time I'd map how the child and parent interact across the device and app before committing to any interface, so the split between physical and digital is grounded in the flow.</p>
             </div>
-            <div class="sec-body">
-              <ul class="next-list">
-                <li>Test with a larger group of caregivers.</li>
-                <li>Observe real children using the device over multiple nights, rather than testing the app in isolation.</li>
-                <li>Test the handoff between the device and the app, which our current testing never covered.</li>
-              </ul>
+            <div class="highlight-item">
+              <p class="highlight">Testing in Real Context</p>
+              <p class="highlight-body">The next step is testing within parents' actual evening routine rather than a neutral setting, since context does half the work here.</p>
+            </div>
+            <div class="highlight-item">
+              <p class="highlight">Extending to Multiple Children</p>
+              <p class="highlight-body">The device management work opened up to support households with more than one child, and more than one Lumino. Given more time the interfaces can be further designed to support more Lumino Devices.</p>
             </div>
           </div>
         </div>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Remember — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset ─────────────────────────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --canvas:#D7D7D7;
+  --paper:#ffffff;
+  --ink:#111111;
+  --muted:#63625f;
+  --faint:#9a9a97;
+  --line:rgba(17,17,17,.10);
+
+  --sidegap:24px;
+  --midgap:8px;
+  --nav-h:56px;
+  --rail-w:280px;
+  --r-lg:40px;
+  --r-sm:10px;
+}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-weight:400;
+  color:var(--ink);
+  background:var(--canvas);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ── Nav ──────────────────────────────────────────────────────────────── */
+#navWrap{flex-shrink:0;margin:calc(var(--sidegap) - 8px) var(--sidegap) 0 var(--sidegap)}
+nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px;padding:8px 10px}
+.nav-tabs{flex:1;display:flex;justify-content:center;gap:10px}
+.nav-tabs a{flex:1;max-width:260px;height:40px;border-radius:999px;border:none;cursor:pointer;font-size:20px;font-weight:400;background:#f4f4f4;color:#000;transition:background .2s;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.nav-tabs a:hover:not(.active){background:#e9e9e9}
+.nav-tabs a.tab-about.active{background:#CBFF71;color:#000}
+.nav-tabs a.tab-work.active{background:#FF8418;color:#000}
+.nav-tabs a.tab-play.active{background:#00D0FF;color:#000}
+.nav-icon-btn{flex:0 0 40px;width:40px;height:40px;border-radius:999px;border:none;cursor:pointer;background:#f4f4f4;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:background .2s;text-decoration:none}
+.nav-icon-btn svg{width:18px;height:18px}
+.nav-icon-btn:hover{background:#e9e9e9}
+
+/* ── Shell ────────────────────────────────────────────────────────────── */
+.shell{flex:1;min-height:0;display:flex;gap:var(--midgap);padding:var(--midgap) var(--sidegap) var(--sidegap) var(--sidegap)}
+
+.rail-frame{flex-shrink:0;width:var(--rail-w);background:var(--paper);border-radius:var(--r-lg);overflow:hidden}
+.rail{height:100%;background:var(--paper);padding:36px 30px;display:flex;flex-direction:column;overflow-y:auto}
+.rail-toc{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.rail-toc ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.rail-toc li a{display:block;padding:7px 2px;font-size:15px;color:var(--faint);text-decoration:none;transition:color .15s,font-size .15s}
+.rail-toc li a:hover{color:var(--ink)}
+.rail-toc li.active a{color:var(--ink);font-size:20px}
+.rail-home{flex-shrink:0;margin-top:24px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#e4e4e4;border-radius:999px;padding:12px 20px;font-size:20px;font-weight:400;color:var(--ink);text-decoration:none;transition:background .2s}
+.rail-home:hover{background:#dadada}
+.rail-home svg{flex-shrink:0}
+
+.content-frame{position:relative;flex:1;min-width:0;background:var(--paper);border-radius:var(--r-lg);overflow:hidden}
+#pageScroll{height:100%;background:var(--paper);overflow-y:auto;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){#pageScroll{scroll-behavior:auto}}
+.inner{padding:56px 64px 40px}
+
+/* ── Reading-progress ruler ───────────────────────────────────────────── */
+.progress-track{position:absolute;top:50%;right:24px;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:4px;z-index:5;pointer-events:none}
+.progress-track .tick{width:9px;height:2px;background:var(--line);transform-origin:right center;transition:transform .1s linear}
+.progress-track .tick.major{width:20px;background:var(--faint)}
+.progress-track .tick.end{width:20px;background:var(--faint);transition:transform .2s ease,background .2s ease}
+.progress-track .tick.end.active{background:var(--muted)}
+.progress-track .tick.on{background:var(--ink)}
+@media (max-width:960px){.progress-track{display:none}}
+
+/* ── Breadcrumb ───────────────────────────────────────────────────────── */
+.crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--faint)}
+.crumb a{color:var(--faint);text-decoration:none}
+.crumb a:hover{color:var(--ink)}
+.crumb span.sep{color:var(--line)}
+.crumb span.cur{color:var(--muted)}
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+header.hero{margin-top:20px;max-width:900px}
+header.hero h2{font-family:'Source Serif 4',serif;font-style:normal;font-size:clamp(32px,4vw,44px);line-height:1.1;letter-spacing:-.015em;font-weight:400}
+header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--muted)}
+
+.meta{margin-top:34px;display:flex;flex-wrap:nowrap;justify-content:space-between;gap:36px}
+.meta-item{display:flex;flex-direction:column;gap:5px}
+.meta-item .k{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.meta-item .v{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* ── Placeholder image blocks ────────────────────────────────────────── */
+.ph{position:relative;background:repeating-linear-gradient(45deg,#ececec 0 12px,#f4f4f4 12px 24px);border-radius:var(--r-sm);overflow:hidden}
+.ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
+.ph-inline{margin-top:32px;width:100%;aspect-ratio:16/9}
+.ph-row{margin-top:32px;display:flex;gap:16px}
+.ph-row .ph{margin-top:0;flex:1 1 0;aspect-ratio:16/9}
+.ph img,.ph video{width:100%;height:100%;object-fit:cover;display:block}
+.ph .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 14px;background:linear-gradient(to top, rgba(17,17,17,.55), transparent);color:#fff;font-size:12.5px}
+
+/* ── Sections ─────────────────────────────────────────────────────────── */
+main{padding:8px 64px 8px}
+section.block{padding-top:clamp(88px,11vh,140px);scroll-margin-top:24px}
+section.block:first-of-type{padding-top:72px;border-top:1px solid var(--line);margin-top:48px}
+.sec-measure{max-width:900px}
+.sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
+.sec-grid + .sec-grid{margin-top:56px}
+.sec-body > p:first-child,
+.sec-body > ul:first-child{margin-top:0}
+.ph-inline + .sec-grid,
+.ph-row + .sec-grid,
+.stat-cells + .sec-grid{margin-top:44px}
+.sec-head{position:relative}
+.sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
+.sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
+section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+
+ul.insights{margin-top:16px;display:flex;flex-direction:column;gap:14px;max-width:54ch}
+ul.insights li{display:flex;gap:14px;align-items:flex-start;font-size:15px;line-height:1.5;color:#2b2b2b}
+ul.insights .dot{flex-shrink:0;width:6px;height:6px;border-radius:1px;margin-top:8px;background:var(--faint)}
+ul.insights em{font-style:italic;color:var(--ink)}
+.methods{margin-top:16px;font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:16px}
+
+/* ── Bento grids ──────────────────────────────────────────────────────── */
+.bento-2{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-2 .cell{padding:32px;border-left:1px solid var(--line)}
+.bento-2 .cell:first-child{border-left:none}
+.bento-2 .cell h3{font-size:15px;font-weight:400}
+.bento-2 .cell .ph{margin-top:16px;aspect-ratio:4/3}
+.bento-2 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+
+.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
+.bento-3 .cell:first-child{border-left:none}
+.bento-3 .cell h3{font-size:15px;font-weight:400}
+.bento-3 .cell h3.highlight{font-size:clamp(16px,1.6vw,18px)}
+.bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+
+/* ── Five-up "ways in" grid — wraps 3 + 2, hairlines reset per row ──────── */
+.bento-5{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-5 .cell{padding:28px;border-left:1px solid var(--line);border-top:1px solid transparent}
+.bento-5 .cell:nth-child(3n+1){border-left:none}
+.bento-5 .cell:nth-child(n+4){border-top:1px solid var(--line)}
+.bento-5 .cell h3{font-size:15px;font-weight:400}
+.bento-5 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+@media (max-width:900px){
+  .bento-5{grid-template-columns:1fr}
+  .bento-5 .cell{border-left:none;border-top:1px solid var(--line)}
+  .bento-5 .cell:first-child{border-top:none}
+}
+
+/* ── Insight / user cells ─────────────────────────────────────────────── */
+.insight-cells{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.insight-cells.cols-3{grid-template-columns:repeat(3,1fr)}
+.insight-cells .cell{padding:28px;border-left:1px solid var(--line)}
+.insight-cells .cell:first-child{border-left:none}
+.insight-cells .cell .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.insight-cells .cell h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
+.insight-cells .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+
+/* ── Stat callouts ────────────────────────────────────────────────────── */
+.stat-cells{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.stat-cells.stat-cells-2{grid-template-columns:repeat(2,1fr)}
+.stat-cells h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(28px,3.4vw,38px);line-height:1;letter-spacing:-.01em;color:var(--ink)}
+.stat-cells p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
+
+.metrics-row{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.metrics-row .stat h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em;color:var(--ink)}
+
+.highlight{font-family:'Source Serif 4',serif;font-style:normal;font-weight:400}
+.stat-cells h2.highlight,
+.metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
+.metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
+
+.highlight-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.highlight-item .highlight{display:block;text-align:center;font-size:clamp(16px,1.6vw,18px);line-height:1.3}
+.highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+.metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
+.metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
+.metrics-row .quote cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:var(--faint)}
+
+/* ── Before/After text pairs (no imagery available — text-only iteration
+   rows) ─────────────────────────────────────────────────────────────── */
+.ba-row{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.ba-row .cell{padding:28px;border-left:1px solid var(--line)}
+.ba-row .cell:first-child{border-left:none}
+.ba-row .cell .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.ba-row .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+@media (max-width:900px){.ba-row{grid-template-columns:1fr}.ba-row .cell{border-left:none;border-top:1px solid var(--line)}.ba-row .cell:first-child{border-top:none}}
+
+/* ── Palette swatches ─────────────────────────────────────────────────── */
+.palette-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.swatch{border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line)}
+.swatch .fill{width:100%;aspect-ratio:2/1}
+.swatch .label{padding:16px 18px}
+.swatch .label .name{font-size:15px;color:var(--ink)}
+.swatch .label .hex{margin-top:4px;font-size:12.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+
+.pullquote{margin:32px 0;padding-left:20px;border-left:1px solid var(--line)}
+.pullquote p{margin:0;max-width:56ch;color:var(--ink);font-size:clamp(19px,2.1vw,24px);line-height:1.4;font-style:italic}
+
+.next-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:54ch}
+.next-list li{font-size:15px;line-height:1.5;color:#2b2b2b;padding-left:18px;position:relative}
+.next-list li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--line)}
+
+footer.pagefoot{border-top:1px solid var(--line);margin-top:56px;padding:28px 0 48px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer.pagefoot a{font-size:12.5px;color:var(--muted);text-decoration:none;cursor:pointer}
+footer.pagefoot a:hover{color:var(--ink)}
+
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+@media (max-width:900px){
+  .sec-grid{grid-template-columns:1fr;row-gap:12px}
+}
+
+@media (max-width:960px){
+  html,body{height:auto;overflow:visible}
+  body{display:block}
+  #navWrap{margin:16px 16px 0}
+  .shell{display:block;height:auto;padding:8px 16px 16px}
+  .rail-frame{width:auto;overflow:visible;border-radius:24px;margin-bottom:8px}
+  .rail{height:auto;overflow:visible;padding:22px 20px}
+  .rail-toc ul{flex-direction:row;flex-wrap:wrap;gap:4px 16px}
+  .rail-toc li a{padding:6px 0}
+  .content-frame{overflow:visible;border-radius:24px}
+  #pageScroll{height:auto;overflow:visible}
+  .inner,main{padding-left:24px;padding-right:24px}
+  .bento-2,.bento-3,.insight-cells,.insight-cells.cols-3{grid-template-columns:1fr}
+  .bento-2 .cell,.bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
+  .bento-2 .cell:first-child,.bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
+  .stat-cells{grid-template-columns:1fr;gap:20px}
+  .metrics-row{grid-template-columns:1fr;gap:20px}
+  .highlight-row{grid-template-columns:1fr;gap:24px}
+  .palette-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="navWrap">
+  <nav>
+    <div class="nav-tabs">
+      <a href="index.html" class="tab-about">About</a>
+      <a href="work.html" class="tab-work active">Work</a>
+      <a href="play.html" class="tab-play">Play</a>
+    </div>
+    <a class="nav-icon-btn" href="https://drive.google.com/file/d/1VkgR9_d0P5G2in3TYsN-1l_7hXY_21DG/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="Resume">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <path d="M14 2v6h6"/>
+        <line x1="8" y1="13" x2="16" y2="13"/>
+        <line x1="8" y1="17" x2="16" y2="17"/>
+      </svg>
+    </a>
+  </nav>
+</div>
+
+<div class="shell">
+  <aside class="rail-frame" aria-label="Table of contents">
+   <div class="rail">
+    <div class="rail-toc">
+     <ul id="tocList">
+      <li data-target="context"><a href="#context">Context</a></li>
+      <li data-target="problem"><a href="#problem">Problem</a></li>
+      <li data-target="reframe"><a href="#reframe">The Reframe</a></li>
+      <li data-target="design-language"><a href="#design-language">Design Language</a></li>
+      <li data-target="users"><a href="#users">Three Users, One System</a></li>
+      <li data-target="scope"><a href="#scope">My Scope &amp; The System</a></li>
+      <li data-target="output-layer"><a href="#output-layer">Designing the Output Layer</a></li>
+      <li data-target="iterations"><a href="#iterations">Iterations</a></li>
+      <li data-target="reflection"><a href="#reflection">Reflection</a></li>
+     </ul>
+    </div>
+    <a href="work.html" class="rail-home">
+      <span>Back to works</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </a>
+   </div>
+  </aside>
+
+  <div class="content-frame">
+   <div class="progress-track" id="progressTrack" aria-hidden="true"></div>
+   <div id="pageScroll">
+    <div class="inner">
+      <p class="crumb">
+        <a href="index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="work.html">Work</a>
+        <span class="sep">/</span>
+        <span class="cur">Remember</span>
+      </p>
+
+      <header class="hero">
+        <h2>Remember</h2>
+        <p class="dek">A digital memorial that gathers scattered memories of one person into a single place to remember them.</p>
+
+        <div class="meta">
+          <div class="meta-item"><span class="k">Team &amp; Role</span><span class="v">3 Designers · 1 PM · 5 Frontend Developers</span></div>
+          <div class="meta-item"><span class="k">My Role</span><span class="v">Output Layer Design · Organizer Dashboard Scope</span></div>
+          <div class="meta-item"><span class="k">Timeline</span><span class="v">Apr 2026 - Jun 2026</span></div>
+        </div>
+
+        <div class="ph ph-hero"></div>
+      </header>
+    </div>
+
+    <main>
+      <section class="block reveal" id="context">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Context</div>
+              <h2>What is Remember?</h2>
+            </div>
+            <div class="sec-body">
+              <p>Remember turns memories held by many people into one memorial for the person who has died. One person — the organizer — creates the memorial and invites family and friends to contribute. Contributors respond to a guided interview rather than facing a blank page, sharing stories, voice recordings, and photos.</p>
+              <p>Those fragments are then synthesized into a single memorial that anyone can visit, moving between a slideshow, a constellation of themes and relationships, recorded voices, and a photo archive. The organizer manages it all from one dashboard, from the first invitation to the finished memorial.</p>
+            </div>
+          </div>
+          <div class="ph ph-inline"></div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="problem">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Problem</div>
+              <h2>The memory of one person lives inside many people</h2>
+            </div>
+            <div class="sec-body">
+              <p>When someone dies, no one holds the whole picture. A friend remembers a conversation. A cousin has the only photo from that summer. A sibling saved a voicemail and can't bring themselves to delete it. Each piece is real, and each one is partial.</p>
+              <p>The tools families reach for are not built to hold any of this. Group chats bury a story under the next message. Shared drives turn a life into a folder of filenames. Social media walls flatten condolences and memories into the same scroll, then move on.</p>
+              <p>So families end up with more fragments than they started with — and still no memorial.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="reframe">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">The Reframe</div>
+              <h2>The hard part was never collecting</h2>
+            </div>
+            <div class="sec-body">
+              <p>We began by treating this as a collection problem: build a good way to gather memories from a lot of people. But collection turned out to be the easy half. The moment we imagined fifty submissions arriving — different voices, different lengths, some a paragraph, some a single sentence — the real question surfaced.</p>
+              <p class="highlight">How do you turn many people's fragments into something that feels authored?</p>
+              <p>That is genuinely hard, and it is the kind of hard that AI is good at. But it introduced the tension that shaped every decision after it. Grief is not a context that tolerates a chatbot, a sparkle icon, or a "generating…" state. The moment a grieving person can see the machine working, the memorial stops being about the person who died.</p>
+            </div>
+          </div>
+          <div class="pullquote">
+            <p>AI does the heaviest work in this product, and must never look like it is there.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="design-language">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Design Language</div>
+              <h2>Feel human, never technological</h2>
+            </div>
+            <div class="sec-body">
+              <p>Before any screen was designed, that principle had to be given a look. Most products built around AI signal it visually — cool blues, gradients, glows. We went the other way and built the system on a warm, physical palette. Nothing on screen suggests a system is running.</p>
+              <p>Weight carries the same idea. Bold is reserved almost entirely for quotes — the actual words people wrote about the person. The interface stays quiet so the memories carry the emphasis. What a visitor should notice is what someone said, not the thing displaying it.</p>
+            </div>
+          </div>
+          <div class="palette-row">
+            <div class="swatch">
+              <div class="fill" style="background:#FBF9F6;border-bottom:1px solid var(--line)"></div>
+              <div class="label"><div class="name">Soft cream — background</div><div class="hex">#FBF9F6</div></div>
+            </div>
+            <div class="swatch">
+              <div class="fill" style="background:#423F39"></div>
+              <div class="label"><div class="name">Deep warm brown — type</div><div class="hex">#423F39</div></div>
+            </div>
+            <div class="swatch">
+              <div class="fill" style="background:#97877B"></div>
+              <div class="label"><div class="name">Muted taupe — supporting</div><div class="hex">#97877B</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="users">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Three Users, One System</div>
+              <h2>Three people who want opposite things</h2>
+            </div>
+            <div class="sec-body">
+              <p>We did not run primary research on this project. What we did instead was define, precisely, who the product had to serve at once — and where those needs pull against each other. The organizer wants power. The contributor wants ease. The viewer wants emotion. One system had to hold all three, and most of the product's difficulty lives in that gap.</p>
+            </div>
+          </div>
+
+          <div class="insight-cells cols-3">
+            <div class="cell">
+              <div class="tag">Organizer</div>
+              <h2>The one grieving, willing to do the work</h2>
+              <p>The only paying user. They need control and structure without the memorial becoming another burden during the worst month of their life.</p>
+            </div>
+            <div class="cell">
+              <div class="tag">Contributor</div>
+              <h2>Invited, often reluctant, usually unsure</h2>
+              <p>They need to be drawn out. A blank text box asking them to "write a memory" is a wall.</p>
+            </div>
+            <div class="cell">
+              <div class="tag">Viewer</div>
+              <h2>Anyone who arrives to remember</h2>
+              <p>They may have thirty seconds. They need to feel something before they need to understand anything.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="scope">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">My Scope &amp; The System</div>
+              <h2>Where I worked</h2>
+            </div>
+            <div class="sec-body">
+              <p>The product is built in three layers: the organizer creates and manages the memorial, contributors submit memories into it, and viewers experience what comes out.</p>
+              <p><span class="highlight">I fully owned the output layer</span> — everything a visitor encounters after the memories have been synthesized. What the memorial looks like, what ways in exist, and how someone moves through it.</p>
+              <p><span class="highlight">I partly owned the organizer dashboard.</span> I defined its scope: what it holds and what an organizer can see there. I did not design the memorial creation and configuration flow.</p>
+              <p>Alongside design work, I ran the designer–developer syncs and coordinated handoff sequencing, so that five frontend developers were never blocked waiting on design.</p>
+            </div>
+          </div>
+          <div class="ph ph-inline"></div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="output-layer">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Designing the Output Layer</div>
+              <h2>What should a synthesized memory look like?</h2>
+            </div>
+            <div class="sec-body">
+              <p>This was the question I owned, and the obvious answers were all wrong. A <span class="highlight">list</span> of contributions is a database — it preserves everything and communicates nothing. A <span class="highlight">timeline</span> is an obituary — it organizes a person by chronology, which is how institutions record lives, not how people remember them. Both were archival. The memorial needed to be something else.</p>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>Grief has no correct order, and no end</h2>
+            </div>
+            <div class="sec-body">
+              <p>The insight that resolved it: there is no single right way to remember someone, and no point at which you are finished. One visitor wants to hear the voice. Another wants to see the face. Another wants to know they weren't the only one who felt that way about him.</p>
+              <p>So the output layer isn't one artifact. It's several ways in, and no prescribed path between them:</p>
+            </div>
+          </div>
+
+          <div class="bento-5">
+            <div class="cell">
+              <h3>Slideshow</h3>
+              <p>The first thing a visitor meets. It requires no decision and no interaction; it simply plays.</p>
+            </div>
+            <div class="cell">
+              <h3>Constellation — Themes</h3>
+              <p>Synthesized memories rendered as connected points of light rather than paragraphs — who he was, assembled from what many people independently remembered.</p>
+            </div>
+            <div class="cell">
+              <h3>Constellation — Relationships</h3>
+              <p>The same structure, read a second way: who remembered him, and how.</p>
+            </div>
+            <div class="cell">
+              <h3>Voices</h3>
+              <p>The recordings, kept as sound. Some things should not be transcribed.</p>
+            </div>
+            <div class="cell">
+              <h3>Photos</h3>
+              <p>Browsable by album or by contributor, so a visitor can follow either the moment or the person who kept it.</p>
+            </div>
+          </div>
+
+          <div class="ph ph-inline"><span class="cap">Constellation — Themes &amp; Relationships</span></div>
+
+          <div class="pullquote">
+            <p>The constellation reframes a life as something you wander rather than something you finish reading — closer to how remembering actually works.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="iterations">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Iterations</div>
+              <h2>Directional signals, not validated findings</h2>
+            </div>
+            <div class="sec-body">
+              <p>The changes below did not come from user testing, which we were not able to run. They came from internal design critique and from constraints surfaced during development. Even without testing, they produced the most important change in the product.</p>
+            </div>
+          </div>
+
+          <div class="ba-row">
+            <div class="cell">
+              <div class="tag">Before</div>
+              <p>The first version was an AI-surfacing-themes feature. It grouped memories into themes and, when opened, assembled them into a produced sequence — essentially the Apple Photos Memories model applied to grief.</p>
+            </div>
+            <div class="cell">
+              <div class="tag">After</div>
+              <p>I rebuilt it as something to move through instead of something to receive. No produced sequence, no correct order, no completion state. The visitor wanders; the system doesn't perform. The AI still does the same synthesis underneath — it simply stopped taking credit for it.</p>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>The critique that named the problem</h2>
+            </div>
+            <div class="sec-body">
+              <p>In team critique, the problem got named: the interaction was working perfectly and saying the wrong thing. That model tells the user <em class="highlight">the system has organized this for you; here is your package.</em> It makes the AI the author. It was the clearest possible violation of the principle we had set — and it was invisible as a problem until someone said it out loud, because nothing about it was broken.</p>
+              <p>Relationship color-coding was added in a subsequent pass, mapping family, friend, colleague, and other to distinct colors. This is what eventually made the second reading of the constellation possible, and turned "what he was like" into "who he was to people."</p>
+            </div>
+          </div>
+
+          <div class="bento-2">
+            <div class="cell">
+              <h3>One dashboard instead of a navigation tab</h3>
+              <div class="ph"><span class="cap">Organizer dashboard, adaptive states</span></div>
+              <p>Managing multiple memorials used to live in its own navigation tab, separate from the dashboard. I removed the tab and folded everything into a single organizer dashboard that adapts across three states — new, in progress, and completed. An organizer lands where they need to be instead of navigating to it. During the hardest weeks of someone's life, a menu is a tax.</p>
+            </div>
+            <div class="cell">
+              <h3>Team-level scope decisions</h3>
+              <div class="ph"><span class="cap">Share flow, before &amp; after</span></div>
+              <p>The team also cut video from the MVP, split audio into two distinct cases (original voice recordings versus speech captured during the interview), and converted the share flow from a full page into a focused pop-up that visually distinguishes a contributor invitation from a viewer link — two emotionally different acts that had looked identical.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="reflection">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Reflection</div>
+              <h2>A feature can work perfectly and still say the wrong thing</h2>
+            </div>
+            <div class="sec-body">
+              <p>The constellation rebuild is what I took from this project. The original version had no usability problem. It was smooth, familiar, and borrowed from a pattern people already understood. It was wrong anyway, because a pattern carries meaning independent of whether it functions — and the meaning that Apple Photos carries is <em class="highlight">the system did this for you.</em> In a grief context, that is the one message the product could not send.</p>
+              <p class="highlight">The harder half of designing with AI wasn't capability. It was tone.</p>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>Next steps</h2>
+            </div>
+            <div class="sec-body">
+              <p>The prototype is live, but it has never been in front of a grieving family. The first thing I would test is not usability. It's whether the constellation is meaningful or merely pretty — a distinction that a task-completion metric cannot detect and that only a real visitor can answer. I would run moderated sessions with actual viewers and organizers, and watch for one thing: whether someone moving through the constellation is remembering a person, or looking at a visualization.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pagefoot">
+        <a href="index.html">Back to home</a>
+        <a id="backToTop2">Back to top</a>
+      </footer>
+    </main>
+   </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const scroller = document.getElementById('pageScroll');
+  const sections = Array.from(document.querySelectorAll('main section.block'));
+  const tocItems = Array.from(document.querySelectorAll('#tocList li'));
+  const tocMap = new Map(tocItems.map(li => [li.dataset.target, li]));
+
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const li = tocMap.get(entry.target.id);
+      if (!li) return;
+      if (entry.isIntersecting) {
+        tocItems.forEach(x => x.classList.remove('active'));
+        li.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  sections.forEach(s => spy.observe(s));
+
+  const reveal = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        reveal.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => reveal.observe(el));
+
+  document.querySelectorAll('#backToTop, #backToTop2').forEach(el => {
+    el.addEventListener('click', () => scroller.scrollTo({ top: 0, behavior: 'smooth' }));
+  });
+
+  const track = document.getElementById('progressTrack');
+  const TICK_COUNT = 28;
+  const BULGE_SIGMA = 3;
+  const BULGE_AMPLITUDE = 0.8;
+  const ticks = [];
+  for (let i = 0; i < TICK_COUNT; i++) {
+    const t = document.createElement('div');
+    t.className = 'tick' + (i % 4 === 0 ? ' major' : '');
+    track.appendChild(t);
+    ticks.push(t);
+  }
+  const endTick = document.createElement('div');
+  endTick.className = 'tick end';
+  track.appendChild(endTick);
+
+  let ticking = false;
+  function updateProgress(){
+    const max = scroller.scrollHeight - scroller.clientHeight;
+    const pct = max > 0 ? scroller.scrollTop / max : 0;
+    const center = pct * (TICK_COUNT - 1);
+    ticks.forEach((t, i) => {
+      const d = i - center;
+      const scale = 1 + BULGE_AMPLITUDE * Math.exp(-(d * d) / (2 * BULGE_SIGMA * BULGE_SIGMA));
+      t.style.transform = `scaleX(${scale.toFixed(3)})`;
+    });
+
+    const atBottom = pct >= 0.995;
+    endTick.classList.toggle('active', atBottom);
+    endTick.style.transform = atBottom ? 'scaleX(1.6)' : 'scaleX(1)';
+    ticking = false;
+  }
+  scroller.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(updateProgress); ticking = true; }
+  }, { passive: true });
+  updateProgress();
+})();
+</script>
+</body>
+</html>
