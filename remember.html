@@ -192,13 +192,10 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .ba-row .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 @media (max-width:900px){.ba-row{grid-template-columns:1fr}.ba-row .cell{border-left:none;border-top:1px solid var(--line)}.ba-row .cell:first-child{border-top:none}}
 
-/* ── Palette swatches ─────────────────────────────────────────────────── */
-.palette-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.swatch{border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line)}
-.swatch .fill{width:100%;aspect-ratio:2/1}
-.swatch .label{padding:16px 18px}
-.swatch .label .name{font-size:15px;color:var(--ink)}
-.swatch .label .hex{margin-top:4px;font-size:12.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+/* ── Product flow diagram — simplified swim-lane flowchart ──────────────── */
+.flow-diagram{margin-top:32px;padding:32px;border:1px solid var(--line);border-radius:var(--r-sm);overflow-x:auto}
+.flow-diagram svg{display:block;width:100%;height:auto;min-width:640px}
+.flow-caption{margin-top:12px;font-size:12.5px;color:var(--faint)}
 
 .pullquote{margin:32px 0;padding-left:20px;border-left:1px solid var(--line)}
 .pullquote p{margin:0;max-width:56ch;color:var(--ink);font-size:clamp(19px,2.1vw,24px);line-height:1.4;font-style:italic}
@@ -237,7 +234,6 @@ footer.pagefoot a:hover{color:var(--ink)}
   .stat-cells{grid-template-columns:1fr;gap:20px}
   .metrics-row{grid-template-columns:1fr;gap:20px}
   .highlight-row{grid-template-columns:1fr;gap:24px}
-  .palette-row{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -294,7 +290,7 @@ footer.pagefoot a:hover{color:var(--ink)}
         <div class="meta">
           <div class="meta-item"><span class="k">Team &amp; Role</span><span class="v">3 Designers · 1 PM · 5 Frontend Developers</span></div>
           <div class="meta-item"><span class="k">My Role</span><span class="v">Output Layer Design · Organizer Dashboard Scope</span></div>
-          <div class="meta-item"><span class="k">Timeline</span><span class="v">Apr 2026 - Jun 2026</span></div>
+          <div class="meta-item"><span class="k">Timeline</span><span class="v">May 2025 – Jun 2025 (cohort demo)</span></div>
         </div>
 
         <div class="ph ph-hero"></div>
@@ -312,6 +308,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             <div class="sec-body">
               <p>Remember turns memories held by many people into one memorial for the person who has died. One person — the organizer — creates the memorial and invites family and friends to contribute. Contributors respond to a guided interview rather than facing a blank page, sharing stories, voice recordings, and photos.</p>
               <p>Those fragments are then synthesized into a single memorial that anyone can visit, moving between a slideshow, a constellation of themes and relationships, recorded voices, and a photo archive. The organizer manages it all from one dashboard, from the first invitation to the finished memorial.</p>
+              <p>Remember was built by a cohort team — a PM, a tech lead, three designers, and five frontend developers — toward a working demo on June 16, 2025. It ships as a one-time purchase per memorial, not a subscription: the organizer pays once, and the memorial stays theirs.</p>
             </div>
           </div>
           <div class="ph ph-inline"></div>
@@ -328,6 +325,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             <div class="sec-body">
               <p>When someone dies, no one holds the whole picture. A friend remembers a conversation. A cousin has the only photo from that summer. A sibling saved a voicemail and can't bring themselves to delete it. Each piece is real, and each one is partial.</p>
               <p>The tools families reach for are not built to hold any of this. Group chats bury a story under the next message. Shared drives turn a life into a folder of filenames. Social media walls flatten condolences and memories into the same scroll, then move on.</p>
+              <p>Grief research backs this up in a specific way: vague memories disappear and specific ones stay. "She was a great mom" fades. The exact, oddly precise detail — the extra syllable she added to a word, the receipt she kept — is what people actually hold onto. And of every kind of memory, voice is the one people fear losing most: they resave voicemails for years just to keep them from auto-deleting, and keep dead phones charged just to hear a greeting again.</p>
               <p>So families end up with more fragments than they started with — and still no memorial.</p>
             </div>
           </div>
@@ -345,6 +343,7 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>We began by treating this as a collection problem: build a good way to gather memories from a lot of people. But collection turned out to be the easy half. The moment we imagined fifty submissions arriving — different voices, different lengths, some a paragraph, some a single sentence — the real question surfaced.</p>
               <p class="highlight">How do you turn many people's fragments into something that feels authored?</p>
               <p>That is genuinely hard, and it is the kind of hard that AI is good at. But it introduced the tension that shaped every decision after it. Grief is not a context that tolerates a chatbot, a sparkle icon, or a "generating…" state. The moment a grieving person can see the machine working, the memorial stops being about the person who died.</p>
+              <p>A research synthesis we pulled together from grief forums, obituaries, eulogies, and bereavement studies pointed at what the AI should actually be looking for. Across hundreds of firsthand accounts, the moment people describe as a gift — not a burden — is finding out something about the person they didn't already know: a story a coworker had never told, a letter that showed a side of someone no family member had seen. That became the north star for the synthesis engine: don't just summarize what's there, surface what nobody in the room already knew.</p>
             </div>
           </div>
           <div class="pullquote">
@@ -365,20 +364,7 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>Weight carries the same idea. Bold is reserved almost entirely for quotes — the actual words people wrote about the person. The interface stays quiet so the memories carry the emphasis. What a visitor should notice is what someone said, not the thing displaying it.</p>
             </div>
           </div>
-          <div class="palette-row">
-            <div class="swatch">
-              <div class="fill" style="background:#FBF9F6;border-bottom:1px solid var(--line)"></div>
-              <div class="label"><div class="name">Soft cream — background</div><div class="hex">#FBF9F6</div></div>
-            </div>
-            <div class="swatch">
-              <div class="fill" style="background:#423F39"></div>
-              <div class="label"><div class="name">Deep warm brown — type</div><div class="hex">#423F39</div></div>
-            </div>
-            <div class="swatch">
-              <div class="fill" style="background:#97877B"></div>
-              <div class="label"><div class="name">Muted taupe — supporting</div><div class="hex">#97877B</div></div>
-            </div>
-          </div>
+          <div class="ph ph-inline" style="aspect-ratio:1494/932;background:none"><img src="images/RememberDesignSystem.png" alt="Remember design system — typography, color, iconography and components"></div>
         </div>
       </section>
 
@@ -428,7 +414,72 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>Alongside design work, I ran the designer–developer syncs and coordinated handoff sequencing, so that five frontend developers were never blocked waiting on design.</p>
             </div>
           </div>
-          <div class="ph ph-inline"></div>
+          <div class="flow-diagram">
+            <svg viewBox="0 0 960 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Product flow: the organizer creates a memorial and shares an invite link; the contributor answers questions and uploads photos and voice; contributions flow back to the organizer, who reviews and generates the memorial.">
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" fill="var(--faint)"/>
+                </marker>
+              </defs>
+
+              <text x="38" y="26" font-size="11" letter-spacing="1.5" fill="var(--faint)" font-family="Inter, -apple-system, sans-serif">ORGANIZER</text>
+              <text x="38" y="201" font-size="11" letter-spacing="1.5" fill="var(--faint)" font-family="Inter, -apple-system, sans-serif">CONTRIBUTOR</text>
+
+              <!-- horizontal connectors, organizer row -->
+              <line x1="122" y1="100" x2="198" y2="100" stroke="var(--faint)" stroke-width="1.3" marker-end="url(#arrow)"/>
+              <line x1="825" y1="100" x2="855" y2="100" stroke="var(--faint)" stroke-width="1.3" marker-end="url(#arrow)"/>
+
+              <!-- horizontal connectors, contributor row -->
+              <line x1="332" y1="280" x2="412" y2="280" stroke="var(--faint)" stroke-width="1.3" marker-end="url(#arrow)"/>
+              <line x1="625" y1="280" x2="685" y2="280" stroke="var(--faint)" stroke-width="1.3" marker-end="url(#arrow)"/>
+
+              <!-- cross-lane: invite sent down -->
+              <line x1="290" y1="138" x2="290" y2="235" stroke="var(--faint)" stroke-width="1.3" marker-end="url(#arrow)"/>
+              <text x="300" y="192" font-size="11" fill="var(--faint)" font-family="Inter, -apple-system, sans-serif">Invite sent</text>
+
+              <!-- cross-lane: contributions collected up -->
+              <line x1="730" y1="235" x2="730" y2="138" stroke="var(--faint)" stroke-width="1.3" marker-end="url(#arrow)"/>
+              <text x="740" y="192" font-size="11" fill="var(--faint)" font-family="Inter, -apple-system, sans-serif">Contributions</text>
+              <text x="740" y="206" font-size="11" fill="var(--faint)" font-family="Inter, -apple-system, sans-serif">collected</text>
+
+              <!-- O1: start circle -->
+              <circle cx="80" cy="100" r="42" fill="var(--paper)" stroke="var(--faint)" stroke-width="1.3"/>
+              <text x="80" y="96" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Creates</text>
+              <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Memorial</text>
+
+              <!-- O2: action rect -->
+              <rect x="195" y="62" width="190" height="76" rx="10" fill="var(--line)" stroke="var(--faint)" stroke-width="1.3"/>
+              <text x="290" y="96" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Generates &amp;</text>
+              <text x="290" y="112" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Shares Invite Link</text>
+
+              <!-- C1: status circle -->
+              <circle cx="290" cy="280" r="42" fill="var(--paper)" stroke="var(--faint)" stroke-width="1.3"/>
+              <text x="290" y="276" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Opens</text>
+              <text x="290" y="290" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Invite Link</text>
+
+              <!-- C2: action rect -->
+              <rect x="412" y="242" width="213" height="76" rx="10" fill="var(--line)" stroke="var(--faint)" stroke-width="1.3"/>
+              <text x="518" y="272" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Answers Questions,</text>
+              <text x="518" y="288" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Uploads Photos &amp; Voice</text>
+              <text x="518" y="304" text-anchor="middle" font-size="10" fill="var(--faint)" font-family="Inter, -apple-system, sans-serif">(voice optional)</text>
+
+              <!-- C3: status circle -->
+              <circle cx="730" cy="280" r="42" fill="var(--paper)" stroke="var(--faint)" stroke-width="1.3"/>
+              <text x="730" y="276" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Submission</text>
+              <text x="730" y="290" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Confirmed</text>
+
+              <!-- O3: action rect -->
+              <rect x="635" y="62" width="190" height="76" rx="10" fill="var(--line)" stroke="var(--faint)" stroke-width="1.3"/>
+              <text x="730" y="96" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Reviews Flags,</text>
+              <text x="730" y="112" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Previews Themes</text>
+
+              <!-- O4: end circle -->
+              <circle cx="898" cy="100" r="42" fill="var(--paper)" stroke="var(--faint)" stroke-width="1.3"/>
+              <text x="898" y="96" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Memorial</text>
+              <text x="898" y="110" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="Inter, -apple-system, sans-serif">Shared</text>
+            </svg>
+            <p class="flow-caption">Simplified product flow — the organizer's and contributor's paths, and where they cross.</p>
+          </div>
         </div>
       </section>
 
@@ -456,24 +507,24 @@ footer.pagefoot a:hover{color:var(--ink)}
 
           <div class="bento-5">
             <div class="cell">
-              <h3>Slideshow</h3>
-              <p>The first thing a visitor meets. It requires no decision and no interaction; it simply plays.</p>
+              <h3>Story</h3>
+              <p>A slideshow, each frame a photo paired with the quote or memory it belongs to, sequenced to read as one narrative. The first thing a visitor meets — no decision required, it simply plays at their own pace.</p>
             </div>
             <div class="cell">
               <h3>Constellation — Themes</h3>
-              <p>Synthesized memories rendered as connected points of light rather than paragraphs — who he was, assembled from what many people independently remembered.</p>
+              <p>Synthesized memories rendered as connected points of light rather than paragraphs. Each theme carries a short summary and the real contributor quotes it was built from — never AI prose standing alone.</p>
             </div>
             <div class="cell">
               <h3>Constellation — Relationships</h3>
-              <p>The same structure, read a second way: who remembered him, and how.</p>
+              <p>The same map, filtered by who's speaking — family, friend, colleague, community — so a visitor can see how differently each circle experienced the same person.</p>
             </div>
             <div class="cell">
               <h3>Voices</h3>
-              <p>The recordings, kept as sound. Some things should not be transcribed.</p>
+              <p>Every recording, kept as sound first, with a transcript underneath for anyone who wants to read instead of listen. Some things should not be transcribed-only.</p>
             </div>
             <div class="cell">
-              <h3>Photos</h3>
-              <p>Browsable by album or by contributor, so a visitor can follow either the moment or the person who kept it.</p>
+              <h3>All Photos</h3>
+              <p>Every submitted photo, sorted into albums the AI names from what's actually in them, not by upload date — then browsable chronologically once you're inside one.</p>
             </div>
           </div>
 
@@ -527,7 +578,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             <div class="cell">
               <h3>Team-level scope decisions</h3>
               <div class="ph"><span class="cap">Share flow, before &amp; after</span></div>
-              <p>The team also cut video from the MVP, split audio into two distinct cases (original voice recordings versus speech captured during the interview), and converted the share flow from a full page into a focused pop-up that visually distinguishes a contributor invitation from a viewer link — two emotionally different acts that had looked identical.</p>
+              <p>For a demo-day MVP, the team drew hard lines: no mobile app, one memorial per account, and no organizer editing of AI-generated content — the output ships as the AI produced it, or not at all. We also converted the share flow from a full page into a focused pop-up that visually distinguishes a contributor invitation from a viewer link — two emotionally different acts that had looked identical.</p>
             </div>
           </div>
         </div>
@@ -552,6 +603,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
             <div class="sec-body">
               <p>The prototype is live, but it has never been in front of a grieving family. The first thing I would test is not usability. It's whether the constellation is meaningful or merely pretty — a distinction that a task-completion metric cannot detect and that only a real visitor can answer. I would run moderated sessions with actual viewers and organizers, and watch for one thing: whether someone moving through the constellation is remembering a person, or looking at a visualization.</p>
+              <p>The research also points past the demo. Memory research shows grief moves in stages: a foggy first year, active reminiscing from years two to five, then a fade that sets in around year five to fifteen, when the specific scenes go first and only generalizations remain. That means a memorial's highest emotional value isn't the week it's built — it's a decade out, when someone's own memory of a voice or a face has started to soften and Remember is the thing that still has it exactly. We built for the demo. The real product has to be built for the ten-year user, still able to accept new contributions, still worth opening, long after the memorial was finished.</p>
             </div>
           </div>
         </div>

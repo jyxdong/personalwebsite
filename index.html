@@ -254,13 +254,7 @@ const TEX = {
     label(c,s,'Artisk Redesign');
   }),
   lumino: new THREE.TextureLoader().load('images/LuminoSign.png'),
-  remember: mkTex((c,s)=>{
-    c.fillStyle='#0d4d68'; c.fillRect(0,0,s,s);
-    [[.07,.07,.86,.19,'rgba(70,220,180,.6)'],[.10,.29,.80,.16,'rgba(255,185,55,.55)'],
-     [.12,.48,.76,.14,'rgba(210,90,230,.55)'],[.15,.65,.70,.12,'rgba(90,185,255,.5)']
-    ].forEach(a=>{c.fillStyle=a[4];c.roundRect(a[0]*s,a[1]*s,a[2]*s,a[3]*s,7);c.fill();});
-    label(c,s,'Remember');
-  }),
+  remember: new THREE.TextureLoader().load('images/RememberSign.png'),
   proj4: mkTex((c,s)=>{
     c.fillStyle='#d42c3e'; c.fillRect(0,0,s,s);
     const tri=(ax,ay,bx,by,cx2,cy2,col)=>{
@@ -348,6 +342,7 @@ const DEFS=[
   {label:'Project 05',      key:'proj5',    shape:'hrect',    w:2.85,h:1.45, y:-3.85, deg:310},
 ];
 
+const PROJECT_PAGES={lumino:'lumino.html', remember:'remember.html'};
 const clickables=[];
 
 function buildSign(def){
@@ -447,9 +442,10 @@ function focusSign(entry){
     busy=false;
     ltxt.textContent=entry.def.label;
     lbl.classList.add('on'); hint.classList.add('on');
-    if(entry.def.key==='lumino'){
+    const page=PROJECT_PAGES[entry.def.key];
+    if(page){
       lbl.classList.add('clickable');
-      lbl.onclick=function(e){ e.stopPropagation(); window.location.href='lumino.html'; };
+      lbl.onclick=function(e){ e.stopPropagation(); window.location.href=page; };
     } else {
       lbl.classList.remove('clickable');
       lbl.onclick=null;
