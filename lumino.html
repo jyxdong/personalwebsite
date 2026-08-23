@@ -53,9 +53,6 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .nav-tabs a.tab-about.active{background:#CBFF71;color:#000}
 .nav-tabs a.tab-work.active{background:#FF8418;color:#000}
 .nav-tabs a.tab-play.active{background:#00D0FF;color:#000}
-.nav-icon-btn{flex:0 0 40px;width:40px;height:40px;border-radius:999px;border:none;cursor:pointer;background:#f4f4f4;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:background .2s;text-decoration:none}
-.nav-icon-btn svg{width:18px;height:18px}
-.nav-icon-btn:hover{background:#e9e9e9}
 
 /* ── Shell: a fixed viewport-height row. Neither the rail nor the content
    frame ever move — each is its own independent scroll box, so momentum
@@ -219,7 +216,8 @@ section.block:first-of-type{padding-top:72px;border-top:1px solid var(--line);ma
 .sec-body > ul:first-child{margin-top:0}
 .ph-inline + .sec-grid,
 .ph-row + .sec-grid,
-.stat-cells + .sec-grid{margin-top:44px}
+.stat-cells + .sec-grid,
+.highlight-row + .sec-grid{margin-top:44px}
 
 /* The tag floats above sec-head instead of taking up flow space, so
    sec-head's own top edge is the H2's top edge — that's what the grid's
@@ -239,20 +237,13 @@ ul.insights em{font-style:italic;color:var(--ink)}
 /* Methods footnote: L5 */
 .methods{margin-top:16px;font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:16px}
 
-/* ── Bento grids (decisions / testing) — hairline only, headings are L3
+/* ── Bento grid (testing) — hairline only, headings are L3
    (h3, subordinate to the section's own H2), body copy is L4. ─────────── */
-.bento-2{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.bento-2 .cell{padding:32px;border-left:1px solid var(--line)}
-.bento-2 .cell:first-child{border-left:none}
-.bento-2 .cell h3{font-size:15px;font-weight:400}
-.bento-2 .cell .ph{margin-top:16px;aspect-ratio:4/3}
-.bento-2 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
-
 .bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
 .bento-3 .cell:first-child{border-left:none}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
-.bento-3 .cell h3.highlight{font-size:clamp(16px,1.6vw,18px)}
+.bento-3 .cell h3.highlight{font-size:clamp(18px,1.8vw,20px)}
 .bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
 /* ── Insight cells — same tag/H2/body type as a normal sec-grid, just
@@ -279,6 +270,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 /* ── Highlight — a non-heading use of the serif face: upright, regular
    weight, same size as whatever context it sits in. ────────────────────── */
 .highlight{font-family:'Source Serif 4',serif;font-style:normal;font-weight:400}
+#system .sec-body p.highlight{font-size:18px}
 .stat-cells h2.highlight,
 .metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
 .metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
@@ -286,7 +278,8 @@ ul.insights em{font-style:italic;color:var(--ink)}
 /* ── Highlight row (Reflection + Next Steps) — three centered cards, each
    a larger centered "highlight" line over a normal paragraph. ──────────── */
 .highlight-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
-.highlight-item .highlight{display:block;text-align:center;font-size:clamp(16px,1.6vw,18px);line-height:1.3}
+.highlight-row.cols-2{grid-template-columns:repeat(2,1fr)}
+.highlight-item .highlight{display:block;text-align:left;font-size:clamp(18px,1.8vw,20px);line-height:1.3}
 .highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
 .metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
@@ -318,7 +311,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .compare-slider.paired{gap:16px;height:calc(var(--cmp-unit-w,220px) * 764 / 375)}
 .cmp-frame{position:relative;flex:1 1 0;height:100%;border-radius:var(--r-sm);overflow:hidden;cursor:ew-resize;user-select:none;touch-action:none}
 .cmp-frame img,.cmp-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
-.cmp-after-video{object-position:50% 50%;transform:scale(1.03)}
+.cmp-after-video{object-position:50% 50%;transform:scale(1.02)}
 .cmp-before-wrap{position:absolute;inset:0;overflow:hidden}
 .cmp-handle{position:absolute;top:0;bottom:0;left:50%;width:0;z-index:3;pointer-events:none}
 .cmp-handle::before{content:"";position:absolute;top:0;bottom:0;left:-1px;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(17,17,17,.15)}
@@ -370,9 +363,9 @@ footer.pagefoot a:hover{color:var(--ink)}
   .content-frame{overflow:visible;border-radius:24px}
   #pageScroll{height:auto;overflow:visible}
   .inner,main{padding-left:24px;padding-right:24px}
-  .bento-2,.bento-3,.insight-cells{grid-template-columns:1fr}
-  .bento-2 .cell,.bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
-  .bento-2 .cell:first-child,.bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
+  .bento-3,.insight-cells{grid-template-columns:1fr}
+  .bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
+  .bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
   .stat-cells{grid-template-columns:1fr;gap:20px}
   .metrics-row{grid-template-columns:1fr;gap:20px}
   .highlight-row{grid-template-columns:1fr;gap:24px}
@@ -387,16 +380,7 @@ footer.pagefoot a:hover{color:var(--ink)}
       <a href="index.html" class="tab-about">About</a>
       <a href="work.html" class="tab-work active">Work</a>
       <a href="play.html" class="tab-play">Play</a>
-    </div>
-    <a class="nav-icon-btn" href="https://drive.google.com/file/d/1VkgR9_d0P5G2in3TYsN-1l_7hXY_21DG/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="Resume">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <path d="M14 2v6h6"/>
-        <line x1="8" y1="13" x2="16" y2="13"/>
-        <line x1="8" y1="17" x2="16" y2="17"/>
-      </svg>
-    </a>
-  </nav>
+    </div>  </nav>
 </div>
 
 <div class="shell">
@@ -408,7 +392,7 @@ footer.pagefoot a:hover{color:var(--ink)}
       <li data-target="problem"><a href="#problem">Problem</a></li>
       <li data-target="research"><a href="#research">Research to insight</a></li>
       <li data-target="system"><a href="#system">System and User</a></li>
-      <li data-target="decisions"><a href="#decisions">Key decisions</a></li>
+      <li data-target="design-process"><a href="#design-process">Design Process</a></li>
       <li data-target="testing"><a href="#testing">Testing and iterations</a></li>
       <li data-target="final-design"><a href="#final-design">Final Design</a></li>
       <li data-target="reflection"><a href="#reflection">Reflection and next steps</a></li>
@@ -554,33 +538,70 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>So parents can access the device wherever they are — a companion app is more portable than the device itself.</p>
             </div>
           </div>
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">User Flow</div>
+              <h2>How users interact through the product?</h2>
+            </div>
+            <div class="sec-body">
+              <p>This chart shows how the child's and parent's actions stay two separate flows on either side of the product, only meeting when a story alone isn't enough and the child escalates to the intercom, before the flow rejoins at the child falling asleep.</p>
+            </div>
+          </div>
           <div class="ph ph-inline" style="aspect-ratio:2864/1270;background:none"><img src="images/LuminoFlowchart.png" alt="Lumino device and app flowchart"></div>
         </div>
       </section>
 
-      <section class="block reveal" id="decisions">
+      <section class="block reveal" id="design-process">
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">Key decisions</div>
-              <h2>Two decisions, one goal: comfort in the dark</h2>
+              <div class="tag">Design Process</div>
+              <h2>Exploring the form</h2>
             </div>
             <div class="sec-body">
-              <p>How the light behaves, and how the buttons are found, are what make the device usable by a child who can't turn on the room light.</p>
+              <p>With the direction set, we sketched broadly to explore form, proportion, and how a child might physically interact with the device before narrowing down.</p>
             </div>
           </div>
-          <div class="bento-2">
-            <div class="cell">
-              <h3>The light fades as the child settles</h3>
-              <div class="ph"><span class="cap">Breathing-light rhythm</span></div>
-              <p>A nightlight that stays at a constant brightness solves one problem and creates another. Lumino's light pulses in a slow inhale-and-exhale rhythm that a child's breathing naturally follows, and overall brightness decreases as the cycle continues, so the room is dimmest by the time the child is closest to sleep. White noise can play alongside it, so the auditory and visual cues work together instead of competing for attention.</p>
+          <div class="ph ph-inline" style="aspect-ratio:1860/610;background:none"><img src="images/LuminoProcess1.jpeg" alt="Lumino design process"></div>
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>Two directions emerged</h2>
             </div>
-            <div class="cell">
-              <h3>Buttons a child can find in the dark</h3>
-              <div class="ph"><span class="cap">Button shape + size</span></div>
-              <p>The story button and the call button are shaped differently and placed on opposite sides, so a child learns them by feel within a few nights. Sizing came from pediatric anthropometric data: toddler fingertip breadth of roughly 0.4 to 0.6 inches set the minimum button size, and the top surface was sized for partial palm contact so an open-handed pat works without precise aim. Actuation resistance is high enough that rolling over in sleep won't trigger anything.</p>
+            <div class="sec-body">
+              <p>From this range of early ideas, two directions emerged, each answering the brief differently: a simple mushroom nightlight, and a more playful glass house.</p>
             </div>
           </div>
+          <div class="highlight-row cols-2">
+            <div class="highlight-item">
+              <p class="highlight">Direction: Mushroom Nightlight</p>
+              <p class="highlight-body">A simple, familiar form the child can bond with. Comfort comes through soft light from the silicon top and physical buttons. The child presses the button to play a story or to reach a parent if still awake. The interaction stays minimal by design, keeping it usable for a young child alone in the dark.</p>
+            </div>
+            <div class="highlight-item">
+              <p class="highlight">Direction: Glass House</p>
+              <p class="highlight-body">A more playful, narrative concept. A translucent glass house paired with a magnetic figurine: placing the figurine inside the house triggers a warm glow through the glass. From the small screen inside, there will also be a gentle scene related to night that the child follows along with.</p>
+            </div>
+          </div>
+
+          <div class="ph ph-inline" style="aspect-ratio:1404/738;background:none"><img src="images/LuminoProcess2.jpeg" alt="Lumino design process"></div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Challenge</div>
+              <h2>From conflict to a clear direction</h2>
+            </div>
+            <div class="sec-body">
+              <p>My teammate and I split on which direction to build — they were drawn to the glass house's storytelling, while I worried it asked too much of our users. Rather than argue preference, we evaluated both against who we were designing for.</p>
+              <p>Weighed against our users, the glass house raised three concerns: the interaction was too complex for a 3–6 year old alone in the dark, glass raised real safety worries at bedtime, and the animated scene risked engaging the child instead of settling them to sleep.</p>
+              <p>Grounding the decision in the user, not our preferences, gave us a shared way to converge. We committed to the mushroom — a clear, grounded direction to bring into 3D.</p>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Final 3D Design</div>
+            </div>
+          </div>
+          <div class="ph ph-inline" style="aspect-ratio:2820/1506;background:none"><img src="images/Lumino3DDesign.png" alt="Lumino 3D design process"></div>
         </div>
       </section>
 
