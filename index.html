@@ -173,6 +173,7 @@ const hint   = document.getElementById('hint');
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.setClearColor(0xffffff);
+renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.shadowMap.enabled = true;
 // Filmic tone mapping rolls bright highlights off smoothly instead of hard-
 // clipping to flat white — needed because curved surfaces (Lumino's circle)
@@ -208,12 +209,15 @@ const rimL = new THREE.DirectionalLight(0xffffff, 0.35);
 rimL.position.set(0,-6,4); scene.add(rimL);
 
 // ── Materials ────────────────────────────────────────────────────────────
+const structureMaterial=new THREE.MeshStandardMaterial({
+  color:0x2a2a2a, roughness:.6, metalness:.25
+});
 const M = {
-  pole:  new THREE.MeshStandardMaterial({color:0x2a2a2a, roughness:.6,  metalness:.25}),
+  pole:  structureMaterial,
   hoop:  new THREE.MeshStandardMaterial({color:0x666666, roughness:.5,  metalness:.35}),
-  back:  new THREE.MeshStandardMaterial({color:0xeeeff0, roughness:.65, metalness:.12}),
-  frame: new THREE.MeshStandardMaterial({color:0xf6f6f6, roughness:.6,  metalness:.08}),
-  arm:   new THREE.MeshStandardMaterial({color:0x2a2a2a, roughness:.6,  metalness:.25}),
+  back:  new THREE.MeshStandardMaterial({color:0xe6e7e8, roughness:.46, metalness:.4}),
+  frame: new THREE.MeshStandardMaterial({color:0xf1f1ef, roughness:.42, metalness:.44}),
+  arm:   structureMaterial,
 };
 
 // ── Placeholder textures ─────────────────────────────────────────────────
@@ -280,12 +284,12 @@ const TEX = {
   }),
 };
 
-// Brushed-metal plate finish: moderate metalness/roughness for a soft
-// sheen, without a baked highlight texture (that caused banding) and
-// safe from blowout now that the renderer's tone mapping rolls off
-// bright highlights instead of hard-clipping them to solid white.
-M.back.roughness  = .55; M.back.metalness  = .3;
-M.frame.roughness = .45; M.frame.metalness = .35;
+// Treat the artwork as printed colour rather than a reflective surface.
+// Explicit sRGB encoding keeps both image files and canvas textures from
+// looking muted when rendered through the WebGL colour pipeline.
+Object.keys(TEX).forEach(key=>{
+  TEX[key].encoding=THREE.sRGBEncoding;
+});
 
 // ── Shape helpers ────────────────────────────────────────────────────────
 function rrShape(w,h,r){
@@ -316,14 +320,32 @@ function circleShape(r){
   return s;
 }
 
+// ShapeGeometry inherits world-space UVs, which clips or repeats artwork when
+// signs use different dimensions. Remap every front face to a full 0–1 UV box
+// so each PNG fills its complete visible sign aperture.
+function fitGeometryUVs(geo){
+  geo.computeBoundingBox();
+  const box=geo.boundingBox;
+  const dx=box.max.x-box.min.x || 1;
+  const dy=box.max.y-box.min.y || 1;
+  const pos=geo.attributes.position;
+  const uv=geo.attributes.uv;
+  for(let i=0;i<pos.count;i++){
+    uv.setXY(i,(pos.getX(i)-box.min.x)/dx,(pos.getY(i)-box.min.y)/dy);
+  }
+  uv.needsUpdate=true;
+  return geo;
+}
+
 // ── Pole ─────────────────────────────────────────────────────────────────
 const pole = new THREE.Mesh(new THREE.CylinderGeometry(.11,.135,14,20), M.pole);
 scene.add(pole);
 
-// Hoops at varied heights
+// Low-profile clamp bands at varied heights, matching the hardware in the
+// reference rather than reading as oversized rings around the pole.
 [-4.3,-2.9,-1.4,.2,1.5,2.8,4.0].forEach(y=>{
-  const h=new THREE.Mesh(new THREE.TorusGeometry(.20,.038,8,24),M.hoop);
-  h.rotation.x=Math.PI/2; h.position.y=y; scene.add(h);
+  const h=new THREE.Mesh(new THREE.CylinderGeometry(.145,.145,.075,24),M.hoop);
+  h.position.y=y; scene.add(h);
 });
 
 // ── Signs ────────────────────────────────────────────────────────────────
@@ -348,62 +370,89 @@ const clickables=[];
 function buildSign(def){
   const shape=def.shape,w=def.w,h=def.h,y=def.y,key=def.key;
   const angle = def.deg * Math.PI/180;
-  const D=0.055, BW=0.1;
-  const fmat=new THREE.MeshStandardMaterial({map:TEX[key],roughness:.7,metalness:.04});
+  const D=.026, FRONT_BW=.13, REAR_BW=.18;
+  const BODY_BEV_T=.005, REAR_RIM_DEPTH=.04, REAR_RIM_BEV_T=.014;
+  const ARM_RADIUS=.024, REAR_CLEARANCE=.006;
+  const fmat=new THREE.MeshBasicMaterial({map:TEX[key],toneMapped:false});
 
   const grp=new THREE.Group();
   grp.rotation.y=angle; grp.position.y=y; scene.add(grp);
 
-  // mount bolt where the bracket meets the pole
-  const bolt=new THREE.Mesh(new THREE.SphereGeometry(.045,8,8),M.hoop);
-  bolt.position.z=.12; grp.add(bolt);
-
-  // short radial bracket reaching from the pole to the sign's inner edge
+  // Silver ball joint and slim black rod, as in the reference hardware.
+  // The rod continues across the rear face to a central mounting point, so it
+  // remains visible when the viewer rotates around to the back of the sign.
+  const jointZ=.12;
   const armLen=.5;
-  const arm=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,armLen,8),M.arm);
+  const signCenterZ=jointZ+armLen+w/2;
+  // Keep the complete rod behind the outermost rear-rim bevel. This explicit
+  // radius + clearance prevents the small edge intersection visible on the
+  // Remember sign while preserving the same bracket layout for every sign.
+  const rearMountX=-(D/2+BODY_BEV_T+REAR_RIM_DEPTH+
+    REAR_RIM_BEV_T+ARM_RADIUS+REAR_CLEARANCE);
+  const bolt=new THREE.Mesh(new THREE.SphereGeometry(.034,12,12),M.hoop);
+  bolt.position.set(rearMountX,0,jointZ); grp.add(bolt);
+
+  const rodLen=signCenterZ-jointZ;
+  const arm=new THREE.Mesh(new THREE.CylinderGeometry(
+    ARM_RADIUS,ARM_RADIUS,rodLen,10),M.arm);
   arm.rotation.x=Math.PI/2;
-  arm.position.z=.12+armLen/2; grp.add(arm);
+  arm.position.set(rearMountX,0,(jointZ+signCenterZ)/2); grp.add(arm);
+
+  const backMount=new THREE.Mesh(new THREE.SphereGeometry(.038,12,12),M.hoop);
+  backMount.position.set(rearMountX,0,signCenterZ); grp.add(backMount);
 
   // sign board: rotated 90° so its length runs radially (like a fingerpost)
   // and its flat face reads tangentially instead of pointing straight out
   const sg=new THREE.Group();
   sg.rotation.y=Math.PI/2;
-  sg.position.z=.12+armLen+w/2; grp.add(sg);
+  sg.position.z=signCenterZ; grp.add(sg);
 
   const hit=[];
 
-  // raised mounting ring: sits proud of the plate face; its outer+inner edges are
-  // beveled so they read as a rounded wrap that softly rolls back toward the rear
-  const ringDepth=.05, bevT=.032, bevS=.03;
-  function mkRing(outerShape, holeShape, curveSegs){
+  // A thin, flat aluminium base carries one independent embossed rim on each
+  // side. The rear centre itself remains a single uninterrupted flat surface.
+  const bodyBevT=BODY_BEV_T, bodyBevS=.009;
+  const ringDepth=.028, ringBevT=.011, ringBevS=.017;
+  const rearRimBevT=REAR_RIM_BEV_T, rearRimBevS=.021;
+  function mkRing(outerShape, holeShape, curveSegs, depth, bevelT, bevelS,material){
     const rs=outerShape.clone(); rs.holes.push(holeShape.clone());
-    const geo=new THREE.ExtrudeGeometry(rs,{depth:ringDepth,bevelEnabled:true,
-      bevelThickness:bevT,bevelSize:bevS,bevelSegments:6,curveSegments:curveSegs});
-    const m=new THREE.Mesh(geo,M.frame); m.position.z=D/2+.002; return m;
+    const geo=new THREE.ExtrudeGeometry(rs,{depth:depth,bevelEnabled:true,
+      bevelThickness:bevelT,bevelSize:bevelS,bevelSegments:6,curveSegments:curveSegs});
+    return new THREE.Mesh(geo,material);
   }
 
-  if(shape==='circle'){
-    const r=w/2;
-    // thin flat plate, sharp edge — plain blank back like stamped aluminum
-    const body=new THREE.Mesh(new THREE.CylinderGeometry(r,r,D,48),M.back);
-    body.rotation.x=Math.PI/2; sg.add(body); hit.push(body);
-    const front=new THREE.Mesh(new THREE.CircleGeometry(r-BW-.006,48),fmat);
-    front.position.z=D/2+.002; sg.add(front); hit.push(front);
-    const ring=mkRing(circleShape(r),circleShape(r-BW),48);
-    sg.add(ring); hit.push(ring);
-  } else {
-    const sh=shape==='triangle'?triShape(w,h):rrShape(w,h);
-    // thin flat plate, sharp edge — plain blank back like stamped aluminum
-    const back=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:D,bevelEnabled:false}),M.back);
-    back.position.z=-D/2; sg.add(back); hit.push(back);
-    // image sits flush/inset within the ring's hole
-    const inR=shape==='triangle'?.13:.11;
-    const ish=shape==='triangle'?triShape(w-BW*2,h-BW*2,inR):rrShape(w-BW*2,h-BW*2,inR);
-    const front=new THREE.Mesh(new THREE.ShapeGeometry(ish),fmat);
-    front.position.z=D/2+.002; sg.add(front); hit.push(front);
-    const ring=mkRing(sh,ish,20);
-    sg.add(ring); hit.push(ring);
+  const curveSegs=shape==='circle'?48:20;
+  const sh=shape==='circle'?circleShape(w/2):
+    shape==='triangle'?triShape(w,h):rrShape(w,h);
+  function insetShape(amount){
+    return shape==='circle'?circleShape(w/2-amount):
+      shape==='triangle'?triShape(w-amount*2,h-amount*2,.13):
+      rrShape(w-amount*2,h-amount*2,.11);
   }
+  const ish=insetShape(FRONT_BW);
+  const rearInner=insetShape(REAR_BW);
+
+  // The base is one solid thin plate, so its rear cap is completely flat.
+  const bodyGeo=new THREE.ExtrudeGeometry(sh,{depth:D,bevelEnabled:true,
+    bevelThickness:bodyBevT,bevelSize:bodyBevS,bevelSegments:5,curveSegments:curveSegs});
+  const body=new THREE.Mesh(bodyGeo,M.back);
+  body.position.z=-D/2; sg.add(body); hit.push(body);
+
+  const frontZ=D/2+bodyBevT+.002;
+  const frontGeo=fitGeometryUVs(new THREE.ShapeGeometry(ish));
+  const front=new THREE.Mesh(frontGeo,fmat);
+  front.position.z=frontZ+.002; sg.add(front); hit.push(front);
+  const frontRing=mkRing(sh,ish,curveSegs,ringDepth,ringBevT,ringBevS,M.frame);
+  frontRing.position.z=frontZ; sg.add(frontRing); hit.push(frontRing);
+
+  // Add one raised rim directly on top of the flat rear face. There is no
+  // second groove ring or inset panel underneath it.
+  const rearSurface=-D/2-bodyBevT;
+  const rearRaisedRim=mkRing(sh,rearInner,curveSegs,
+    REAR_RIM_DEPTH,rearRimBevT,rearRimBevS,M.frame);
+  rearRaisedRim.rotation.y=Math.PI;
+  rearRaisedRim.position.z=rearSurface;
+  sg.add(rearRaisedRim); hit.push(rearRaisedRim);
 
   hit.forEach(m=>{ m.userData.sign={def:def,grp:grp,sg:sg,angle:angle}; clickables.push(m); });
   return {def:def,grp:grp,sg:sg,angle:angle};
