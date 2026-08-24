@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case-transition.css">
+<script src="case-transition.js" defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -250,13 +252,7 @@ const TEX = {
     c.beginPath(); c.arc(s/2,s*.42,s*.28,0,Math.PI*2); c.stroke();
     label(c,s,'Who Am I');
   }),
-  artisk: mkTex((c,s)=>{
-    c.fillStyle='#3a8c64'; c.fillRect(0,0,s,s);
-    [[40,40,230,150,'rgba(255,230,80,.55)'],[180,120,230,170,'rgba(100,210,255,.45)'],
-     [60,230,200,160,'rgba(255,110,110,.45)'],[240,290,190,130,'rgba(255,255,255,.32)']
-    ].forEach(a=>{c.fillStyle=a[4];c.roundRect(a[0],a[1],a[2],a[3],16);c.fill();});
-    label(c,s,'Artisk Redesign');
-  }),
+  artisk: new THREE.TextureLoader().load('images/ArtiskSign.svg'),
   lumino: new THREE.TextureLoader().load('images/LuminoSign.png'),
   remember: new THREE.TextureLoader().load('images/RememberSign.png'),
   proj4: mkTex((c,s)=>{
@@ -322,8 +318,8 @@ function circleShape(r){
 
 // ShapeGeometry inherits world-space UVs, which clips or repeats artwork when
 // signs use different dimensions. Remap every front face to a full 0–1 UV box
-// so each PNG fills its complete visible sign aperture.
-function fitGeometryUVs(geo){
+// so each artwork fills its complete visible sign aperture.
+function fitGeometryUVs(geo,textureAspect){
   geo.computeBoundingBox();
   const box=geo.boundingBox;
   const dx=box.max.x-box.min.x || 1;
@@ -331,7 +327,14 @@ function fitGeometryUVs(geo){
   const pos=geo.attributes.position;
   const uv=geo.attributes.uv;
   for(let i=0;i<pos.count;i++){
-    uv.setXY(i,(pos.getX(i)-box.min.x)/dx,(pos.getY(i)-box.min.y)/dy);
+    let u=(pos.getX(i)-box.min.x)/dx;
+    // When an artwork aspect is supplied, fit its full height to the plate and
+    // crop equal amounts from the left and right instead of stretching it.
+    if(textureAspect){
+      const visibleWidth=(dx/dy)/textureAspect;
+      u=.5+(u-.5)*visibleWidth;
+    }
+    uv.setXY(i,u,(pos.getY(i)-box.min.y)/dy);
   }
   uv.needsUpdate=true;
   return geo;
@@ -357,14 +360,14 @@ scene.add(pole);
 // around the pole; the back shows from the opposite tangential side.
 const DEFS=[
   {label:'Who Am I',        key:'whoAmI',   shape:'square',   w:2.2, h:2.2,  y:4.4,   deg:25},
-  {label:'Artisk Redesign', key:'artisk',   shape:'hrect',    w:3.3, h:1.65, y:-0.9,  deg:70},
+  {label:'Artisk Redesign', key:'artisk',   shape:'hrect',    w:3.3, h:1.65, y:-0.9,  deg:70, textureAspect:1395/384},
   {label:'Lumino',          key:'lumino',   shape:'square',   w:2.1, h:2.1,  y:0.8,   deg:140},
   {label:'Remember',        key:'remember', shape:'circle',   w:2.1, h:2.1,  y:2.55,  deg:195},
   {label:'Project 04',      key:'proj4',    shape:'triangle', w:2.3, h:2.0,  y:-2.5,  deg:250},
   {label:'Project 05',      key:'proj5',    shape:'hrect',    w:2.85,h:1.45, y:-3.85, deg:310},
 ];
 
-const PROJECT_PAGES={lumino:'lumino.html', remember:'remember.html'};
+const PROJECT_PAGES={artisk:'artisk.html',lumino:'lumino.html',remember:'remember.html'};
 const clickables=[];
 
 function buildSign(def){
@@ -439,7 +442,7 @@ function buildSign(def){
   body.position.z=-D/2; sg.add(body); hit.push(body);
 
   const frontZ=D/2+bodyBevT+.002;
-  const frontGeo=fitGeometryUVs(new THREE.ShapeGeometry(ish));
+  const frontGeo=fitGeometryUVs(new THREE.ShapeGeometry(ish),def.textureAspect);
   const front=new THREE.Mesh(frontGeo,fmat);
   front.position.z=frontZ+.002; sg.add(front); hit.push(front);
   const frontRing=mkRing(sh,ish,curveSegs,ringDepth,ringBevT,ringBevS,M.frame);
@@ -494,7 +497,10 @@ function focusSign(entry){
     const page=PROJECT_PAGES[entry.def.key];
     if(page){
       lbl.classList.add('clickable');
-      lbl.onclick=function(e){ e.stopPropagation(); window.location.href=page; };
+      lbl.onclick=function(e){
+        e.stopPropagation();
+        window.CaseTransitions.navigate(page);
+      };
     } else {
       lbl.classList.remove('clickable');
       lbl.onclick=null;

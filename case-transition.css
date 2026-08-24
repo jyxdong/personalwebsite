@@ -1,0 +1,51 @@
+/* Shared signpost → case-study transition. The white panel is animated with
+   transforms so the browser can keep the hand-off smooth between documents. */
+.case-transition-frame{
+  position:fixed;
+  z-index:80;
+  background:#fff;
+  pointer-events:none;
+  transform-origin:0 0;
+  will-change:transform,border-radius;
+}
+
+body.case-transitioning{
+  pointer-events:none;
+}
+body.case-transitioning #introRail{
+  opacity:0;
+  transform:translateX(-56px);
+  transition:opacity .34s ease,transform .68s cubic-bezier(.65,0,.35,1);
+}
+body.case-transitioning #contentWrap{
+  visibility:hidden;
+}
+
+/* The expanded 3D frame lands at the content-frame dimensions. On the new
+   page that white frame is already in place; its contents fade in while the
+   directory repeats the left-to-right entrance used by the About cards. */
+html.case-from-sign .rail-frame{
+  opacity:0;
+  transform:translateX(-60px);
+}
+html.case-from-sign .content-frame > *{
+  opacity:0;
+}
+html.case-from-sign.case-entry-ready .rail-frame{
+  opacity:1;
+  transform:translateX(0);
+  transition:opacity .48s ease .12s,
+    transform .6s cubic-bezier(.65,0,.35,1) .12s;
+}
+html.case-from-sign.case-entry-ready .content-frame > *{
+  opacity:1;
+  transition:opacity .36s ease .08s;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .case-transition-frame{display:none}
+  body.case-transitioning #introRail{opacity:1;transform:none;transition:none}
+  body.case-transitioning #contentWrap{visibility:visible}
+  html.case-from-sign .rail-frame{opacity:1;transform:none;transition:none}
+  html.case-from-sign .content-frame > *{opacity:1;transition:none}
+}
