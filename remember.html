@@ -101,10 +101,14 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 /* ── Placeholder image blocks ────────────────────────────────────────── */
 .ph{position:relative;background:repeating-linear-gradient(45deg,#ececec 0 12px,#f4f4f4 12px 24px);border-radius:var(--r-sm);overflow:hidden}
 .ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
-.ph-inline{margin-top:32px;width:100%;aspect-ratio:16/9}
-.ph-row{margin-top:32px;display:flex;gap:16px}
+.ph-inline{margin-top:40px;width:100%;aspect-ratio:16/9}
+.ph-row{margin-top:40px;display:flex;gap:16px}
 .ph-row .ph{margin-top:0;flex:1 1 0;aspect-ratio:16/9}
 .ph img,.ph video{width:100%;height:100%;object-fit:cover;display:block}
+.ph-row-captions{margin-top:24px;display:flex;gap:16px}
+.ph-row-captions .cap-block{flex:1 1 0}
+.ph-row-captions .cap-block .tag{display:block;margin-bottom:6px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.ph-row-captions .cap-block p{margin-top:0;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .ph .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 14px;background:linear-gradient(to top, rgba(17,17,17,.55), transparent);color:#fff;font-size:12.5px}
 
 /* ── Sections ─────────────────────────────────────────────────────────── */
@@ -113,13 +117,15 @@ section.block{padding-top:clamp(88px,11vh,140px);scroll-margin-top:24px}
 section.block:first-of-type{padding-top:72px;border-top:1px solid var(--line);margin-top:48px}
 .sec-measure{max-width:900px}
 .sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
-.sec-grid + .sec-grid{margin-top:56px}
+.sec-grid + .sec-grid{margin-top:64px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
 .ph-inline + .sec-grid,
 .ph-row + .sec-grid,
+.ph-row-captions + .sec-grid,
 .stat-cells + .sec-grid,
-.insight-cells + .sec-grid{margin-top:44px}
+.insight-cells + .sec-grid,
+.bento-4 + .sec-grid{margin-top:64px}
 .sec-head{position:relative}
 .sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
 .sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
@@ -132,14 +138,14 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .methods{margin-top:16px;font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:16px}
 
 /* ── Bento grids ──────────────────────────────────────────────────────── */
-.bento-2{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-2{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .bento-2 .cell{padding:32px;border-left:1px solid var(--line)}
 .bento-2 .cell:first-child{border-left:none}
 .bento-2 .cell h3{font-size:15px;font-weight:400}
 .bento-2 .cell .ph{margin-top:16px;aspect-ratio:4/3}
 .bento-2 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
-.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-3{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
 .bento-3 .cell:first-child{border-left:none}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
@@ -147,7 +153,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
 /* ── Four-up "ways in" grid — 2x2 ────────────────────────────────────────── */
-.bento-4{margin-top:32px;display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-4{margin-top:40px;display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .bento-4 .cell{padding:32px;border-left:1px solid var(--line);border-top:1px solid transparent}
 .bento-4 .cell:nth-child(2n+1){border-left:none}
 .bento-4 .cell:nth-child(n+3){border-top:1px solid var(--line)}
@@ -161,7 +167,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 }
 
 /* ── Insight / user cells ─────────────────────────────────────────────── */
-.insight-cells{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.insight-cells{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .insight-cells.cols-3{grid-template-columns:repeat(3,1fr)}
 .insight-cells .cell{padding:28px;border-left:1px solid var(--line)}
 .insight-cells .cell:first-child{border-left:none}
@@ -183,23 +189,14 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
 .metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
 
-.highlight-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.highlight-row{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
 .highlight-item .highlight{display:block;text-align:center;font-size:clamp(16px,1.6vw,18px);line-height:1.3}
 .highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
 .metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
 .metrics-row .quote cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:var(--faint)}
 
-/* ── Before/After text pairs (no imagery available — text-only iteration
-   rows) ─────────────────────────────────────────────────────────────── */
-.ba-row{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.ba-row .cell{padding:28px;border-left:1px solid var(--line)}
-.ba-row .cell:first-child{border-left:none}
-.ba-row .cell .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.ba-row .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
-@media (max-width:900px){.ba-row{grid-template-columns:1fr}.ba-row .cell{border-left:none;border-top:1px solid var(--line)}.ba-row .cell:first-child{border-top:none}}
-
-.pullquote{margin:32px 0;padding-left:20px;border-left:1px solid var(--line)}
+.pullquote{margin:40px 0;padding-left:20px;border-left:1px solid var(--line)}
 .pullquote p{margin:0;max-width:56ch;color:var(--ink);font-size:clamp(19px,2.1vw,24px);line-height:1.4;font-style:italic}
 
 .next-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:54ch}
@@ -261,7 +258,6 @@ footer.pagefoot a:hover{color:var(--ink)}
       <li data-target="users"><a href="#users">Three Users, One System</a></li>
       <li data-target="design-language"><a href="#design-language">Design Language</a></li>
       <li data-target="output-layer"><a href="#output-layer">Designing the Output Layer</a></li>
-      <li data-target="iterations"><a href="#iterations">Iterations</a></li>
       <li data-target="reflection"><a href="#reflection">Reflection</a></li>
      </ul>
     </div>
@@ -339,7 +335,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
             <div class="sec-body">
               <p>We began by treating this as a collection problem: build a good way to gather memories from a lot of people. But collection turned out to be the easy half. The moment we imagined fifty submissions arriving — different voices, different lengths, some a paragraph, some a single sentence — the real question surfaced.</p>
-              <p>Turning many people's fragments into something that feels authored is the kind of hard AI is good at, provided it stays invisible — so we turned to a synthesis of grief forums, obituaries, eulogies, and bereavement studies to find out what it should actually be looking for.</p>
+              <p>Synthesizing many people's fragments into something coherent is the kind of hard AI is good at, provided it stays invisible. The harder question turned out to be what that synthesis should actually look like once someone opens it — so we turned to a synthesis of grief forums, obituaries, eulogies, and bereavement studies to find out.</p>
             </div>
           </div>
 
@@ -357,6 +353,8 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>People said the questions they wish they'd asked weren't the big ones — favorite soda, who taught them to drive — the small stuff they assumed they'd always have time to ask.</p>
             </div>
           </div>
+
+          <p class="methods">These three findings come from a secondary research synthesis of grief forums, obituaries, eulogies, and bereavement studies, not from interviews the team conducted directly.</p>
         </div>
       </section>
 
@@ -365,10 +363,10 @@ footer.pagefoot a:hover{color:var(--ink)}
           <div class="sec-grid">
             <div class="sec-head">
               <div class="tag">Three Users, One System</div>
-              <h2>Three people who want opposite things</h2>
+              <h2>Three people, three different needs</h2>
             </div>
             <div class="sec-body">
-              <p>We ran a handful of voice-of-customer interviews, not a full research program. What did most of the work was defining, precisely, who the product had to serve at once — and where those needs pull against each other. The organizer wants power. The contributor wants ease. The viewer wants emotion. One system had to hold all three, and most of the product's difficulty lives in that gap.</p>
+              <p>We ran a handful of voice-of-customer interviews. What did most of the work was defining, precisely, who the product had to serve at once. The organizer needs power without being crushed by process. The contributor needs an opening low-friction enough to actually use. The viewer needs to feel something before they need to understand anything. This case follows two of those three threads: the organizer's dashboard, and what a viewer meets in the output layer.</p>
             </div>
           </div>
 
@@ -396,7 +394,7 @@ footer.pagefoot a:hover{color:var(--ink)}
               <h2>How users interact through the product?</h2>
             </div>
             <div class="sec-body">
-              <p>This chart shows how the organizer's, contributor's, and viewer's actions stay three separate flows that only meet at a few key moments across the product.</p>
+              <p>This chart shows how the organizer's, contributor's, and viewer's actions stay three separate flows that only meet at a few key moments across the product. The work ahead follows the organizer's and viewer's paths specifically.</p>
             </div>
           </div>
 
@@ -419,16 +417,31 @@ footer.pagefoot a:hover{color:var(--ink)}
         </div>
       </section>
 
-
       <section class="block reveal" id="output-layer">
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">Designing the Output Layer</div>
+              <div class="tag">Design Process</div>
               <h2>What should a synthesized memory look like?</h2>
             </div>
             <div class="sec-body">
-              <p>This was the question I owned, and the obvious answers were all wrong. A <span class="highlight">list</span> of contributions is a database — it preserves everything and communicates nothing. A <span class="highlight">timeline</span> is an obituary — it organizes a person by chronology, which is how institutions record lives, not how people remember them. Both were archival. The memorial needed to be something else.</p>
+              <p>This was the question I owned, and the obvious answers were all wrong. Two structures kept coming up early on, and I mocked up both before setting them aside. Neither one could hold what a memorial actually needed to do.</p>
+            </div>
+          </div>
+
+          <div class="ph-row">
+            <div class="ph" style="aspect-ratio:1440/820;background:none"><img src="images/RememberRejected1.svg" alt="Rejected concept — a list of contributions"></div>
+            <div class="ph" style="aspect-ratio:1440/820;background:none"><img src="images/RememberRejected2.svg" alt="Rejected concept — a chronological timeline"></div>
+          </div>
+
+          <div class="ph-row-captions">
+            <div class="cap-block">
+              <div class="tag">Why not the list</div>
+              <p>It preserves every submission exactly as it arrived, but it does not decide what matters. Fifty entries read like fifty entries, not like a picture of one person.</p>
+            </div>
+            <div class="cap-block">
+              <div class="tag">Why not the timeline</div>
+              <p>It puts a life in order, but grief does not move in order. People reach for a habit or a joke first, not the year it happened.</p>
             </div>
           </div>
 
@@ -437,8 +450,8 @@ footer.pagefoot a:hover{color:var(--ink)}
               <h2>Grief has no correct order, and no end</h2>
             </div>
             <div class="sec-body">
-              <p>The insight that resolved it: there is no single right way to remember someone, and no point at which you are finished. One visitor wants to hear the voice. Another wants to see the face. Another wants to know they weren't the only one who felt that way about him.</p>
-              <p>So the output layer isn't one artifact. It's several ways in, and no prescribed path between them:</p>
+              <p>The insight that resolved it: there is no single right way to remember someone, and no point at which you are finished. Grief research backed this up again and again. Different people needed different things from the same memorial, sometimes at different times.</p>
+              <p>So the output layer consists of four ways, and what separates them is how much the system interferes. Someone who wants to be carried starts at one end. Someone who doesn't want a machine's version of their father goes straight to the other. No tab claims to be the complete one.</p>
             </div>
           </div>
 
@@ -449,7 +462,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
             <div class="cell">
               <h3 class="highlight">Constellation</h3>
-              <p>Synthesized memories rendered as connected points of light rather than paragraphs. Each theme carries a short summary and the real contributor quotes it was built from — never AI prose standing alone. Filtered by who's speaking — family, friend, colleague, community — the same map reads a second way: how differently each circle experienced the same person.</p>
+              <p>Synthesized memories rendered as connected points of light rather than paragraphs. Each theme carries a short summary and the real contributor quotes it was built from — never AI prose standing alone.</p>
             </div>
             <div class="cell">
               <h3 class="highlight">Voices</h3>
@@ -461,58 +474,19 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>How the organizer sees it</h2>
+            </div>
+            <div class="sec-body">
+              <p>The organizer meets the same four in the dashboard. Once the memorial is built, organizing and previewing it happens through the identical surface a visitor will see. There is no backstage version where the memorial is really managed. The person who built it sees what everyone else sees.</p>
+            </div>
+          </div>
+
           <div class="ph ph-inline"><span class="cap">Constellation — Themes &amp; Relationships</span></div>
 
           <div class="pullquote">
             <p>The constellation reframes a life as something you wander rather than something you finish reading — closer to how remembering actually works.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="block reveal" id="iterations">
-        <div class="sec-measure">
-          <div class="sec-grid">
-            <div class="sec-head">
-              <div class="tag">Iterations</div>
-              <h2>Directional signals, not validated findings</h2>
-            </div>
-            <div class="sec-body">
-              <p>The changes below did not come from user testing, which we were not able to run. They came from internal design critique and from constraints surfaced during development. Even without testing, they produced the most important change in the product.</p>
-            </div>
-          </div>
-
-          <div class="ba-row">
-            <div class="cell">
-              <div class="tag">Before</div>
-              <p>The first version was an AI-surfacing-themes feature. It grouped memories into themes and, when opened, assembled them into a produced sequence — essentially the Apple Photos Memories model applied to grief.</p>
-            </div>
-            <div class="cell">
-              <div class="tag">After</div>
-              <p>I rebuilt it as something to move through instead of something to receive. No produced sequence, no correct order, no completion state. The visitor wanders; the system doesn't perform. The AI still does the same synthesis underneath — it simply stopped taking credit for it.</p>
-            </div>
-          </div>
-
-          <div class="sec-grid">
-            <div class="sec-head">
-              <h2>The critique that named the problem</h2>
-            </div>
-            <div class="sec-body">
-              <p>In team critique, the problem got named: the interaction was working perfectly and saying the wrong thing. That model tells the user <em class="highlight">the system has organized this for you; here is your package.</em> It makes the AI the author. It was the clearest possible violation of the principle we had set — and it was invisible as a problem until someone said it out loud, because nothing about it was broken.</p>
-              <p>Relationship color-coding was added in a subsequent pass, mapping family, friend, colleague, and other to distinct colors. This is what eventually made the second reading of the constellation possible, and turned "what he was like" into "who he was to people."</p>
-            </div>
-          </div>
-
-          <div class="bento-2">
-            <div class="cell">
-              <h3>One dashboard instead of a navigation tab</h3>
-              <div class="ph"><span class="cap">Organizer dashboard, adaptive states</span></div>
-              <p>Managing multiple memorials used to live in its own navigation tab, separate from the dashboard. I removed the tab and folded everything into a single organizer dashboard that adapts across three states — new, in progress, and completed. An organizer lands where they need to be instead of navigating to it. During the hardest weeks of someone's life, a menu is a tax.</p>
-            </div>
-            <div class="cell">
-              <h3>Team-level scope decisions</h3>
-              <div class="ph"><span class="cap">Share flow, before &amp; after</span></div>
-              <p>For the MVP, the team drew hard lines: no mobile app, one memorial per account, and no organizer editing of AI-generated content — the output ships as the AI produced it, or not at all. We also converted the share flow from a full page into a focused pop-up that visually distinguishes a contributor invitation from a viewer link — two emotionally different acts that had looked identical.</p>
-            </div>
           </div>
         </div>
       </section>
@@ -526,6 +500,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
             <div class="sec-body">
               <p>The constellation rebuild is what I took from this project. The original version had no usability problem. It was smooth, familiar, and borrowed from a pattern people already understood. It was wrong anyway, because a pattern carries meaning independent of whether it functions — and the meaning that Apple Photos carries is <em class="highlight">the system did this for you.</em> In a grief context, that is the one message the product could not send.</p>
+              <p>The "no technological feeling" rule started as a visual instruction in the design language. After the critique, it became something bigger: a rule about authorship, about who gets credit for a feeling.</p>
               <p class="highlight">The harder half of designing with AI wasn't capability. It was tone.</p>
             </div>
           </div>
@@ -536,7 +511,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
             <div class="sec-body">
               <p>The prototype is live, but it has never been in front of a grieving family. The first thing I would test is not usability. It's whether the constellation is meaningful or merely pretty — a distinction that a task-completion metric cannot detect and that only a real visitor can answer. I would run moderated sessions with actual viewers and organizers, and watch for one thing: whether someone moving through the constellation is remembering a person, or looking at a visualization.</p>
-              <p>The research also points further out than launch. Memory research shows grief moves in stages: a foggy first year, active reminiscing from years two to five, then a fade that sets in around year five to fifteen, when the specific scenes go first and only generalizations remain. That means a memorial's highest emotional value isn't the week it's built — it's a decade out, when someone's own memory of a voice or a face has started to soften and Remember is the thing that still has it exactly. The real product has to be built for the ten-year user, still able to accept new contributions, still worth opening, long after the memorial was finished.</p>
+              <p>The research also points further out than launch: a memorial's highest emotional value isn't the week it's built, it's years later, once someone's own memory of a voice or a face has started to soften and Remember is the thing that still has it exactly. The real product has to be built for that later user, still able to accept new contributions, still worth opening long after it was first finished.</p>
             </div>
           </div>
         </div>
