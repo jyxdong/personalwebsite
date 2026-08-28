@@ -166,6 +166,22 @@ ul.insights em{font-style:italic;color:var(--ink)}
   .bento-4 .cell:first-child{border-top:none}
 }
 
+/* ── Toggle + scrollable page frame (Final Design) ────────────────────── */
+.carousel-toggle{margin-top:24px;width:100%;display:flex;background:#f4f4f4;border-radius:999px;padding:4px;gap:4px}
+.carousel-toggle .toggle-btn{flex:1;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13px;color:var(--muted);padding:9px 12px;border-radius:999px;transition:background .2s,color .2s;white-space:nowrap;text-align:center}
+.carousel-toggle .toggle-btn:hover:not(.active){color:var(--ink)}
+.carousel-toggle .toggle-btn.active{background:#fff;color:var(--ink)}
+
+.page-frame{position:relative;margin-top:12px;width:100%;aspect-ratio:3/2;border-radius:var(--r-sm);overflow:hidden;background:#ececec;border:1px solid var(--line)}
+.page-frame-track{display:flex;width:100%;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.page-frame-scroll{flex:0 0 100%;width:100%;height:100%;overflow-y:auto}
+.page-frame-scroll img{display:block;width:100%;height:auto}
+
+@media (max-width:600px){
+  .carousel-toggle{flex-wrap:wrap}
+  .carousel-toggle .toggle-btn{flex:1 1 40%}
+}
+
 /* ── Insight / user cells ─────────────────────────────────────────────── */
 .insight-cells{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .insight-cells.cols-3{grid-template-columns:repeat(3,1fr)}
@@ -257,7 +273,8 @@ footer.pagefoot a:hover{color:var(--ink)}
       <li data-target="reframe"><a href="#reframe">The Reframe</a></li>
       <li data-target="users"><a href="#users">Three Users, One System</a></li>
       <li data-target="design-language"><a href="#design-language">Design Language</a></li>
-      <li data-target="output-layer"><a href="#output-layer">Designing the Output Layer</a></li>
+      <li data-target="output-layer"><a href="#output-layer">Design Process</a></li>
+      <li data-target="final-design"><a href="#final-design">Final Design</a></li>
       <li data-target="reflection"><a href="#reflection">Reflection</a></li>
      </ul>
     </div>
@@ -483,10 +500,37 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
-          <div class="ph ph-inline"><span class="cap">Constellation — Themes &amp; Relationships</span></div>
+        </div>
+      </section>
 
-          <div class="pullquote">
-            <p>The constellation reframes a life as something you wander rather than something you finish reading — closer to how remembering actually works.</p>
+      <section class="block reveal" id="final-design">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Final Design</div>
+              <h2>Auditing each page against its job</h2>
+            </div>
+            <div class="sec-body">
+              <p>Five finished pages — one for each of the four output-layer views, plus Constellation's two facets. Toggle between them below; each is shown at its full length, scrollable in place, not cropped to a hero shot.</p>
+            </div>
+          </div>
+
+          <div class="carousel-toggle" id="finalDesignToggle" role="tablist" aria-label="Final design page toggle">
+            <button class="toggle-btn active" data-index="0" role="tab" aria-selected="true">Story</button>
+            <button class="toggle-btn" data-index="1" role="tab" aria-selected="false">Constellation — Themes</button>
+            <button class="toggle-btn" data-index="2" role="tab" aria-selected="false">Constellation — Relationships</button>
+            <button class="toggle-btn" data-index="3" role="tab" aria-selected="false">Voices</button>
+            <button class="toggle-btn" data-index="4" role="tab" aria-selected="false">All Photos</button>
+          </div>
+
+          <div class="page-frame" id="finalDesignFrame">
+            <div class="page-frame-track" id="finalDesignTrack">
+              <div class="page-frame-scroll" data-index="0"><img src="images/RememberStories.svg" alt="Final design — Story"></div>
+              <div class="page-frame-scroll" data-index="1"><img src="images/RememberConstellationThemes.svg" alt="Final design — Constellation, Themes"></div>
+              <div class="page-frame-scroll" data-index="2"><img src="images/RememberConstellationRelationships.svg" alt="Final design — Constellation, Relationships"></div>
+              <div class="page-frame-scroll" data-index="3"><img src="images/RememberVoices.svg" alt="Final design — Voices"></div>
+              <div class="page-frame-scroll" data-index="4"><img src="images/RememberAllPhotos.svg" alt="Final design — All Photos"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -554,6 +598,25 @@ footer.pagefoot a:hover{color:var(--ink)}
     });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => reveal.observe(el));
+
+  const finalDesignToggle = document.getElementById('finalDesignToggle');
+  if (finalDesignToggle) {
+    const track = document.getElementById('finalDesignTrack');
+    const slides = Array.from(track.querySelectorAll('.page-frame-scroll'));
+    const btns = Array.from(finalDesignToggle.querySelectorAll('.toggle-btn'));
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = Number(btn.dataset.index);
+        btns.forEach((b, i) => {
+          const on = i === idx;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        track.style.transform = `translateX(-${idx * 100}%)`;
+        slides.forEach((s, i) => { if (i === idx) s.scrollTop = 0; });
+      });
+    });
+  }
 
   document.querySelectorAll('#backToTop, #backToTop2').forEach(el => {
     el.addEventListener('click', () => scroller.scrollTo({ top: 0, behavior: 'smooth' }));
