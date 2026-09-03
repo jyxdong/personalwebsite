@@ -329,6 +329,58 @@ ul.insights em{font-style:italic;color:var(--ink)}
   .ph-row{flex-direction:column}
 }
 
+/* ── Survey block — a question switcher on the left, the answering pie and
+   its legend on the right. Slice colors are a single warm ramp ordered by
+   share (largest = darkest), so color reinforces the arc instead of adding a
+   second thing to decode; every slice is also named and numbered in the
+   legend, so identity is never carried by color alone. ─────────────────── */
+/* The toggle stands on its own to the left; only the chart panel is framed. */
+.survey{margin-top:32px;display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start}
+/* Vertical version of the site's pill nav: one grey track, the active
+   question lifted out of it as a white pill. */
+.survey-toggle{display:flex;flex-direction:column;gap:2px;background:#f4f4f4;border-radius:22px;padding:6px;align-self:start}
+.survey-tab{appearance:none;border:none;background:none;cursor:pointer;padding:11px 16px;border-radius:999px;font:inherit;font-size:15px;line-height:1.3;color:var(--muted);text-align:center;transition:background .2s,color .2s,box-shadow .2s}
+.survey-tab:hover:not([aria-selected="true"]){color:var(--ink)}
+.survey-tab[aria-selected="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(17,17,17,.10)}
+/* Chart left, question + legend right. */
+.survey-panel{position:relative;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;min-width:0;height:276px;padding:24px;border:1px solid var(--line);border-radius:var(--r-sm)}
+.survey-pie{width:190px;height:190px;flex-shrink:0}
+.survey-pie path{stroke:var(--paper);stroke-width:2;transition:opacity .15s}
+.survey-pie.dimmed path:not(.is-hovered){opacity:.45}
+.survey-readout{min-width:0}
+.survey-question{font-family:'Source Serif 4',serif;font-weight:400;font-size:clamp(18px,1.8vw,20px);line-height:1.3}
+.survey-legend{margin-top:22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.survey-legend li{display:flex;align-items:baseline;gap:10px;font-size:15px;line-height:1.4;color:#2b2b2b}
+.survey-legend .sw{flex-shrink:0;width:10px;height:10px;border-radius:2px;transform:translateY(1px)}
+.survey-legend .pct{margin-left:auto;padding-left:14px;color:var(--ink);font-variant-numeric:tabular-nums}
+.survey-legend li.zero{color:var(--faint)}
+.survey-legend li.zero .sw{background:none;border:1px solid var(--line)}
+.survey-legend li.zero .pct{color:var(--faint)}
+.survey-tip{position:absolute;pointer-events:none;z-index:2;background:var(--ink);color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:6px;white-space:nowrap;transform:translate(-50%,-115%)}
+@media (max-width:900px){
+  .survey{grid-template-columns:1fr;gap:16px}
+  .survey-toggle{flex-direction:row;overflow-x:auto;border-radius:999px}
+  .survey-tab{flex:1 0 auto;white-space:nowrap}
+  .survey-panel{grid-template-columns:1fr;justify-items:center;gap:24px;height:auto;padding:24px 20px}
+  .survey-readout{text-align:left;width:100%}
+}
+
+/* ── Device annotation diagram — a centered product render with labels
+   floating around it, connected by thin leader lines. Everything (image,
+   labels, lines) is positioned in % against a fixed-aspect-ratio box so it
+   scales together; below 900px it collapses to a plain stacked column. ── */
+.device-annotate{position:relative;margin-top:40px;width:100%;aspect-ratio:900/560}
+.device-annotate .device-lines{position:absolute;inset:0;width:100%;height:100%}
+.device-annotate .device-lines line{stroke:var(--muted);stroke-width:1}
+.device-annotate .device-img{position:absolute}
+.device-annotate .device-label{position:absolute}
+@media (max-width:900px){
+  .device-annotate{aspect-ratio:auto;max-width:100%}
+  .device-annotate .device-lines{display:none}
+  .device-annotate .device-img,.device-annotate .device-label{position:static;left:auto!important;right:auto!important;top:auto!important;width:100%!important;margin-top:24px}
+  .device-annotate .device-img{margin-top:0}
+}
+
 /* ── Pull quote: flat, no fill — a hairline rule carries it. Its size is
    intentionally its own, not one of the type-scale tiers, since it's a
    quoted aside, not running text, a heading, or a label. ──────────────── */
@@ -459,11 +511,10 @@ footer.pagefoot a:hover{color:var(--ink)}
           <div class="sec-grid">
             <div class="sec-head">
               <div class="tag">Problem statement</div>
-              <h2>Kids cannot sleep alone at night</h2>
+              <h2>Sleeping alone is a milestone for the whole family</h2>
             </div>
             <div class="sec-body">
-              <p>A child moves out of co-sleeping and is about to sleep alone. At first they wake at night, call out, and a parent walks back in. Then it happens again. On a normal night this cycle repeats one to two times, sometimes more, and both sides end up depleted.</p>
-              <p>Most products built for this moment are designed for the parent: monitors, trackers, routine apps. We wanted to build a product that connects the child with the parent while making this stage easier for both.</p>
+              <p>A child moves out of co-sleeping and is about to sleep alone. At first they wake at night, call out, or need a parent nearby to settle back down. For the child, the dark room feels unsafe without a parent close by. For the parent, the repeated check-ins and drifting bedtimes mean lost sleep that follows them into the next day. This in-between stretch, no longer co-sleeping but not yet independent, is where it feels hardest for both.</p>
             </div>
           </div>
           <div class="ph-row">
@@ -514,6 +565,32 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>What parents told us</h2>
+            </div>
+            <div class="sec-body">
+              <p>We surveyed eight parents with a young child under five. Their answers backed up the secondary research: bedtime is relatively stressful for them, and they are open to an outside device helping with it.</p>
+            </div>
+          </div>
+
+          <div class="survey" id="survey">
+            <div class="survey-toggle" role="tablist" aria-label="Survey questions">
+              <button class="survey-tab" role="tab" aria-selected="true" data-q="0">Responding at night</button>
+              <button class="survey-tab" role="tab" aria-selected="false" data-q="1">Re-entering the room</button>
+              <button class="survey-tab" role="tab" aria-selected="false" data-q="2">Bedtime stress</button>
+              <button class="survey-tab" role="tab" aria-selected="false" data-q="3">Comfort with device</button>
+            </div>
+            <div class="survey-panel">
+              <svg class="survey-pie" id="surveyPie" viewBox="0 0 200 200" role="img" aria-labelledby="surveyPieTitle"><title id="surveyPieTitle"></title></svg>
+              <div class="survey-readout">
+                <p class="survey-question" id="surveyQuestion"></p>
+                <ul class="survey-legend" id="surveyLegend"></ul>
+              </div>
+              <div class="survey-tip" id="surveyTip" hidden></div>
+            </div>
+          </div>
+
           <div class="insight-cells">
             <div class="cell">
               <div class="tag">Insight 1</div>
@@ -524,6 +601,15 @@ footer.pagefoot a:hover{color:var(--ink)}
               <div class="tag">Insight 2</div>
               <h2>Operation with simplicity</h2>
               <p>Targeting 5-year-olds, every interaction had to be tactile and single step. Anything harder to operate in the dark risks becoming its own source of frustration, undermining the sense of security the device is meant to give.</p>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>How Might We</h2>
+            </div>
+            <div class="sec-body">
+              <p>How might we help young children feel safe sleeping on their own, while easing the nightly stress on their parents?</p>
             </div>
           </div>
         </div>
@@ -595,9 +681,9 @@ footer.pagefoot a:hover{color:var(--ink)}
               <h2>From conflict to a clear direction</h2>
             </div>
             <div class="sec-body">
-              <p>My teammate and I split on which direction to build — they were drawn to the glass house's storytelling, while I worried it asked too much of our users. Rather than argue preference, we evaluated both against who we were designing for.</p>
-              <p>Weighed against our users, the glass house raised three concerns: the interaction was too complex for a 3–6 year old alone in the dark, glass raised real safety worries at bedtime, and the animated scene risked engaging the child instead of settling them to sleep.</p>
-              <p>Grounding the decision in the user, not our preferences, gave us a shared way to converge. We committed to the mushroom — a clear, grounded direction to bring into 3D.</p>
+              <p>My teammate and I split on which direction to build. They were drawn to the glass house's storytelling, while I worried it asked too much of our users. Rather than argue preference, we evaluated both against who we were designing for.</p>
+              <p>Weighed against our users, the glass house raised three concerns: the interaction was <strong>too complex</strong> for a 3–6 year old alone in the dark, glass raised real <strong>safety worries</strong> at bedtime, and the animated <strong>scene risked engaging</strong> the child instead of settling them to sleep.</p>
+              <p>Grounding the decision in the user, not our preferences, gave us a shared way to converge. We committed to the mushroom and brought it into 3D.</p>
             </div>
           </div>
 
@@ -606,7 +692,27 @@ footer.pagefoot a:hover{color:var(--ink)}
               <div class="tag">Final 3D Design</div>
             </div>
           </div>
-          <div class="ph ph-inline" style="aspect-ratio:2820/1506;background:none"><img src="images/Lumino3DDesign.png" alt="Lumino 3D design process"></div>
+          <div class="device-annotate">
+            <svg class="device-lines" viewBox="0 0 900 560" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="261" y1="194" x2="412" y2="276"></line>
+              <line x1="261" y1="452" x2="470" y2="296"></line>
+            </svg>
+            <div class="ph device-img" style="left:31%;top:3.57%;width:38%;aspect-ratio:875/1130;background:none">
+              <img src="images/Lumino3DDesign.png" alt="Lumino final 3D design — mushroom nightlight with intercom button, play button, and silicone top">
+            </div>
+            <div class="highlight-item device-label" style="left:0;top:24%;width:29%">
+              <p class="highlight">Intercom Button</p>
+              <p class="highlight-body">Keep pressing to activate intercom feature: hold to talk. The button is sized with a length of 1.8 inch for toddlers' small hands.</p>
+            </div>
+            <div class="highlight-item device-label" style="left:0;top:70%;width:29%">
+              <p class="highlight">Play Button</p>
+              <p class="highlight-body">Press to start playing the preset story/audio playlist. Size is differentiated from the intercom button so that it can be distinguished by touch in the dark.</p>
+            </div>
+            <div class="highlight-item device-label" style="right:0;top:24%;width:29%">
+              <p class="highlight">Silicone Top</p>
+              <p class="highlight-body">The tap-to-activate silicone top is designed to suit toddlers' limited fine motor control. An open-palm pat is instinctive, and its soft and smooth texture prevents potential harm in darkness.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -621,6 +727,21 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>We ran a moderated usability test of the app prototype with several parents of a four-year-old, using four task scenarios and a SUS-style rating. All tasks were completed, which told us the structure held. One walkthrough was recorded. Three specific interactions did not.</p>
             </div>
           </div>
+          <div class="bento-3">
+            <div class="cell">
+              <h3 class="highlight">A screen-free device with app-based control fit real bedtime routines</h3>
+              <p>Parents affirmed the pairing of a physical device for the child and remote control through the app. The child stays off screens while the parent stays in control from another room, matching how they already manage bedtime.</p>
+            </div>
+            <div class="cell">
+              <h3 class="highlight">The mushroom form felt safe to keep in a child's room</h3>
+              <p>Parents found the shape warm and approachable, and were comfortable placing it by the bed as a nightly companion. Its neutral, friendly form read as reassuring rather than tech-like.</p>
+            </div>
+            <div class="cell">
+              <h3 class="highlight">Parents completed every task without help</h3>
+              <p>The core functions all worked. Parents set up stories, adjusted the light, and reached their child without confusion, and the simple controls held up even at the end of a long day.</p>
+            </div>
+          </div>
+
           <div class="bento-3">
             <div class="cell">
               <h3 class="highlight">Content below the fold unseen</h3>
@@ -808,6 +929,157 @@ footer.pagefoot a:hover{color:var(--ink)}
   document.querySelectorAll('#backToTop, #backToTop2').forEach(el => {
     el.addEventListener('click', () => scroller.scrollTo({ top: 0, behavior: 'smooth' }));
   });
+
+  // Survey block: four questions, one pie at a time. Answers are stored in
+  // descending order, so the ramp below (dark -> pale) always runs largest to
+  // smallest and the first slice starts at 12 o'clock. Options nobody picked
+  // keep their row in the legend — a 0% that was on the table is a finding
+  // too — but draw no slice.
+  const survey = document.getElementById('survey');
+  if (survey) {
+    const RAMP = ['#8A4206', '#EE8018', '#FBD0A4'];
+    const LABEL_INK = ['#ffffff', '#ffffff', '#2b2b2b'];
+    const QUESTIONS = [
+      {
+        q: 'When your child calls out at night, how do you usually respond?',
+        answers: [
+          ['Respond verbally from another room', 50],
+          ['Immediately go to their room', 37.5],
+          ['Wait a few minutes before responding', 12.5],
+          ['Encourage them to self-soothe', 0],
+        ],
+      },
+      {
+        q: "How many times do you typically re-enter your child's room during bedtime?",
+        answers: [
+          ['1–2 times', 62.5],
+          ['3–5 times', 37.5],
+          ['0 times', 0],
+          ['5+ times', 0],
+        ],
+      },
+      {
+        q: "How stressful do you find your child's bedtime routine?",
+        answers: [
+          ['Moderately stressful', 50],
+          ['Slightly stressful', 37.5],
+          ['Not stressful', 12.5],
+          ['Very stressful', 0],
+        ],
+      },
+      {
+        q: 'How comfortable would you be with a device that lets your child communicate with you without leaving bed?',
+        answers: [
+          ['Neutral', 50],
+          ['Comfortable', 37.5],
+          ['Slightly comfortable', 12.5],
+          ['Not comfortable', 0],
+          ['Very comfortable', 0],
+        ],
+      },
+    ];
+
+    const pie = document.getElementById('surveyPie');
+    const pieTitle = document.getElementById('surveyPieTitle');
+    const legend = document.getElementById('surveyLegend');
+    const questionEl = document.getElementById('surveyQuestion');
+    const tip = document.getElementById('surveyTip');
+    const panel = survey.querySelector('.survey-panel');
+    const tabs = Array.from(survey.querySelectorAll('.survey-tab'));
+    const NS = 'http://www.w3.org/2000/svg';
+    const CX = 100, CY = 100, R = 88;
+
+    const pointAt = (deg) => {
+      const rad = (deg - 90) * Math.PI / 180;
+      return [CX + R * Math.cos(rad), CY + R * Math.sin(rad)];
+    };
+    const fmt = (n) => (Number.isInteger(n) ? n : n.toFixed(1)) + '%';
+
+    function render(index) {
+      const { q, answers } = QUESTIONS[index];
+      questionEl.textContent = q;
+      pieTitle.textContent = q + ' ' + answers.map(([l, v]) => `${l}: ${fmt(v)}`).join('; ');
+
+      pie.querySelectorAll('path, text').forEach(n => n.remove());
+      legend.innerHTML = '';
+
+      let angle = 0;
+      answers.forEach(([label, value], i) => {
+        const color = value > 0 ? RAMP[Math.min(i, RAMP.length - 1)] : null;
+
+        if (value > 0) {
+          const sweep = value / 100 * 360;
+          const [x1, y1] = pointAt(angle);
+          const [x2, y2] = pointAt(angle + sweep);
+          const large = sweep > 180 ? 1 : 0;
+          const path = document.createElementNS(NS, 'path');
+          path.setAttribute('d', value >= 100
+            ? `M ${CX} ${CY - R} A ${R} ${R} 0 1 1 ${CX - 0.01} ${CY - R} Z`
+            : `M ${CX} ${CY} L ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} Z`);
+          path.setAttribute('fill', color);
+          path.dataset.label = label;
+          path.dataset.value = fmt(value);
+          pie.appendChild(path);
+
+          // Direct-label the slice when there is room; the legend carries the rest.
+          if (value >= 10) {
+            const rad = (angle + sweep / 2 - 90) * Math.PI / 180;
+            const t = document.createElementNS(NS, 'text');
+            t.setAttribute('x', CX + R * 0.62 * Math.cos(rad));
+            t.setAttribute('y', CY + R * 0.62 * Math.sin(rad));
+            t.setAttribute('text-anchor', 'middle');
+            t.setAttribute('dominant-baseline', 'central');
+            t.setAttribute('font-size', '13');
+            t.setAttribute('fill', LABEL_INK[Math.min(i, LABEL_INK.length - 1)]);
+            t.setAttribute('pointer-events', 'none');
+            t.textContent = fmt(value);
+            pie.appendChild(t);
+          }
+          angle += sweep;
+        }
+
+        const li = document.createElement('li');
+        if (value === 0) li.className = 'zero';
+        const sw = document.createElement('span');
+        sw.className = 'sw';
+        if (color) sw.style.background = color;
+        const name = document.createElement('span');
+        name.textContent = label;
+        const pct = document.createElement('span');
+        pct.className = 'pct';
+        pct.textContent = fmt(value);
+        li.append(sw, name, pct);
+        legend.appendChild(li);
+      });
+    }
+
+    // Hover: dim the rest, name the slice under the cursor.
+    pie.addEventListener('mousemove', (e) => {
+      const path = e.target.closest('path');
+      pie.querySelectorAll('path').forEach(p => p.classList.toggle('is-hovered', p === path));
+      pie.classList.toggle('dimmed', !!path);
+      if (!path) { tip.hidden = true; return; }
+      const rect = panel.getBoundingClientRect();
+      tip.textContent = `${path.dataset.label} · ${path.dataset.value}`;
+      tip.style.left = (e.clientX - rect.left) + 'px';
+      tip.style.top = (e.clientY - rect.top) + 'px';
+      tip.hidden = false;
+    });
+    pie.addEventListener('mouseleave', () => {
+      tip.hidden = true;
+      pie.classList.remove('dimmed');
+      pie.querySelectorAll('path').forEach(p => p.classList.remove('is-hovered'));
+    });
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.setAttribute('aria-selected', String(t === tab)));
+        render(Number(tab.dataset.q));
+      });
+    });
+
+    render(0);
+  }
 
   // Reading-progress ruler: a fixed set of ticks; as #pageScroll moves, a
   // soft gaussian bulge in tick WIDTH travels to sit over the current

@@ -272,7 +272,7 @@ footer.pagefoot a:hover{color:var(--ink)}
       <li data-target="problem"><a href="#problem">Problem</a></li>
       <li data-target="reframe"><a href="#reframe">The Reframe</a></li>
       <li data-target="users"><a href="#users">Three Users, One System</a></li>
-      <li data-target="design-language"><a href="#design-language">Design Language</a></li>
+      <li data-target="positioning"><a href="#positioning">Positioning</a></li>
       <li data-target="output-layer"><a href="#output-layer">Design Process</a></li>
       <li data-target="final-design"><a href="#final-design">Final Design</a></li>
       <li data-target="reflection"><a href="#reflection">Reflection</a></li>
@@ -358,20 +358,18 @@ footer.pagefoot a:hover{color:var(--ink)}
 
           <div class="stat-cells">
             <div class="stat">
-              <h2 class="highlight">"Brief but descriptive memories mean a lot"</h2>
-              <p>People said vague praise disappears — but the oddly specific detail, like a receipt kept from a decades-old return, stays forever.</p>
+              <h2 class="highlight">Specific details outlast vague praise</h2>
+              <p>People told us general compliments fade fast, but an oddly specific memory — like a receipt someone kept from a return decades ago — stays with you forever.</p>
             </div>
             <div class="stat">
-              <h2 class="highlight">"You'll eat them up"</h2>
-              <p>Contributors said hearing a story about the deceased they'd never heard before felt less like new information and more like a gift.</p>
+              <h2 class="highlight">An unheard story feels like a gift</h2>
+              <p>Contributors said hearing something new about the person didn't land as information. It felt like being handed a piece of them they didn't know existed.</p>
             </div>
             <div class="stat">
-              <h2 class="highlight">"Nothing is too trivial"</h2>
-              <p>People said the questions they wish they'd asked weren't the big ones — favorite soda, who taught them to drive — the small stuff they assumed they'd always have time to ask.</p>
+              <h2 class="highlight">The smallest things matter most</h2>
+              <p>The questions people wished they'd asked weren't the big ones. It was the small stuff — their favorite soda, who taught them to drive — what everyone assumed there'd always be time to ask.</p>
             </div>
           </div>
-
-          <p class="methods">These three findings come from a secondary research synthesis of grief forums, obituaries, eulogies, and bereavement studies, not from interviews the team conducted directly.</p>
         </div>
       </section>
 
@@ -419,18 +417,50 @@ footer.pagefoot a:hover{color:var(--ink)}
         </div>
       </section>
 
-      <section class="block reveal" id="design-language">
+      <section class="block reveal" id="positioning">
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">Design Language</div>
-              <h2>Feel human, never technological</h2>
+              <div class="tag">Positioning</div>
+              <h2>Why not a shared album or a scrapbook?</h2>
             </div>
             <div class="sec-body">
-              <p>We settled on the style before a single screen was designed. The brief to ourselves was one sentence: no technological feeling, even though this is an AI-powered product. Most products built around AI signal it visually — cool blues, gradients, glows. We went the other way and built the system on a warm, physical palette. Nothing on screen suggests a system is running.</p>
+              <p>Photo libraries, shared docs, and memorial pages store what people upload, but stop there. Scrapbooks and personal albums offer only one person's view. Neither turns scattered fragments into a coherent picture of who someone was.</p>
+              <p>Remember sits where nothing else does: many contributors, one synthesized portrait. Each person adds the fragment only they carry, and the AI weaves them into a rounded sense of the person, doing the organizing no individual realistically could.</p>
             </div>
           </div>
-          <div class="ph ph-inline" style="aspect-ratio:1494/932;background:none"><img src="images/RememberDesignSystem.png" alt="Remember design system — typography, color, iconography and components"></div>
+
+          <div style="margin-top:40px">
+            <svg viewBox="0 0 1600 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Positioning map. Vertical axis: Solo to Collaborative. Horizontal axis: Raw storage to Synthesized into a person. Shared docs and Social memorials sit in the collaborative, raw-storage quadrant. Photo libraries and Physical scrapbook sit in the solo quadrant. Remember sits alone in the collaborative, synthesized quadrant.">
+              <line x1="800" y1="58" x2="800" y2="472" stroke="var(--muted)" stroke-width="1.5"/>
+              <path d="M 791 70 L 800 58 L 809 70" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 791 460 L 800 472 L 809 460" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <line x1="95" y1="267" x2="1505" y2="267" stroke="var(--muted)" stroke-width="1.5"/>
+              <path d="M 107 258 L 95 267 L 107 276" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 1493 258 L 1505 267 L 1493 276" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <text x="800" y="32" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Collaborative</text>
+              <text x="800" y="502" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Solo</text>
+              <text x="24" y="240" text-anchor="start" font-size="30" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Raw storage</text>
+              <text x="1576" y="240" text-anchor="end" font-size="30" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Synthesized into a person</text>
+
+              <circle cx="508" cy="186" r="9" fill="var(--ink)" fill-opacity="0.78"/>
+              <text x="508" y="158" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Shared docs</text>
+
+              <circle cx="649" cy="229" r="9" fill="var(--ink)" fill-opacity="0.78"/>
+              <text x="649" y="201" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Social memorials</text>
+
+              <circle cx="479" cy="349" r="9" fill="var(--ink)" fill-opacity="0.78"/>
+              <text x="479" y="321" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Photo libraries</text>
+
+              <circle cx="845" cy="365" r="9" fill="var(--ink)" fill-opacity="0.78"/>
+              <text x="845" y="337" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Physical scrapbook</text>
+
+              <circle cx="1106" cy="178" r="13" fill="#C16341"/>
+              <text x="1106" y="150" text-anchor="middle" font-size="22" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Remember</text>
+            </svg>
+          </div>
         </div>
       </section>
 
@@ -532,6 +562,8 @@ footer.pagefoot a:hover{color:var(--ink)}
               <div class="page-frame-scroll" data-index="4"><img src="images/RememberAllPhotos.svg" alt="Final design — All Photos"></div>
             </div>
           </div>
+
+          <div class="ph ph-inline" style="aspect-ratio:1494/932;background:none"><img src="images/RememberDesignSystem.png" alt="Remember design system — typography, color, iconography and components"></div>
         </div>
       </section>
 
