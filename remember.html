@@ -12,7 +12,15 @@
 if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classList.add('case-from-sign');
 </script>
 <script src="case-transition.js" defer></script>
+<link rel="preload" href="fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Switzer-VariableItalic.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* ── Switzer (Fontshare, free for commercial use) — self-hosted variable
+   font carrying body copy and every label/tag. Serif headings are
+   unchanged and still come from Source Serif 4. ──────────────────────── */
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-VariableItalic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+
 /* ── Reset ─────────────────────────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
 
@@ -33,7 +41,7 @@ if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classL
 }
 html,body{height:100%}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family:'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight:400;
   color:var(--ink);
   background:var(--canvas);
@@ -114,7 +122,7 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 /* ── Sections ─────────────────────────────────────────────────────────── */
 main{padding:8px 64px 8px}
 section.block{padding-top:clamp(88px,11vh,140px);scroll-margin-top:24px}
-section.block:first-of-type{padding-top:72px;border-top:1px solid var(--line);margin-top:48px}
+section.block:first-of-type{padding-top:72px;margin-top:48px}
 .sec-measure{max-width:900px}
 .sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
 .sec-grid + .sec-grid{margin-top:64px}
@@ -367,25 +375,25 @@ footer.pagefoot a:hover{color:var(--ink)}
               <path d="M 107 258 L 95 267 L 107 276" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M 1493 258 L 1505 267 L 1493 276" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-              <text x="800" y="32" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Collaborative</text>
-              <text x="800" y="502" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Solo</text>
-              <text x="24" y="240" text-anchor="start" font-size="30" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Raw storage</text>
-              <text x="1576" y="240" text-anchor="end" font-size="30" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Synthesized into a person</text>
+              <text x="800" y="32" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Collaborative</text>
+              <text x="800" y="502" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Solo</text>
+              <text x="24" y="240" text-anchor="start" font-size="30" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Raw storage</text>
+              <text x="1576" y="240" text-anchor="end" font-size="30" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Synthesized into a person</text>
 
               <circle cx="508" cy="186" r="9" fill="var(--ink)" fill-opacity="0.78"/>
-              <text x="508" y="158" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Shared docs</text>
+              <text x="508" y="158" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Shared docs</text>
 
               <circle cx="649" cy="229" r="9" fill="var(--ink)" fill-opacity="0.78"/>
-              <text x="649" y="201" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Social memorials</text>
+              <text x="649" y="201" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Social memorials</text>
 
               <circle cx="479" cy="349" r="9" fill="var(--ink)" fill-opacity="0.78"/>
-              <text x="479" y="321" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Photo libraries</text>
+              <text x="479" y="321" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Photo libraries</text>
 
               <circle cx="845" cy="365" r="9" fill="var(--ink)" fill-opacity="0.78"/>
-              <text x="845" y="337" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Physical scrapbook</text>
+              <text x="845" y="337" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Physical scrapbook</text>
 
               <circle cx="1106" cy="178" r="13" fill="#C16341"/>
-              <text x="1106" y="150" text-anchor="middle" font-size="22" fill="var(--faint)" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Remember</text>
+              <text x="1106" y="150" text-anchor="middle" font-size="22" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Remember</text>
             </svg>
           </div>
         </div>

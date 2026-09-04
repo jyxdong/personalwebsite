@@ -7,7 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@1,300&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Switzer-VariableItalic.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* ── Switzer (Fontshare, free for commercial use) — self-hosted variable
+   font carrying body copy and every label/tag. Serif headings are
+   unchanged and still come from Source Serif 4. ──────────────────────── */
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-VariableItalic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --canvas:#D7D7D7;
@@ -18,7 +26,7 @@
 }
 html,body{height:100%}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family:'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight:400;
   color:var(--ink);
   background:var(--canvas);

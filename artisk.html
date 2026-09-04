@@ -12,7 +12,15 @@
 if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classList.add('case-from-sign');
 </script>
 <script src="case-transition.js" defer></script>
+<link rel="preload" href="fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Switzer-VariableItalic.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* ── Switzer (Fontshare, free for commercial use) — self-hosted variable
+   font carrying body copy and every label/tag. Serif headings are
+   unchanged and still come from Source Serif 4. ──────────────────────── */
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-VariableItalic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+
 /* ── Reset ─────────────────────────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
 
@@ -37,7 +45,7 @@ if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classL
 }
 html,body{height:100%}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family:'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight:400;
   color:var(--ink);
   background:var(--canvas);
@@ -162,7 +170,7 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 /* ── Sections ──────────────────────────────────────────────────────────── */
 main{padding:8px 64px 8px}
 section.block{padding-top:clamp(64px,8vh,104px);scroll-margin-top:24px}
-section.block:first-of-type{padding-top:56px;border-top:1px solid var(--line);margin-top:48px}
+section.block:first-of-type{padding-top:56px;margin-top:48px}
 
 .sec-measure{max-width:900px}
 

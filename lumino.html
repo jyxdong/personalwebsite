@@ -12,7 +12,15 @@
 if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classList.add('case-from-sign');
 </script>
 <script src="case-transition.js" defer></script>
+<link rel="preload" href="fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Switzer-VariableItalic.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* ── Switzer (Fontshare, free for commercial use) — self-hosted variable
+   font carrying body copy and every label/tag. Serif headings are
+   unchanged and still come from Source Serif 4. ──────────────────────── */
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-VariableItalic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+
 /* ── Reset ─────────────────────────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
 
@@ -37,7 +45,7 @@ if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classL
 }
 html,body{height:100%}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family:'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight:400;
   color:var(--ink);
   background:var(--canvas);
@@ -204,7 +212,7 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 /* ── Sections ──────────────────────────────────────────────────────────── */
 main{padding:8px 64px 8px}
 section.block{padding-top:clamp(88px,11vh,140px);scroll-margin-top:24px}
-section.block:first-of-type{padding-top:72px;border-top:1px solid var(--line);margin-top:48px}
+section.block:first-of-type{padding-top:72px;margin-top:48px}
 
 /* Reading column: capped at the same 900px measure as the header above,
    so paragraphs, grids, images and tables never run wider than the
@@ -219,9 +227,22 @@ section.block:first-of-type{padding-top:72px;border-top:1px solid var(--line);ma
 .sec-grid + .sec-grid{margin-top:56px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
+/* The right column IS the reading measure — the grid already caps it at
+   529px out of the 900px sec-measure. Capping the text a second time at
+   54ch inside that column left every paragraph 62px short of the images
+   below it, which run the full sec-measure width. Let the column do the
+   capping so text and images share one right edge.
+   Only while the two-column grid is live: below 900px the grid collapses
+   to a single full-width column, and there the 54ch cap is the only thing
+   keeping the line length readable. */
+@media (min-width:901px){
+  section.block .sec-body p,
+  section.block .sec-body ul{max-width:none}
+}
 .ph-inline + .sec-grid,
 .ph-row + .sec-grid,
 .stat-cells + .sec-grid,
+.bento-3 + .sec-grid,
 .highlight-row + .sec-grid{margin-top:44px}
 
 /* The tag floats above sec-head instead of taking up flow space, so
@@ -250,6 +271,8 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
 .bento-3 .cell h3.highlight{font-size:clamp(18px,1.8vw,20px)}
 .bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+/* Small diagram between a cell's keyword and its explanation. */
+.cell-figure{display:block;width:100%;height:auto;margin:18px 0 4px}
 
 /* ── Insight cells — same tag/H2/body type as a normal sec-grid, just
    boxed and run side by side instead of the full two-column width. ────── */
@@ -345,19 +368,21 @@ ul.insights em{font-style:italic;color:var(--ink)}
 /* Chart left, question + legend right. */
 .survey-panel{position:relative;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;min-width:0;height:276px;padding:24px;border:1px solid var(--line);border-radius:var(--r-sm)}
 .survey-pie{width:190px;height:190px;flex-shrink:0}
-.survey-pie path{stroke:var(--paper);stroke-width:2;transition:opacity .15s}
+.survey-pie path{stroke-width:1;transition:opacity .15s}
 .survey-pie.dimmed path:not(.is-hovered){opacity:.45}
 .survey-readout{min-width:0}
 .survey-question{font-family:'Source Serif 4',serif;font-weight:400;font-size:clamp(18px,1.8vw,20px);line-height:1.3}
 .survey-legend{margin-top:22px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .survey-legend li{display:flex;align-items:baseline;gap:10px;font-size:15px;line-height:1.4;color:#2b2b2b}
-.survey-legend .sw{flex-shrink:0;width:10px;height:10px;border-radius:2px;transform:translateY(1px)}
+.survey-legend .sw{flex-shrink:0;width:10px;height:10px;border-radius:2px;transform:translateY(1px);box-shadow:inset 0 0 0 1px rgba(17,17,17,.16)}
 .survey-legend .pct{margin-left:auto;padding-left:14px;color:var(--ink);font-variant-numeric:tabular-nums}
 .survey-legend li.zero{color:var(--faint)}
 .survey-legend li.zero .sw{background:none;border:1px solid var(--line)}
 .survey-legend li.zero .pct{color:var(--faint)}
 .survey-tip{position:absolute;pointer-events:none;z-index:2;background:var(--ink);color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:6px;white-space:nowrap;transform:translate(-50%,-115%)}
-@media (max-width:900px){
+/* Stacks earlier than the page's 900px breakpoint: side by side, the readout
+   column gets too narrow to hold a question in the panel's fixed height. */
+@media (max-width:1140px){
   .survey{grid-template-columns:1fr;gap:16px}
   .survey-toggle{flex-direction:row;overflow-x:auto;border-radius:999px}
   .survey-tab{flex:1 0 auto;white-space:nowrap}
@@ -367,9 +392,9 @@ ul.insights em{font-style:italic;color:var(--ink)}
 
 /* ── Device annotation diagram — a centered product render with labels
    floating around it, connected by thin leader lines. Everything (image,
-   labels, lines) is positioned in % against a fixed-aspect-ratio box so it
-   scales together; below 900px it collapses to a plain stacked column. ── */
-.device-annotate{position:relative;margin-top:40px;width:100%;aspect-ratio:900/560}
+   labels, lines) is positioned in % against a compact fixed-aspect-ratio box
+   so it scales together; below 900px it collapses to a plain stacked column. ── */
+.device-annotate{position:relative;margin-top:40px;width:100%;aspect-ratio:900/500}
 .device-annotate .device-lines{position:absolute;inset:0;width:100%;height:100%}
 .device-annotate .device-lines line{stroke:var(--muted);stroke-width:1}
 .device-annotate .device-img{position:absolute}
@@ -449,7 +474,8 @@ footer.pagefoot a:hover{color:var(--ink)}
       <li data-target="problem"><a href="#problem">Problem</a></li>
       <li data-target="research"><a href="#research">Research to insight</a></li>
       <li data-target="system"><a href="#system">System and User</a></li>
-      <li data-target="design-process"><a href="#design-process">Design Process</a></li>
+      <li data-target="design-process"><a href="#design-process">Physical Design</a></li>
+      <li data-target="interface-development"><a href="#interface-development">Interface Development</a></li>
       <li data-target="testing"><a href="#testing">Testing and iterations</a></li>
       <li data-target="final-design"><a href="#final-design">Final Design</a></li>
       <li data-target="reflection"><a href="#reflection">Reflection and next steps</a></li>
@@ -577,8 +603,8 @@ footer.pagefoot a:hover{color:var(--ink)}
           <div class="survey" id="survey">
             <div class="survey-toggle" role="tablist" aria-label="Survey questions">
               <button class="survey-tab" role="tab" aria-selected="true" data-q="0">Responding at night</button>
-              <button class="survey-tab" role="tab" aria-selected="false" data-q="1">Re-entering the room</button>
               <button class="survey-tab" role="tab" aria-selected="false" data-q="2">Bedtime stress</button>
+              <button class="survey-tab" role="tab" aria-selected="false" data-q="1">Re-entering the room</button>
               <button class="survey-tab" role="tab" aria-selected="false" data-q="3">Comfort with device</button>
             </div>
             <div class="survey-panel">
@@ -619,18 +645,6 @@ footer.pagefoot a:hover{color:var(--ink)}
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">System and User</div>
-              <h2>A digital and physical combined experience</h2>
-            </div>
-            <div class="sec-body">
-              <p class="highlight">Why a physical product?</p>
-              <p>Our target users are 4- to 6-year-olds, so we wanted the experience to stay fully tangible and away from digital distractions.</p>
-              <p class="highlight">Why an app for control?</p>
-              <p>So parents can access the device wherever they are — a companion app is more portable than the device itself.</p>
-            </div>
-          </div>
-          <div class="sec-grid">
-            <div class="sec-head">
               <div class="tag">User Flow</div>
               <h2>How users interact through the product?</h2>
             </div>
@@ -638,7 +652,32 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>This chart shows how the child's and parent's actions stay two separate flows on either side of the product, only meeting when a story alone isn't enough and the child escalates to the intercom, before the flow rejoins at the child falling asleep.</p>
             </div>
           </div>
-          <div class="ph ph-inline" style="aspect-ratio:2864/1270;background:none"><img src="images/LuminoFlowchart.png" alt="Lumino device and app flowchart"></div>
+          <div class="ph ph-inline" style="aspect-ratio:1940/689;background:none;border-radius:0;overflow:visible"><img src="images/LuminoFlowchart.svg" alt="Lumino device and app flowchart" style="object-fit:contain"></div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">System and User</div>
+              <h2>A digital and physical combined experience</h2>
+            </div>
+          </div>
+
+          <div class="bento-3">
+            <div class="cell">
+              <h3 class="highlight">Screen-free</h3>
+              <img class="cell-figure" src="images/LuminoInfographicScreen.svg" alt="A screen crossed out, replaced by a small glowing light">
+              <p>Our users are 4 to 6, so the child's side stays fully tangible: a light to pat and two buttons to press, with no screen at bedtime.</p>
+            </div>
+            <div class="cell">
+              <h3 class="highlight">Accessible</h3>
+              <img class="cell-figure" src="images/LuminoInfographicAccessible.svg" alt="The light sits on a bedside table within reach of the bed">
+              <p>It sits within arm's reach of the bed, so a child can work it alone in the dark. Parents reach the same controls through the app from wherever they are.</p>
+            </div>
+            <div class="cell">
+              <h3 class="highlight">Emotional</h3>
+              <img class="cell-figure" src="images/LuminoInfographicEmotional.svg" alt="A glowing light between a child and a parent, connected to both">
+              <p>The light and a parent's own recorded voice keep the child company. The parent settles them without walking back in, so both sides get through the night.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -646,7 +685,7 @@ footer.pagefoot a:hover{color:var(--ink)}
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">Design Process</div>
+              <div class="tag">Physical Design</div>
               <h2>Exploring the form</h2>
             </div>
             <div class="sec-body">
@@ -693,18 +732,18 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
           <div class="device-annotate">
-            <svg class="device-lines" viewBox="0 0 900 560" preserveAspectRatio="none" aria-hidden="true">
-              <line x1="261" y1="194" x2="412" y2="276"></line>
-              <line x1="261" y1="452" x2="470" y2="296"></line>
+            <svg class="device-lines" viewBox="0 0 900 500" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="261" y1="145" x2="414" y2="286"></line>
+              <line x1="261" y1="315" x2="480" y2="300"></line>
             </svg>
             <div class="ph device-img" style="left:31%;top:3.57%;width:38%;aspect-ratio:875/1130;background:none">
               <img src="images/Lumino3DDesign.png" alt="Lumino final 3D design — mushroom nightlight with intercom button, play button, and silicone top">
             </div>
-            <div class="highlight-item device-label" style="left:0;top:24%;width:29%">
+            <div class="highlight-item device-label" style="left:0;top:16%;width:29%">
               <p class="highlight">Intercom Button</p>
               <p class="highlight-body">Keep pressing to activate intercom feature: hold to talk. The button is sized with a length of 1.8 inch for toddlers' small hands.</p>
             </div>
-            <div class="highlight-item device-label" style="left:0;top:70%;width:29%">
+            <div class="highlight-item device-label" style="left:0;top:52%;width:29%">
               <p class="highlight">Play Button</p>
               <p class="highlight-body">Press to start playing the preset story/audio playlist. Size is differentiated from the intercom button so that it can be distinguished by touch in the dark.</p>
             </div>
@@ -712,6 +751,23 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p class="highlight">Silicone Top</p>
               <p class="highlight-body">The tap-to-activate silicone top is designed to suit toddlers' limited fine motor control. An open-palm pat is instinctive, and its soft and smooth texture prevents potential harm in darkness.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="interface-development">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Interface Development</div>
+              <h2>Bringing the app’s content into focus</h2>
+            </div>
+            <div class="sec-body">
+              <p>After exploring several interface directions, we chose to place graphic representations of the app’s content at the center of each screen. This created a clearer visual focus, made the controls easier to scan, and gave Lumino a friendlier, more cohesive character.</p>
+            </div>
+          </div>
+          <div class="ph ph-inline" style="aspect-ratio:3369/1895;background:none">
+            <img src="images/LuminoScreenDevelop.svg" alt="Lumino interface development showing several screen directions and the selected graphic-led approach">
           </div>
         </div>
       </section>
@@ -724,7 +780,7 @@ footer.pagefoot a:hover{color:var(--ink)}
               <h2>Putting the prototype in front of a parent</h2>
             </div>
             <div class="sec-body">
-              <p>We ran a moderated usability test of the app prototype with several parents of a four-year-old, using four task scenarios and a SUS-style rating. All tasks were completed, which told us the structure held. One walkthrough was recorded. Three specific interactions did not.</p>
+              <p>We ran a moderated usability test of the app prototype with several parents of a four-year-old, using four task scenarios and a SUS-style rating. One walkthrough was recorded. All tasks were completed, which told us the structure held.</p>
             </div>
           </div>
           <div class="bento-3">
@@ -739,6 +795,13 @@ footer.pagefoot a:hover{color:var(--ink)}
             <div class="cell">
               <h3 class="highlight">Parents completed every task without help</h3>
               <p>The core functions all worked. Parents set up stories, adjusted the light, and reached their child without confusion, and the simple controls held up even at the end of a long day.</p>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head"></div>
+            <div class="sec-body">
+              <p>The structure held, but a few design details raised concern.</p>
             </div>
           </div>
 
@@ -937,8 +1000,12 @@ footer.pagefoot a:hover{color:var(--ink)}
   // too — but draw no slice.
   const survey = document.getElementById('survey');
   if (survey) {
-    const RAMP = ['#8A4206', '#EE8018', '#FBD0A4'];
-    const LABEL_INK = ['#ffffff', '#ffffff', '#2b2b2b'];
+    // Lumino's own palette. The two warm neutrals (#F2ECE4 / #E1D6C9) are
+    // near-identical to the eye, so they're ordered non-adjacent, and every
+    // slice and swatch carries a hairline outline — three of these four sit
+    // under 3:1 against white and would otherwise read as holes.
+    const RAMP = ['#6299B1', '#F2ECE4', '#AFB893', '#E1D6C9'];
+    const LABEL_INK = ['#2b2b2b', '#2b2b2b', '#2b2b2b', '#2b2b2b'];
     const QUESTIONS = [
       {
         q: 'When your child calls out at night, how do you usually respond?',
@@ -968,13 +1035,13 @@ footer.pagefoot a:hover{color:var(--ink)}
         ],
       },
       {
-        q: 'How comfortable would you be with a device that lets your child communicate with you without leaving bed?',
+        q: "How comfortable would you be with using an assistive device in your child's bedroom?",
         answers: [
-          ['Neutral', 50],
+          ['Neutral', 37.5],
           ['Comfortable', 37.5],
           ['Slightly comfortable', 12.5],
+          ['Very comfortable', 12.5],
           ['Not comfortable', 0],
-          ['Very comfortable', 0],
         ],
       },
     ];
@@ -1017,6 +1084,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             ? `M ${CX} ${CY - R} A ${R} ${R} 0 1 1 ${CX - 0.01} ${CY - R} Z`
             : `M ${CX} ${CY} L ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} Z`);
           path.setAttribute('fill', color);
+          path.setAttribute('stroke', 'rgba(17,17,17,.16)');
           path.dataset.label = label;
           path.dataset.value = fmt(value);
           pie.appendChild(path);
