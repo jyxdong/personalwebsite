@@ -119,12 +119,23 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 .ph-row-captions .cap-block p{margin-top:0;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .ph .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 14px;background:linear-gradient(to top, rgba(17,17,17,.55), transparent);color:#fff;font-size:12.5px}
 
+/* ── Side-by-side scrollable wireframes ─────────────────────────────── */
+.linear-scroll-row{margin-top:40px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.linear-scroll-card{min-width:0}
+.linear-scroll-card figcaption{min-height:62px;padding:0 2px 14px;display:flex;flex-direction:column;gap:5px}
+.linear-scroll-card figcaption .tag{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.linear-scroll-card figcaption span:last-child{font-size:13px;line-height:1.45;color:var(--muted)}
+.linear-scroll-frame{height:clamp(460px,62vh,620px);overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--line);border-radius:var(--r-sm);background:#f4f4f4;scrollbar-width:thin;scrollbar-color:#b8b8b5 transparent}
+.linear-scroll-frame:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.linear-scroll-frame img{display:block;width:100%;height:auto}
+
 /* ── Sections ─────────────────────────────────────────────────────────── */
 main{padding:8px 64px 8px}
 section.block{padding-top:clamp(88px,11vh,140px);scroll-margin-top:24px}
 section.block:first-of-type{padding-top:72px;margin-top:48px}
 .sec-measure{max-width:900px}
 .sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
+.sec-grid.heading-only{grid-template-columns:1fr}
 .sec-grid + .sec-grid{margin-top:64px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
@@ -188,6 +199,8 @@ ul.insights em{font-style:italic;color:var(--ink)}
 @media (max-width:600px){
   .carousel-toggle{flex-wrap:wrap}
   .carousel-toggle .toggle-btn{flex:1 1 40%}
+  .linear-scroll-row{grid-template-columns:1fr}
+  .linear-scroll-card figcaption{min-height:0}
 }
 
 /* ── Insight / user cells ─────────────────────────────────────────────── */
@@ -488,7 +501,26 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
-          <div class="ph ph-inline"><div class="cap">Placeholder — first attempt: one linear page, ordered by the organizer</div></div>
+          <div class="linear-scroll-row">
+            <figure class="linear-scroll-card">
+              <figcaption>
+                <span class="tag">Organizer View</span>
+                <span>Sets the order every visitor will follow.</span>
+              </figcaption>
+              <div class="linear-scroll-frame" tabindex="0" aria-label="Scrollable organizer wireframe">
+                <img src="images/RememberLinearOrganizer.svg" alt="Organizer wireframe for arranging the sections of a linear memorial page">
+              </div>
+            </figure>
+            <figure class="linear-scroll-card">
+              <figcaption>
+                <span class="tag">Viewer View</span>
+                <span>Moves through the memorial in the organizer's sequence.</span>
+              </figcaption>
+              <div class="linear-scroll-frame" tabindex="0" aria-label="Scrollable viewer wireframe">
+                <img src="images/RememberLinearViewer.svg" alt="Viewer wireframe for scrolling through a linear memorial page">
+              </div>
+            </figure>
+          </div>
         </div>
       </section>
 
@@ -597,25 +629,25 @@ footer.pagefoot a:hover{color:var(--ink)}
 
       <section class="block reveal" id="reflection">
         <div class="sec-measure">
-          <div class="sec-grid">
+          <div class="sec-grid heading-only">
             <div class="sec-head">
-              <div class="tag">Reflection</div>
-              <h2>A feature can work perfectly and still say the wrong thing</h2>
-            </div>
-            <div class="sec-body">
-              <p>The constellation rebuild is what I took from this project. The original version had no usability problem. It was smooth, familiar, and borrowed from a pattern people already understood. It was wrong anyway, because a pattern carries meaning independent of whether it functions — and the meaning that Apple Photos carries is <em class="highlight">the system did this for you.</em> In a grief context, that is the one message the product could not send.</p>
-              <p>What the critique actually pointed at was bigger than visual style. It was about authorship — about who gets credit for a feeling a person is having, and making sure the system never quietly takes that credit for itself.</p>
-              <p class="highlight">The harder half of designing with AI wasn't capability. It was tone.</p>
+              <div class="tag">Reflection + Next Steps</div>
+              <h2>What does it mean to give up on one right structure?</h2>
             </div>
           </div>
 
-          <div class="sec-grid">
-            <div class="sec-head">
-              <h2>Next steps</h2>
+          <div class="highlight-row">
+            <div class="highlight-item">
+              <p class="highlight">There Is No One Right Structure</p>
+              <p class="highlight-body">The real turning point wasn't choosing four views over a single page. It was giving up the assumption that one correct way to organize a person's life exists at all. Once that assumption was gone, four views that interfere by different amounts stopped being a compromise and became the answer.</p>
             </div>
-            <div class="sec-body">
-              <p>The prototype is live, but it has never been in front of a grieving family. The first thing I would test is not usability. It's whether the constellation is meaningful or merely pretty — a distinction that a task-completion metric cannot detect and that only a real visitor can answer. I would run moderated sessions with actual viewers and organizers, and watch for one thing: whether someone moving through the constellation is remembering a person, or looking at a visualization.</p>
-              <p>The research also points further out than launch: a memorial's highest emotional value isn't the week it's built, it's years later, once someone's own memory of a voice or a face has started to soften and Remember is the thing that still has it exactly. The real product has to be built for that later user, still able to accept new contributions, still worth opening long after it was first finished.</p>
+            <div class="highlight-item">
+              <p class="highlight">Go to Market for Real Users</p>
+              <p class="highlight-body">Remember has never had a real user. Before testing whether the four views work the way the research predicted, the project needs a way to actually reach the grieving families it was designed for.</p>
+            </div>
+            <div class="highlight-item">
+              <p class="highlight">Designing for the Later Visitor</p>
+              <p class="highlight-body">A memorial's highest emotional value isn't the week it's built. It's years later, once someone's own memory of a voice or a face has started to soften. The product needs to keep accepting new contributions and stay worth opening long after it was first finished.</p>
             </div>
           </div>
         </div>
