@@ -198,8 +198,8 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
   overflow:hidden;
 }
 .ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
-.ph-inline{margin-top:32px;width:100%;aspect-ratio:16/9}
-.ph-row{margin-top:32px;display:flex;gap:16px}
+.ph-inline{margin-top:48px;width:100%;aspect-ratio:16/9}
+.ph-row{margin-top:48px;display:flex;gap:16px}
 .ph-row .ph{margin-top:0;flex:1 1 0;aspect-ratio:16/9}
 .ph img,.ph video{width:100%;height:100%;object-fit:cover;display:block}
 .ph .cap{
@@ -211,8 +211,7 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 
 /* ── Sections ──────────────────────────────────────────────────────────── */
 main{padding:8px 64px 8px}
-section.block{padding-top:clamp(88px,11vh,140px);scroll-margin-top:24px}
-section.block:first-of-type{padding-top:72px;margin-top:48px}
+section.block{padding-top:96px;scroll-margin-top:24px}
 
 /* Reading column: capped at the same 900px measure as the header above,
    so paragraphs, grids, images and tables never run wider than the
@@ -224,6 +223,7 @@ section.block:first-of-type{padding-top:72px;margin-top:48px}
    15px wider than the left column's own gap would need, so the right
    column reads narrower than the left column's raw width suggests. */
 .sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
+.sec-grid.heading-only{grid-template-columns:1fr}
 .sec-grid + .sec-grid{margin-top:56px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
@@ -243,7 +243,8 @@ section.block:first-of-type{padding-top:72px;margin-top:48px}
 .ph-row + .sec-grid,
 .stat-cells + .sec-grid,
 .bento-3 + .sec-grid,
-.highlight-row + .sec-grid{margin-top:44px}
+.metrics-row + .sec-grid,
+.highlight-row + .sec-grid{margin-top:48px}
 
 /* The tag floats above sec-head instead of taking up flow space, so
    sec-head's own top edge is the H2's top edge — that's what the grid's
@@ -282,6 +283,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .insight-cells .cell .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
 .insight-cells .cell h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
 .insight-cells .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+.insight-cells + .sec-grid{margin-top:96px}
 
 /* ── Stat callouts (Research to insight) — three columns, a big H2-style
    figure over a normal paragraph, sitting above the insight cells. ─────── */
@@ -445,6 +447,7 @@ footer.pagefoot a:hover{color:var(--ink)}
   .content-frame{overflow:visible;border-radius:24px}
   #pageScroll{height:auto;overflow:visible}
   .inner,main{padding-left:24px;padding-right:24px}
+  section.block{padding-top:64px}
   .bento-3,.insight-cells{grid-template-columns:1fr}
   .bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
   .bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
@@ -472,13 +475,13 @@ footer.pagefoot a:hover{color:var(--ink)}
      <ul id="tocList">
       <li data-target="context"><a href="#context">Context</a></li>
       <li data-target="problem"><a href="#problem">Problem</a></li>
-      <li data-target="research"><a href="#research">Research to insight</a></li>
+      <li data-target="research"><a href="#research">Research to Insight</a></li>
       <li data-target="system"><a href="#system">System and User</a></li>
       <li data-target="design-process"><a href="#design-process">Physical Design</a></li>
       <li data-target="interface-development"><a href="#interface-development">Interface Development</a></li>
-      <li data-target="testing"><a href="#testing">Testing and iterations</a></li>
+      <li data-target="testing"><a href="#testing">Testing and Iterations</a></li>
       <li data-target="final-design"><a href="#final-design">Final Design</a></li>
-      <li data-target="reflection"><a href="#reflection">Reflection and next steps</a></li>
+      <li data-target="reflection"><a href="#reflection">Reflection and Next Steps</a></li>
      </ul>
     </div>
     <a href="work.html" class="rail-home">
@@ -552,7 +555,7 @@ footer.pagefoot a:hover{color:var(--ink)}
 
       <section class="block reveal" id="research">
         <div class="sec-measure">
-          <div class="sec-grid">
+          <div class="sec-grid heading-only">
             <div class="sec-head">
               <div class="tag">Research to insight</div>
               <h2>Key Related Data</h2>
@@ -574,7 +577,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
-          <div class="sec-grid">
+          <div class="sec-grid heading-only">
             <div class="sec-head">
               <h2>Target Users</h2>
             </div>
@@ -654,7 +657,7 @@ footer.pagefoot a:hover{color:var(--ink)}
           </div>
           <div class="ph ph-inline" style="aspect-ratio:1940/689;background:none;border-radius:0;overflow:visible"><img src="images/LuminoFlowchart.svg" alt="Lumino device and app flowchart" style="object-fit:contain"></div>
 
-          <div class="sec-grid">
+          <div class="sec-grid heading-only">
             <div class="sec-head">
               <div class="tag">System and User</div>
               <h2>A digital and physical combined experience</h2>
@@ -726,7 +729,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
-          <div class="sec-grid">
+          <div class="sec-grid heading-only">
             <div class="sec-head">
               <div class="tag">Final 3D Design</div>
             </div>
@@ -882,20 +885,13 @@ footer.pagefoot a:hover{color:var(--ink)}
 
       <section class="block reveal" id="final-design">
         <div class="sec-measure">
-          <div class="sec-grid">
+          <div class="sec-grid heading-only">
             <div class="sec-head">
               <div class="tag">Final Design</div>
-              <h2 style="white-space:nowrap">Meet Lumino, a sleep companion</h2>
+              <h2>Meet Lumino, a sleep companion</h2>
             </div>
           </div>
           <div class="ph ph-inline" style="background:none"><video id="happyPathVideo" src="images/LuminoHappyPath.mov" muted loop playsinline preload="auto"></video></div>
-
-          <div class="sec-grid">
-            <div class="sec-head">
-              <h2>The design system</h2>
-            </div>
-          </div>
-          <div class="ph ph-inline" style="aspect-ratio:1366/591;background:none"><img src="images/LuminoDesignSystem.png" alt="Lumino design system assets"></div>
 
           <div class="metrics-row">
             <div class="stat">
@@ -907,12 +903,19 @@ footer.pagefoot a:hover{color:var(--ink)}
               <cite>— Professor Intriligator</cite>
             </div>
           </div>
+
+          <div class="sec-grid heading-only">
+            <div class="sec-head">
+              <h2>The design system</h2>
+            </div>
+          </div>
+          <div class="ph ph-inline" style="aspect-ratio:1366/591;background:none"><img src="images/LuminoDesignSystem.png" alt="Lumino design system assets"></div>
         </div>
       </section>
 
       <section class="block reveal" id="reflection">
         <div class="sec-measure">
-          <div class="sec-grid">
+          <div class="sec-grid heading-only">
             <div class="sec-head">
               <div class="tag">Reflection + Next Steps</div>
               <h2>How can Lumino be more comforting?</h2>
@@ -951,20 +954,30 @@ footer.pagefoot a:hover{color:var(--ink)}
   const sections = Array.from(document.querySelectorAll('main section.block'));
   const tocItems = Array.from(document.querySelectorAll('#tocList li'));
   const tocMap = new Map(tocItems.map(li => [li.dataset.target, li]));
+  const activateToc = id => {
+    const li = tocMap.get(id);
+    if (!li) return;
+    tocItems.forEach(item => item.classList.remove('active'));
+    li.classList.add('active');
+  };
 
   // Scroll-spy scoped to the content frame's own scrollbox, since the
   // page itself no longer scrolls.
   const spy = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      const li = tocMap.get(entry.target.id);
-      if (!li) return;
-      if (entry.isIntersecting) {
-        tocItems.forEach(x => x.classList.remove('active'));
-        li.classList.add('active');
-      }
+      if (entry.isIntersecting) activateToc(entry.target.id);
     });
-  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  }, { rootMargin: '-20% 0px -55% 0px', threshold: 0 });
   sections.forEach(s => spy.observe(s));
+
+  // The final section may be too short to cross the observer band before
+  // the scrollbox reaches its limit, so reaching the bottom activates it.
+  const syncLastTocAtBottom = () => {
+    const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2;
+    if (atBottom && sections.length) activateToc(sections[sections.length - 1].id);
+  };
+  scroller.addEventListener('scroll', syncLastTocAtBottom, { passive: true });
+  syncLastTocAtBottom();
 
   const reveal = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
