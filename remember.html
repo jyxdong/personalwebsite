@@ -119,13 +119,24 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 .ph-row-captions .cap-block p{margin-top:0;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .ph .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 14px;background:linear-gradient(to top, rgba(17,17,17,.55), transparent);color:#fff;font-size:12.5px}
 
+.concept-compare-grid{margin-top:40px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}
+.concept-card{min-width:0;margin:0}
+.concept-media{position:relative;aspect-ratio:1440/820;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-sm);background:#f4f4f4}
+.concept-media img{display:block;width:100%;height:100%;object-fit:cover}
+.concept-status{position:absolute;z-index:1;top:12px;right:12px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:20px;font-weight:600;line-height:1;box-shadow:0 0 0 3px rgba(255,255,255,.88)}
+.concept-status.rejected{background:#d75454}
+.concept-status.accepted{background:#339b68}
+.concept-card figcaption{padding:14px 2px 0}
+.concept-card figcaption .tag{display:block;margin-bottom:6px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.concept-card figcaption p{margin-top:0;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+
 /* ── Side-by-side scrollable wireframes ─────────────────────────────── */
 .linear-scroll-row{margin-top:40px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .linear-scroll-card{min-width:0}
 .linear-scroll-card figcaption{min-height:62px;padding:0 2px 14px;display:flex;flex-direction:column;gap:5px}
 .linear-scroll-card figcaption .tag{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
 .linear-scroll-card figcaption span:last-child{font-size:13px;line-height:1.45;color:var(--muted)}
-.linear-scroll-frame{height:clamp(460px,62vh,620px);overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--line);border-radius:var(--r-sm);background:#f4f4f4;scrollbar-width:thin;scrollbar-color:#b8b8b5 transparent}
+.linear-scroll-frame{width:100%;height:auto;aspect-ratio:4/3;overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--line);border-radius:var(--r-sm);background:#f4f4f4;scrollbar-width:thin;scrollbar-color:#b8b8b5 transparent}
 .linear-scroll-frame:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .linear-scroll-frame img{display:block;width:100%;height:auto}
 
@@ -139,12 +150,16 @@ section.block:first-of-type{padding-top:72px;margin-top:48px}
 .sec-grid + .sec-grid{margin-top:64px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
+@media (min-width:901px){
+  section.block .sec-body p,
+  section.block .sec-body ul{max-width:none}
+}
 .ph-inline + .sec-grid,
 .ph-row + .sec-grid,
 .ph-row-captions + .sec-grid,
+.concept-compare-grid + .sec-grid,
 .stat-cells + .sec-grid,
-.insight-cells + .sec-grid,
-.bento-4 + .sec-grid{margin-top:64px}
+.insight-cells + .sec-grid{margin-top:64px}
 .sec-head{position:relative}
 .sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
 .sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
@@ -171,20 +186,6 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .bento-3 .cell h3.highlight{font-size:clamp(16px,1.6vw,18px)}
 .bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
-/* ── Four-up "ways in" grid — 2x2 ────────────────────────────────────────── */
-.bento-4{margin-top:40px;display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.bento-4 .cell{padding:32px;border-left:1px solid var(--line);border-top:1px solid transparent}
-.bento-4 .cell:nth-child(2n+1){border-left:none}
-.bento-4 .cell:nth-child(n+3){border-top:1px solid var(--line)}
-.bento-4 .cell h3{font-size:18px;font-weight:400}
-.bento-4 .cell h3.highlight{font-style:normal;font-weight:400}
-.bento-4 .cell p{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
-@media (max-width:900px){
-  .bento-4{grid-template-columns:1fr}
-  .bento-4 .cell{border-left:none;border-top:1px solid var(--line)}
-  .bento-4 .cell:first-child{border-top:none}
-}
-
 /* ── Toggle + scrollable page frame (Final Design) ────────────────────── */
 .carousel-toggle{margin-top:24px;width:100%;display:flex;background:#f4f4f4;border-radius:999px;padding:4px;gap:4px}
 .carousel-toggle .toggle-btn{flex:1;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13px;color:var(--muted);padding:9px 12px;border-radius:999px;transition:background .2s,color .2s;white-space:nowrap;text-align:center}
@@ -201,6 +202,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
   .carousel-toggle .toggle-btn{flex:1 1 40%}
   .linear-scroll-row{grid-template-columns:1fr}
   .linear-scroll-card figcaption{min-height:0}
+  .concept-compare-grid{grid-template-columns:1fr}
 }
 
 /* ── Insight / user cells ─────────────────────────────────────────────── */
@@ -484,7 +486,6 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
-          <p style="margin-top:40px;max-width:56ch">Fragments needed to be synthesized into a coherent shape, not simply listed. That single requirement shaped everything about how the output layer got designed.</p>
         </div>
       </section>
 
@@ -532,53 +533,83 @@ footer.pagefoot a:hover{color:var(--ink)}
               <h2>Four ways, chosen out of many</h2>
             </div>
             <div class="sec-body">
-              <p>The single linear page was not the only idea we tried. Before landing on four views, we explored several different structures, and mocked up two of them properly enough to test.</p>
+              <p>The single linear page was not the only idea we tried. Before landing on four views, we explored several different structures and developed four directions far enough to compare.</p>
             </div>
           </div>
 
-          <div class="ph-row">
-            <div class="ph" style="aspect-ratio:1440/820;background:none"><img src="images/RememberRejected1.svg" alt="Rejected concept — a list of contributions"></div>
-            <div class="ph" style="aspect-ratio:1440/820;background:none"><img src="images/RememberRejected2.svg" alt="Rejected concept — a chronological timeline"></div>
-          </div>
-
-          <div class="ph-row-captions">
-            <div class="cap-block">
-              <div class="tag">Why not the list</div>
-              <p>It preserves every submission exactly as it arrived, but it does not decide what matters. Fifty entries read like fifty entries, not like a picture of one person.</p>
-            </div>
-            <div class="cap-block">
-              <div class="tag">Why not the timeline</div>
-              <p>It puts a life in order, but grief does not move in order. People reach for a habit or a joke first, not the year it happened.</p>
-            </div>
+          <div class="concept-compare-grid">
+            <figure class="concept-card">
+              <div class="concept-media">
+                <span class="concept-status rejected" aria-label="Rejected concept">&times;</span>
+                <img src="images/RememberRejected1.svg" alt="Rejected output concept showing contributions in a list view">
+              </div>
+              <figcaption>
+                <span class="tag">Why not the list</span>
+                <p>It preserves every submission exactly as it arrived, but it does not decide what matters. Fifty entries read like fifty entries, not like a picture of one person.</p>
+              </figcaption>
+            </figure>
+            <figure class="concept-card">
+              <div class="concept-media">
+                <span class="concept-status accepted" aria-label="Accepted direction">&#10003;</span>
+                <img src="images/RememberAccepted1.svg" alt="Accepted output direction showing memories as a constellation">
+              </div>
+              <figcaption>
+                <span class="tag">Why the constellation</span>
+                <p>It lets people enter through a theme or relationship, then trace each synthesis back to the contributor quotes behind it. The connections stay visible without forcing a beginning or ending.</p>
+              </figcaption>
+            </figure>
+            <figure class="concept-card">
+              <div class="concept-media">
+                <span class="concept-status rejected" aria-label="Rejected concept">&times;</span>
+                <img src="images/RememberRejected2.svg" alt="Rejected output concept showing memories on a chronological timeline">
+              </div>
+              <figcaption>
+                <span class="tag">Why not the timeline</span>
+                <p>It puts a life in order, but grief does not move in order. People reach for a habit or a joke first, not the year it happened.</p>
+              </figcaption>
+            </figure>
+            <figure class="concept-card">
+              <div class="concept-media">
+                <span class="concept-status accepted" aria-label="Accepted direction">&#10003;</span>
+                <img src="images/RememberAccepted2.svg" alt="Accepted output direction showing memories as a slideshow">
+              </div>
+              <figcaption>
+                <span class="tag">Why the slideshow</span>
+                <p>It guides the viewer through one memory at a time, pairing each image with the story it belongs to. The sequence offers a clear path while the other views remain available for open exploration.</p>
+              </figcaption>
+            </figure>
           </div>
 
           <div class="sec-grid">
             <div class="sec-head">
-              <h2>Grief has no correct order, and no end</h2>
+              <h2>Preserving a path back to the source</h2>
             </div>
             <div class="sec-body">
-              <p>The insight that resolved it: there is no single right way to remember someone, and no point at which you are finished. Grief research backed this up again and again. Different people needed different things from the same memorial, sometimes at different times.</p>
-              <p>So the output layer split into four ways, and what separates them is how much the system interferes. Someone who wants to be carried starts at one end. Someone who doesn't want a machine's version of their father goes straight to the other. No tab claims to be the complete one.</p>
+              <p>Alongside the two views shaped more heavily by AI, we kept a direct path to everything people submitted. Voices and All Photos preserve the original recordings and images so viewers can explore the source material themselves. This gives families more control when synthesis feels too mediated and keeps the system from making every decision for them.</p>
             </div>
           </div>
 
-          <div class="bento-4">
-            <div class="cell">
-              <h3 class="highlight">Story</h3>
-              <p>A slideshow, each frame a photo paired with the quote or memory it belongs to, sequenced to read as one narrative. It carries forward what the earliest linear page was reaching for, minus the requirement that every visitor take the whole memorial in that same fixed order.</p>
-            </div>
-            <div class="cell">
-              <h3 class="highlight">Constellation</h3>
-              <p>Synthesized memories rendered as connected points of light rather than paragraphs. Each theme carries a short summary and the real contributor quotes it was built from — never AI prose standing alone.</p>
-            </div>
-            <div class="cell">
-              <h3 class="highlight">Voices</h3>
-              <p>Every recording, kept as sound first, with a transcript underneath for anyone who wants to read instead of listen. Some things should not be transcribed-only.</p>
-            </div>
-            <div class="cell">
-              <h3 class="highlight">All Photos</h3>
-              <p>Every submitted photo, sorted into albums the AI names from what's actually in them, not by upload date — then browsable chronologically once you're inside one.</p>
-            </div>
+          <div class="concept-compare-grid">
+            <figure class="concept-card">
+              <div class="concept-media">
+                <span class="concept-status accepted" aria-label="Accepted direction">&#10003;</span>
+                <img src="images/RememberAccepted3-Voices.svg" alt="Accepted Voices output showing recordings, playback, and transcripts">
+              </div>
+              <figcaption>
+                <span class="tag">Why voices</span>
+                <p>Every recording stays in the contributor's own voice, with a transcript underneath for anyone who wants to read. The original audio remains available without being reduced to text.</p>
+              </figcaption>
+            </figure>
+            <figure class="concept-card">
+              <div class="concept-media">
+                <span class="concept-status accepted" aria-label="Accepted direction">&#10003;</span>
+                <img src="images/RememberAccepted4-PhotoArchive.svg" alt="Accepted All Photos output grouping submitted photographs by contributor">
+              </div>
+              <figcaption>
+                <span class="tag">Why all photos</span>
+                <p>Every submitted photo stays available in its original form and is grouped by contributor. Viewers can see what each person brought to the memorial and browse the source material directly.</p>
+              </figcaption>
+            </figure>
           </div>
 
           <div class="sec-grid">
@@ -586,7 +617,7 @@ footer.pagefoot a:hover{color:var(--ink)}
               <h2>How the organizer sees it</h2>
             </div>
             <div class="sec-body">
-              <p>The organizer meets the same four in the dashboard. Once the memorial is built, organizing and previewing it happens through the identical surface a visitor will see. There is no backstage version where the memorial is really managed. The person who built it sees what everyone else sees.</p>
+              <p>The organizer previews the AI-generated memorial in the dashboard exactly as it will appear to viewers. The same stories, constellations, voices, and photos carry into the published experience, while review and approval controls remain with the organizer.</p>
             </div>
           </div>
 
