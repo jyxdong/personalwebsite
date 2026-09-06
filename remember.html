@@ -109,8 +109,8 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 /* ── Placeholder image blocks ────────────────────────────────────────── */
 .ph{position:relative;background:repeating-linear-gradient(45deg,#ececec 0 12px,#f4f4f4 12px 24px);border-radius:var(--r-sm);overflow:hidden}
 .ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
-.ph-inline{margin-top:40px;width:100%;aspect-ratio:16/9}
-.ph-row{margin-top:40px;display:flex;gap:16px}
+.ph-inline{margin-top:48px;width:100%;aspect-ratio:16/9}
+.ph-row{margin-top:48px;display:flex;gap:16px}
 .ph-row .ph{margin-top:0;flex:1 1 0;aspect-ratio:16/9}
 .ph img,.ph video{width:100%;height:100%;object-fit:cover;display:block}
 .ph-row-captions{margin-top:24px;display:flex;gap:16px}
@@ -119,7 +119,7 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 .ph-row-captions .cap-block p{margin-top:0;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .ph .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 14px;background:linear-gradient(to top, rgba(17,17,17,.55), transparent);color:#fff;font-size:12.5px}
 
-.concept-compare-grid{margin-top:40px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}
+.concept-compare-grid{margin-top:48px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}
 .concept-card{min-width:0;margin:0}
 .concept-media{position:relative;aspect-ratio:1440/820;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-sm);background:#f4f4f4}
 .concept-media img{display:block;width:100%;height:100%;object-fit:cover}
@@ -131,7 +131,7 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 .concept-card figcaption p{margin-top:0;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
 /* ── Side-by-side scrollable wireframes ─────────────────────────────── */
-.linear-scroll-row{margin-top:40px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.linear-scroll-row{margin-top:48px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .linear-scroll-card{min-width:0}
 .linear-scroll-card figcaption{min-height:62px;padding:0 2px 14px;display:flex;flex-direction:column;gap:5px}
 .linear-scroll-card figcaption .tag{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
@@ -142,12 +142,11 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 
 /* ── Sections ─────────────────────────────────────────────────────────── */
 main{padding:8px 64px 8px}
-section.block{padding-top:clamp(88px,11vh,140px);scroll-margin-top:24px}
-section.block:first-of-type{padding-top:72px;margin-top:48px}
+section.block{padding-top:96px;scroll-margin-top:24px}
 .sec-measure{max-width:900px}
 .sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
 .sec-grid.heading-only{grid-template-columns:1fr}
-.sec-grid + .sec-grid{margin-top:64px}
+.sec-grid + .sec-grid{margin-top:56px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
 @media (min-width:901px){
@@ -159,7 +158,11 @@ section.block:first-of-type{padding-top:72px;margin-top:48px}
 .ph-row-captions + .sec-grid,
 .concept-compare-grid + .sec-grid,
 .stat-cells + .sec-grid,
-.insight-cells + .sec-grid{margin-top:64px}
+.bento-2 + .sec-grid,
+.bento-3 + .sec-grid,
+.metrics-row + .sec-grid,
+.highlight-row + .sec-grid{margin-top:48px}
+.insight-cells + .sec-grid{margin-top:96px}
 .sec-head{position:relative}
 .sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
 .sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
@@ -172,14 +175,14 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .methods{margin-top:16px;font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:16px}
 
 /* ── Bento grids ──────────────────────────────────────────────────────── */
-.bento-2{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-2{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .bento-2 .cell{padding:32px;border-left:1px solid var(--line)}
 .bento-2 .cell:first-child{border-left:none}
 .bento-2 .cell h3{font-size:15px;font-weight:400}
 .bento-2 .cell .ph{margin-top:16px;aspect-ratio:4/3}
 .bento-2 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
-.bento-3{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
 .bento-3 .cell:first-child{border-left:none}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
@@ -206,7 +209,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 }
 
 /* ── Insight / user cells ─────────────────────────────────────────────── */
-.insight-cells{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.insight-cells{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .insight-cells.cols-3{grid-template-columns:repeat(3,1fr)}
 .insight-cells .cell{padding:28px;border-left:1px solid var(--line)}
 .insight-cells .cell:first-child{border-left:none}
@@ -228,14 +231,14 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
 .metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
 
-.highlight-row{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.highlight-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
 .highlight-item .highlight{display:block;text-align:center;font-size:clamp(16px,1.6vw,18px);line-height:1.3}
 .highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
 .metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
 .metrics-row .quote cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:var(--faint)}
 
-.pullquote{margin:40px 0;padding-left:20px;border-left:1px solid var(--line)}
+.pullquote{margin:32px 0;padding-left:20px;border-left:1px solid var(--line)}
 .pullquote p{margin:0;max-width:56ch;color:var(--ink);font-size:clamp(19px,2.1vw,24px);line-height:1.4;font-style:italic}
 
 .next-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:54ch}
@@ -266,6 +269,7 @@ footer.pagefoot a:hover{color:var(--ink)}
   .content-frame{overflow:visible;border-radius:24px}
   #pageScroll{height:auto;overflow:visible}
   .inner,main{padding-left:24px;padding-right:24px}
+  section.block{padding-top:64px}
   .bento-2,.bento-3,.insight-cells,.insight-cells.cols-3{grid-template-columns:1fr}
   .bento-2 .cell,.bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
   .bento-2 .cell:first-child,.bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
@@ -380,7 +384,7 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
-          <div style="margin-top:40px">
+          <div style="margin-top:48px">
             <svg viewBox="0 0 1600 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Positioning map. Vertical axis: Solo to Collaborative. Horizontal axis: Raw storage to Synthesized into a person. Shared docs and Social memorials sit in the collaborative, raw-storage quadrant. Photo libraries and Physical scrapbook sit in the solo quadrant. Remember sits alone in the collaborative, synthesized quadrant.">
               <line x1="800" y1="58" x2="800" y2="472" stroke="var(--muted)" stroke-width="1.5"/>
               <path d="M 791 70 L 800 58 L 809 70" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

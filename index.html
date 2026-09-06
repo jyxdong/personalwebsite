@@ -46,10 +46,42 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .nav-tabs a.tab-work.active{background:#FF8418;color:#000}
 .nav-tabs a.tab-play.active{background:#00D0FF;color:#000}
 .shell{flex:1;min-height:0;display:flex;gap:var(--midgap);margin:var(--midgap) var(--sidegap) var(--sidegap) var(--sidegap)}
-#contentWrap{flex:1;min-width:0;background:#fff;border-radius:40px;overflow:hidden;position:relative}
-#wrap{position:absolute;inset:0;overflow:hidden;cursor:grab}
+#contentWrap{--view-inset:24px;flex:1;min-width:0;background:#fff;border-radius:40px;overflow:hidden;position:relative}
+#wrap{position:absolute;inset:0;z-index:0;overflow:hidden;cursor:grab}
+#contentWrap::before{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;background:rgba(255,255,255,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);transition:backdrop-filter .9s cubic-bezier(.7,0,1,.35),-webkit-backdrop-filter .9s cubic-bezier(.7,0,1,.35),background .9s cubic-bezier(.7,0,1,.35)}
+#contentWrap.cards-view::before{background:rgba(255,255,255,.16);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition-duration:1.5s;transition-delay:.42s;transition-timing-function:ease}
+#contentWrap.cards-view #wrap{pointer-events:none}
+#contentWrap.cards-view #lbl,#contentWrap.cards-view #hint{visibility:hidden}
 #wrap:active{cursor:grabbing}
 canvas{display:block}
+.cards-button{position:absolute;right:var(--view-inset);bottom:var(--view-inset);z-index:3;min-height:40px;padding:8px 24px;border:0;border-radius:999px;background:#CBFF71;color:#000;font-family:inherit;font-size:20px;line-height:24px;font-weight:400;text-decoration:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s,bottom .7s cubic-bezier(.65,0,.35,1)}
+#contentWrap.cards-view .cards-button{bottom:calc(100% - var(--view-inset) - 40px)}
+.cards-button:hover{background:#e9e9e9}
+.cards-button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+#projectCards{position:absolute;z-index:2;top:calc(var(--view-inset) + 56px);right:var(--view-inset);bottom:var(--view-inset);width:65%;padding:4px;overflow-y:auto;overscroll-behavior:contain;visibility:hidden;pointer-events:none;transition:visibility 0s .65s}
+#contentWrap.cards-view #projectCards{visibility:visible;pointer-events:auto;transition-delay:0s}
+.project-grid{min-height:100%;display:grid;align-content:center;grid-template-rows:repeat(3,auto);gap:12px}
+.project-card{display:grid;grid-template-columns:minmax(96px,28%) minmax(0,1fr);background:#f4f4f4;border-radius:28px;overflow:hidden;text-decoration:none;color:var(--ink);opacity:0;transform:translateY(100vh);transition:transform .65s cubic-bezier(.65,0,.35,1),opacity .4s ease}
+#contentWrap.cards-view .project-card{transform:translateY(0);opacity:1;transition-delay:.7s}
+#contentWrap.cards-view .project-card:nth-child(2){transition-delay:.84s}
+#contentWrap.cards-view .project-card:nth-child(3){transition-delay:.98s}
+.project-card:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.project-thumb{position:relative;width:100%;aspect-ratio:1/1;align-self:center;overflow:hidden}
+.project-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:28px;transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.project-card:hover .project-thumb img{transform:scale(.94)}
+.project-body{padding:16px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.project-body h2{font-size:20px;line-height:1.15;letter-spacing:-.01em;font-weight:400}
+.project-body p{margin-top:8px;font-size:14px;line-height:1.4;color:#2b2b2b}
+.project-tags{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.project-tag{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:#2b2b2b;border:1px solid #2b2b2b;border-radius:999px;padding:2px 8px}
+@media (prefers-reduced-motion:reduce){
+  #wrap,#contentWrap::before,#contentWrap.cards-view::before,#projectCards,#contentWrap.cards-view #projectCards,.cards-button,.project-card,#contentWrap.cards-view .project-card,.project-thumb img{transition:none}
+}
+#signCursor{position:fixed;top:0;left:0;z-index:1000;pointer-events:none;visibility:hidden;padding:2px 12px;border:1px solid #000;border-radius:999px;background:#f4f4f4;color:#000;font-family:inherit;font-size:15px;font-weight:400;line-height:1.4;letter-spacing:.04em;text-transform:uppercase;text-align:center;white-space:nowrap}
+@media (hover:hover) and (pointer:fine){
+  #c.custom-cursor{cursor:none}
+  #signCursor.on{visibility:visible}
+}
 #lbl{position:absolute;bottom:11%;left:50%;transform:translateX(-50%);background:#fff;color:#000;border:2px solid #000;border-radius:999px;padding:9px 34px;font-size:20px;font-weight:400;pointer-events:none;opacity:0;transition:opacity .35s,background .2s;white-space:nowrap;display:flex;align-items:center;gap:12px}
 #lbl.on{opacity:1}
 #lbl.clickable{pointer-events:auto;cursor:pointer}
@@ -93,7 +125,15 @@ canvas{display:block}
   .shell{flex-direction:column;height:auto}
   #introRail{width:100%}
   .intro-frame.bio{flex:none}
-  #contentWrap{min-height:420px}
+  #contentWrap{--view-inset:16px;min-height:420px}
+  .cards-button{right:16px;bottom:16px;max-width:calc(100% - 32px);font-size:16px;padding:8px 20px}
+  .project-card{grid-template-columns:minmax(84px,28%) minmax(0,1fr)}
+  .project-body{padding:16px}
+  .project-body h2{font-size:20px}
+  .project-body p{font-size:14px}
+}
+@media (max-width:540px){
+  .project-card{grid-template-columns:minmax(0,1fr)}
 }
 </style>
 </head>
@@ -146,8 +186,60 @@ if(sessionStorage.getItem('aboutFromPlay')){
       <div id="hint">Click anywhere to return</div>
       <div id="err"></div>
     </div>
+    <section id="projectCards" aria-label="Projects as cards" aria-hidden="true" inert>
+      <div class="project-grid">
+        <a class="project-card" href="lumino.html">
+          <div class="project-thumb"><img src="images/LuminoCover.jpg" alt="" decoding="async"></div>
+          <div class="project-body">
+            <h2>Lumino</h2>
+            <p>A product designed to provide companion that guides young children to sleep on their own.</p>
+            <div class="project-tags"><span class="project-tag">UX Research</span><span class="project-tag">Interface</span><span class="project-tag">Product Design</span></div>
+          </div>
+        </a>
+        <a class="project-card" href="remember.html">
+          <div class="project-thumb"><img src="images/RememberCover.jpg" alt="" decoding="async"></div>
+          <div class="project-body">
+            <h2>Remember</h2>
+            <p>A collaborative memorial platform where AI weaves media into a living story of someone who's passed.</p>
+            <div class="project-tags"><span class="project-tag">Web Design</span><span class="project-tag">User Flow</span><span class="project-tag">AI Product</span></div>
+          </div>
+        </a>
+        <a class="project-card" href="artisk.html">
+          <div class="project-thumb"><img src="images/ArtiskCover.jpg" alt="" decoding="async"></div>
+          <div class="project-body">
+            <h2>Artisk</h2>
+            <p>Redesigning the About and FAQ page based on Artisk's rebranding.</p>
+            <div class="project-tags"><span class="project-tag">Web Design</span><span class="project-tag">Internship</span><span class="project-tag">System</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+    <button class="cards-button" type="button" aria-controls="projectCards" aria-expanded="false"><span>View projects as cards</span><span aria-hidden="true">↓</span></button>
   </div>
 </div>
+<div id="signCursor" aria-hidden="true">↔ DRAG</div>
+
+<script>
+(function(){
+  const content=document.getElementById('contentWrap');
+  const wrap=document.getElementById('wrap');
+  const cards=document.getElementById('projectCards');
+  const button=content.querySelector('.cards-button');
+  const label=button.querySelector('span');
+  const arrow=button.querySelector('[aria-hidden]');
+  button.addEventListener('click',function(){
+    const showCards=content.classList.toggle('cards-view');
+    wrap.inert=showCards;
+    wrap.setAttribute('aria-hidden',String(showCards));
+    cards.inert=!showCards;
+    cards.setAttribute('aria-hidden',String(!showCards));
+    button.setAttribute('aria-expanded',String(showCards));
+    label.textContent=showCards ? 'Back to signpost' : 'View projects as cards';
+    arrow.textContent=showCards ? '↘' : '↓';
+    content.dispatchEvent(new CustomEvent('projectsviewchange',{detail:{showCards}}));
+  });
+})();
+</script>
 
 <script>
 window.addEventListener('error', e=>{
@@ -194,13 +286,16 @@ renderer.toneMappingExposure = 1.0;
 
 const scene  = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42,1,0.1,200);
-camera.position.set(4.5, 1.2, 11);
+// Default view: front-facing Remember and Playground signs, matching the
+// intended opening composition (290° orbit at the original camera distance).
+camera.position.set(-11.17, 0.5, 4.06);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enablePan  = false;
 controls.enableZoom = false;
-controls.minPolarAngle = Math.PI/2 - 0.14;
-controls.maxPolarAngle = Math.PI/2 + 0.14;
+// Keep the pole parallel to the screen; dragging only orbits its vertical axis.
+controls.minPolarAngle = Math.PI/2;
+controls.maxPolarAngle = Math.PI/2;
 controls.rotateSpeed   = 0.48;
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
@@ -209,14 +304,20 @@ controls.update();
 
 // ── Lights ───────────────────────────────────────────────────────────────
 scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+// Keep the lighting consistent around the pole as the viewing angle changes.
+// The material still receives directional shading and metallic highlights.
+const lightRig = new THREE.Group();
+scene.add(lightRig);
+const initialLightAzimuth = Math.atan2(
+  camera.position.x-controls.target.x, camera.position.z-controls.target.z);
 const sun = new THREE.DirectionalLight(0xffffff, 1.35);
 sun.position.set(6,12,8); sun.castShadow = true;
 sun.shadow.mapSize.set(2048,2048);
-scene.add(sun);
+lightRig.add(sun);
 const fillL = new THREE.DirectionalLight(0xeaf0ff, 0.55);
-fillL.position.set(-5,4,-6); scene.add(fillL);
+fillL.position.set(-5,4,-6); lightRig.add(fillL);
 const rimL = new THREE.DirectionalLight(0xffffff, 0.35);
-rimL.position.set(0,-6,4); scene.add(rimL);
+rimL.position.set(0,-6,4); lightRig.add(rimL);
 
 // ── Materials ────────────────────────────────────────────────────────────
 const structureMaterial=new THREE.MeshStandardMaterial({
@@ -250,32 +351,10 @@ function label(ctx,s,txt,col){
 }
 
 const TEX = {
-  whoAmI: mkTex((c,s)=>{
-    const g=c.createLinearGradient(0,0,s,s);
-    g.addColorStop(0,'#d4673e'); g.addColorStop(1,'#b84d2a');
-    c.fillStyle=g; c.fillRect(0,0,s,s);
-    c.strokeStyle='rgba(255,200,160,.3)'; c.lineWidth=15;
-    for(let i=-s;i<s*2;i+=70){c.beginPath();c.moveTo(i,0);c.lineTo(i+s,s);c.stroke();}
-    c.strokeStyle='rgba(255,255,255,.2)'; c.lineWidth=22;
-    c.beginPath(); c.arc(s/2,s*.42,s*.28,0,Math.PI*2); c.stroke();
-    label(c,s,'Who Am I');
-  }),
+  playground: new THREE.TextureLoader().load('images/PlaySign.svg'),
   artisk: new THREE.TextureLoader().load('images/ArtiskSign.svg'),
   lumino: new THREE.TextureLoader().load('images/LuminoSign.png'),
   remember: new THREE.TextureLoader().load('images/RememberSign.svg'),
-  proj4: mkTex((c,s)=>{
-    c.fillStyle='#d42c3e'; c.fillRect(0,0,s,s);
-    const tri=(ax,ay,bx,by,cx2,cy2,col)=>{
-      c.beginPath(); c.moveTo(ax*s,ay*s); c.lineTo(bx*s,by*s); c.lineTo(cx2*s,cy2*s);
-      c.closePath(); c.fillStyle=col; c.fill();
-    };
-    tri(.5,.06,.86,.46,.14,.46,'rgba(255,225,45,.7)');
-    tri(.14,.46,.5,.06,.5,.5,'rgba(255,255,255,.28)');
-    tri(.5,.5,.86,.46,.5,.06,'rgba(255,90,40,.38)');
-    tri(.1,.56,.5,.56,.3,.82,'rgba(90,235,255,.62)');
-    tri(.5,.56,.9,.56,.7,.82,'rgba(255,255,255,.38)');
-    label(c,s,'Project 04');
-  }),
   proj5: mkTex((c,s)=>{
     c.fillStyle='#101e62'; c.fillRect(0,0,s,s);
     const cols=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c77dff','#ff9f43'];
@@ -349,7 +428,12 @@ function fitGeometryUVs(geo,textureAspect){
 }
 
 // ── Pole ─────────────────────────────────────────────────────────────────
-const pole = new THREE.Mesh(new THREE.CylinderGeometry(.11,.135,14,20), M.pole);
+// Continue the original taper below the frame so shifting the view cannot
+// reveal a flat end in the middle of the white panel. The top stays at y=7.
+const poleHeight=50;
+const pole = new THREE.Mesh(new THREE.CylinderGeometry(
+  .11,.11+(.135-.11)*poleHeight/14,poleHeight,20), M.pole);
+pole.position.y=7-poleHeight/2;
 scene.add(pole);
 
 // Low-profile clamp bands at varied heights, matching the hardware in the
@@ -367,15 +451,19 @@ scene.add(pole);
 // pole. A sign at 25° shows its face to someone standing near 25°+90°/-90°
 // around the pole; the back shows from the opposite tangential side.
 const DEFS=[
-  {label:'Who Am I',        key:'whoAmI',   shape:'square',   w:2.2, h:2.2,  y:4.4,   deg:25},
+  {label:'PLAYGROUND',      key:'playground',shape:'square',  w:2.2, h:2.2,  y:-1.9,  deg:200},
   {label:'Artisk Redesign', key:'artisk',   shape:'hrect',    w:3.3, h:1.65, y:-0.9,  deg:70, textureAspect:1395/384},
   {label:'Lumino',          key:'lumino',   shape:'square',   w:2.1, h:2.1,  y:0.8,   deg:140},
   {label:'Remember',        key:'remember', shape:'circle',   w:2.1, h:2.1,  y:2.55,  deg:195},
-  {label:'Project 04',      key:'proj4',    shape:'triangle', w:2.3, h:2.0,  y:-2.5,  deg:250},
-  {label:'Project 05',      key:'proj5',    shape:'hrect',    w:2.85,h:1.45, y:-3.85, deg:310},
+  {label:'Project 05',      key:'proj5',    shape:'hrect',    w:2.85,h:1.45, y:4.4,   deg:25},
 ];
 
-const PROJECT_PAGES={artisk:'artisk.html',lumino:'lumino.html',remember:'remember.html'};
+const PROJECT_PAGES={
+  playground:'play.html',
+  artisk:'artisk.html',
+  lumino:'lumino.html',
+  remember:'remember.html'
+};
 const clickables=[];
 
 function buildSign(def){
@@ -481,7 +569,12 @@ function tween(fromCam,toCam,fromTgt,toTgt,dur,onDone){
 }
 
 // ── Focus state ──────────────────────────────────────────────────────────
-let focused=null, busy=false;
+let focused=null, busy=false, cardsView=false;
+let cardsShift=0, cardsMotion=null;
+const cardsOrbitAxis=new THREE.Vector3(0,1,0);
+const cardsOrbitOffset=new THREE.Vector3();
+let viewportWidth=1, viewportHeight=1;
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
 const savedCam=new THREE.Vector3(), savedTgt=new THREE.Vector3();
 
 function focusSign(entry){
@@ -496,7 +589,7 @@ function focusSign(entry){
   entry.sg.getWorldQuaternion(q);
   const frontDir=new THREE.Vector3(0,0,1).applyQuaternion(q);
   const toCam=sgp.clone().addScaledVector(frontDir,3.8);
-  toCam.y=sgp.y+.25;
+  toCam.y=sgp.y;
 
   tween(camera.position,toCam,controls.target,sgp,.65,function(){
     busy=false;
@@ -520,30 +613,108 @@ function unfocus(){
   if(busy||!focused) return; busy=true;
   lbl.classList.remove('on','clickable'); lbl.onclick=null; hint.classList.remove('on');
   tween(camera.position,savedCam,controls.target,savedTgt,.55,function(){
-    focused=null; busy=false; controls.enabled=true;
+    focused=null; busy=false; controls.enabled=!cardsView;
   });
 }
 
-// ── Click ────────────────────────────────────────────────────────────────
+// ── Pointer feedback and click ───────────────────────────────────────────
 const ray=new THREE.Raycaster(), mp=new THREE.Vector2();
-let drag=false;
-canvas.addEventListener('pointerdown',function(){drag=false;});
-canvas.addEventListener('pointermove',function(){drag=true;});
-canvas.addEventListener('pointerup',function(e){
-  if(drag||busy) return;
-  const r=wrap.getBoundingClientRect();
-  mp.x=((e.clientX-r.left)/r.width)*2-1;
-  mp.y=-((e.clientY-r.top)/r.height)*2+1;
+const signCursor=document.getElementById('signCursor');
+const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)');
+let drag=false, pressedPointer=null, downX=0, downY=0;
+let cursorInside=false, cursorX=0, cursorY=0;
+
+function signAt(x,y){
+  const r=canvas.getBoundingClientRect();
+  mp.x=((x-r.left)/r.width)*2-1;
+  mp.y=-((y-r.top)/r.height)*2+1;
   ray.setFromCamera(mp,camera);
-  const hits=ray.intersectObjects(clickables);
-  if(hits.length){ const s=hits[0].object.userData.sign; focused?unfocus():focusSign(s); }
-  else if(focused) unfocus();
+  const hit=ray.intersectObjects(clickables)[0];
+  return hit ? hit.object.userData.sign : null;
+}
+
+function hideCursor(){
+  signCursor.classList.remove('on');
+  canvas.classList.remove('custom-cursor');
+}
+
+function updateCursor(){
+  if(cardsView||!cursorInside||!finePointer.matches||busy||document.elementFromPoint(cursorX,cursorY)!==canvas){hideCursor();return;}
+  const text=focused ? 'BACK ↩' : drag ? '↔' : signAt(cursorX,cursorY) ? 'EXPLORE ↗' : '↔ DRAG';
+  if(signCursor.textContent!==text) signCursor.textContent=text;
+  // Keep the badge centered on the actual hit point, including near edges.
+  signCursor.style.transform=`translate(${cursorX}px,${cursorY}px) translate(-50%,-50%)`;
+  signCursor.classList.add('on');
+  canvas.classList.add('custom-cursor');
+}
+
+function trackCursor(e){
+  cursorX=e.clientX; cursorY=e.clientY;
+  cursorInside=e.pointerType==='mouse' && document.elementFromPoint(cursorX,cursorY)===canvas;
+  if(!cursorInside) hideCursor();
+}
+
+// Track movement outside the canvas too, so buttons use the native pointer.
+document.addEventListener('pointermove',trackCursor,{passive:true});
+document.querySelector('.cards-button').addEventListener('pointerenter',function(){
+  cursorInside=false;
+  hideCursor();
+});
+canvas.addEventListener('pointerenter',trackCursor);
+canvas.addEventListener('pointerleave',function(){cursorInside=false;hideCursor();});
+canvas.addEventListener('pointerdown',function(e){
+  if(pressedPointer!==null) {drag=true;return;}
+  pressedPointer=e.pointerId; drag=false;
+  downX=e.clientX; downY=e.clientY;
+  trackCursor(e);
+});
+canvas.addEventListener('pointermove',function(e){
+  if(pressedPointer===e.pointerId && Math.hypot(e.clientX-downX,e.clientY-downY)>5) drag=true;
+  trackCursor(e);
+});
+canvas.addEventListener('pointerup',function(e){
+  if(e.pointerId!==pressedPointer) return;
+  const wasDrag=drag;
+  pressedPointer=null; drag=false;
+  trackCursor(e);
+  if(wasDrag||busy||e.button!==0||document.elementFromPoint(e.clientX,e.clientY)!==canvas) return;
+  const sign=signAt(e.clientX,e.clientY);
+  if(focused) unfocus();
+  else if(sign) focusSign(sign);
+});
+function resetPointer(){pressedPointer=null;drag=false;cursorInside=false;hideCursor();}
+window.addEventListener('pointerup',function(e){
+  if(pressedPointer===e.pointerId) resetPointer();
+});
+canvas.addEventListener('pointercancel',resetPointer);
+canvas.addEventListener('lostpointercapture',function(){pressedPointer=null;drag=false;});
+window.addEventListener('blur',resetPointer);
+window.addEventListener('scroll',function(){cursorInside=false;hideCursor();},true);
+finePointer.addEventListener('change',resetPointer);
+
+// Shift the projection within a full-size canvas, rather than moving the
+// canvas itself and exposing its clipped lower/right edges inside the panel.
+function applyCardsOffset(){
+  if(cardsShift===0){camera.clearViewOffset();return;}
+  camera.setViewOffset(viewportWidth,viewportHeight,
+    viewportWidth*.36*cardsShift,(viewportHeight*.38+180)*cardsShift,
+    viewportWidth,viewportHeight);
+}
+
+document.getElementById('contentWrap').addEventListener('projectsviewchange',function(e){
+  cardsView=e.detail.showCards;
+  cardsMotion={from:cardsShift,to:cardsView?1:0,t:0};
+  controls.enabled=!cardsView&&!focused&&!busy;
+  resetPointer();
 });
 
 // ── Resize ───────────────────────────────────────────────────────────────
 function resize(){
   const w=wrap.clientWidth,h=wrap.clientHeight;
+  if(!w||!h) return;
+  viewportWidth=w; viewportHeight=h;
   renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix();
+  applyCardsOffset();
 }
 resize(); new ResizeObserver(resize).observe(wrap);
 
@@ -562,7 +733,25 @@ const clock=new THREE.Clock();
     if(tw.t>=1){tweens.splice(i,1); if(tw.onDone) tw.onDone();}
   }
   controls.update();
+  if(cardsMotion){
+    const previousShift=cardsShift;
+    cardsMotion.t=reducedMotion.matches ? 1 : Math.min(cardsMotion.t+dt/.7,1);
+    cardsShift=THREE.MathUtils.lerp(cardsMotion.from,cardsMotion.to,eio(cardsMotion.t));
+    if(cardsMotion.t===1){cardsShift=cardsMotion.to;cardsMotion=null;}
+    // Orbit around the vertical axis, just like a horizontal drag. Apply
+    // only this frame's change so returning reverses the added rotation.
+    cardsOrbitOffset.copy(camera.position).sub(controls.target);
+    cardsOrbitOffset.applyAxisAngle(cardsOrbitAxis,
+      THREE.MathUtils.degToRad(60)*(cardsShift-previousShift));
+    camera.position.copy(controls.target).add(cardsOrbitOffset);
+    applyCardsOffset();
+  }
+  camera.lookAt(controls.target);
+  lightRig.rotation.y = Math.atan2(
+    camera.position.x-controls.target.x,
+    camera.position.z-controls.target.z)-initialLightAzimuth;
   renderer.render(scene,camera);
+  updateCursor();
 })();
 
 })();
