@@ -63,6 +63,16 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .no-intro-anim .intro-frame{animation:none;opacity:1;transform:none}
 .intro-name{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:19.5cqi;line-height:1.1;color:#111;white-space:nowrap}
 .intro-photo{margin-top:18px;width:100%;aspect-ratio:1/1;border-radius:16px;background:#d7d7d7;object-fit:cover;display:block}
+/* Flip card: cartoon avatar on the front, photo on the back. Auto-flips 3s
+   after the page is shown, spinning around the vertical centre axis. */
+.intro-photo-flip{margin-top:18px;width:100%;aspect-ratio:1/1;perspective:1200px}
+.intro-photo-flip .flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.45,.05,.25,1)}
+.intro-photo-flip.flipped .flip-inner{transform:rotateY(180deg)}
+.intro-photo-flip .intro-photo{position:absolute;inset:0;margin-top:0;width:100%;height:100%;aspect-ratio:auto;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.intro-photo-flip .intro-photo.back{transform:rotateY(180deg);overflow:hidden}
+/* Zoom + drop the photo so the real head lands where the cartoon head is. */
+.intro-photo-flip .intro-photo.back img{width:100%;height:100%;object-fit:cover;display:block;transform:translateY(15%) scale(1.4)}
+@media (prefers-reduced-motion:reduce){.intro-photo-flip .flip-inner{transition:none}}
 .intro-bio{font-size:16px;font-weight:400;line-height:1.2;color:#111}
 .intro-contact{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .intro-icons{display:flex;align-items:center;gap:10px}
@@ -98,10 +108,15 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
   <div id="introRail" aria-label="About Ginny">
     <div class="intro-frame id">
       <div class="intro-name">Ginny Dong</div>
-      <img class="intro-photo" src="images/PersonalImage.png" alt="Ginny Dong"/>
+      <div class="intro-photo-flip" id="introPhotoFlip">
+        <div class="flip-inner">
+          <img class="intro-photo front" src="images/PersonalImage.png" alt="Illustrated portrait of Ginny Dong"/>
+          <div class="intro-photo back"><img src="images/AboutmePic.jpg" alt="Photo of Ginny Dong"/></div>
+        </div>
+      </div>
     </div>
     <div class="intro-frame bio">
-      <p class="intro-bio">When I'm not designing, I'm usually chasing light with my camera, planning my next trip, or getting way too into a new hobby for exactly three weeks. I grew up moving between languages and places, which is probably why I like noticing how people do the same things differently.</p>
+      <p class="intro-bio">When I'm not designing, I'm usually chasing light with my camera, planning my next trip, or playing guitar in a band with my friends. I like going to new places, talking to strangers, and trying new media in my art &mdash; each one turns a piece of my life into something I haven't experienced before.</p>
     </div>
     <div class="intro-frame contact">
       <div class="intro-contact">
@@ -123,5 +138,19 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 
   <div id="contentWrap"></div>
 </div>
+<script>
+(function(){
+  const flip=document.getElementById('introPhotoFlip');
+  if(!flip) return;
+  let timer=null;
+  function schedule(){
+    clearTimeout(timer);
+    flip.classList.remove('flipped');
+    timer=setTimeout(()=>flip.classList.add('flipped'),3000);
+  }
+  schedule();
+  window.addEventListener('pageshow',e=>{if(e.persisted) schedule();});
+})();
+</script>
 </body>
 </html>
