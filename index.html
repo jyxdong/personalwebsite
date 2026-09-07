@@ -26,7 +26,7 @@
   --sidegap:24px;
   --midgap:8px;
 }
-html,body{height:100%}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{
   font-family:'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight:400;
@@ -107,6 +107,27 @@ canvas{display:block}
 .no-intro-anim .intro-frame{animation:none;opacity:1;transform:none}
 .intro-name{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:19.5cqi;line-height:1.1;color:#111;white-space:nowrap}
 .intro-photo{margin-top:18px;width:100%;aspect-ratio:1/1;border-radius:16px;background:#d7d7d7;object-fit:cover;display:block}
+/* Flip card: cartoon avatar on the front, photo on the back. Which face shows
+   is driven by the `rail-about` class on <html> (see the rail hand-off below). */
+.intro-photo-flip{margin-top:18px;width:100%;aspect-ratio:1/1;perspective:1200px}
+.intro-photo-flip .flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.45,.05,.25,1)}
+.intro-photo-flip .intro-photo{position:absolute;inset:0;margin-top:0;width:100%;height:100%;aspect-ratio:auto;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.intro-photo-flip .intro-photo.back{transform:rotateY(180deg);overflow:hidden}
+/* Zoom + drop the photo so the real head lands where the cartoon head is. */
+.intro-photo-flip .intro-photo.back img{width:100%;height:100%;object-fit:cover;display:block;transform:translateY(15%) scale(1.4)}
+
+/* ── Rail hand-off between tabs: the portrait flips and the bio slides up to
+   swap, while the three frames themselves stay put. `rail-about` on <html>
+   means "show the About side"; every rail page carries both states. ── */
+html.rail-about .intro-photo-flip .flip-inner{transform:rotateY(180deg)}
+.intro-bio-stack{display:grid;width:100%;overflow:hidden}
+.intro-bio-stack .intro-bio{grid-area:1/1;align-self:center;transition:transform .6s cubic-bezier(.4,0,.2,1),opacity .45s ease}
+.bio-personal{transform:translateY(105%);opacity:0}
+html.rail-about .bio-pro{transform:translateY(-105%);opacity:0}
+html.rail-about .bio-personal{transform:none;opacity:1}
+@media (prefers-reduced-motion:reduce){
+  .intro-photo-flip .flip-inner,.intro-bio-stack .intro-bio{transition:none}
+}
 .intro-bio{font-size:16px;font-weight:400;line-height:1.2;color:#111}
 .intro-contact{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .intro-icons{display:flex;align-items:center;gap:10px}
@@ -120,7 +141,7 @@ canvas{display:block}
    side-by-side, and let the page scroll since content no longer fits one
    fixed-height row. ── */
 @media (max-width:860px){
-  html,body{height:auto}
+  html,body{height:auto;overflow:visible}
   body{overflow-y:auto}
   .shell{flex-direction:column;height:auto}
   #introRail{width:100%}
@@ -137,29 +158,43 @@ canvas{display:block}
 }
 </style>
 </head>
-<body>
+<body data-rail="pro">
 <script>
-if(sessionStorage.getItem('aboutFromPlay')){
-  document.documentElement.classList.add('no-intro-anim');
-  sessionStorage.removeItem('aboutFromPlay');
-}
+// Carry the rail state over from the page we came from, so the portrait and
+// bio can animate from it instead of snapping. Runs before first paint.
+(function(){
+  var from=sessionStorage.getItem('railFrom');
+  sessionStorage.removeItem('railFrom');
+  window.__railFrom=from;
+  var root=document.documentElement;
+  if(from) root.classList.add('no-intro-anim');
+  if(from==='about') root.classList.add('rail-about');
+})();
 </script>
 <div id="navWrap">
   <nav>
     <div class="nav-tabs">
       <a href="index.html" class="tab-work active">Work</a>
       <a href="aboutme.html" class="tab-about">About</a>
-      <a href="play.html" class="tab-play" onclick="sessionStorage.setItem('playFromAbout','1')">Play</a>
+      <a href="play.html" class="tab-play">Play</a>
     </div>  </nav>
 </div>
 <div class="shell">
   <div id="introRail" aria-label="About Ginny">
     <div class="intro-frame id">
       <div class="intro-name">Ginny Dong</div>
-      <img class="intro-photo" src="images/PersonalImage.png" alt="Ginny Dong"/>
+      <div class="intro-photo-flip">
+        <div class="flip-inner">
+          <img class="intro-photo front" src="images/PersonalImage.png" alt="Illustrated portrait of Ginny Dong"/>
+          <div class="intro-photo back"><img src="images/AboutmePic.jpg" alt="Photo of Ginny Dong"/></div>
+        </div>
+      </div>
     </div>
     <div class="intro-frame bio">
-      <p class="intro-bio">Ginny is a UX designer with a background in human factors psychology and visual arts. She studies how people think and decide, and turn that into interfaces that are clear and easy to trust.</p>
+      <div class="intro-bio-stack">
+        <p class="intro-bio bio-pro">Ginny is a UX designer with a background in human factors psychology and visual arts. She studies how people think and decide, and turn that into interfaces that are clear and easy to trust.</p>
+        <p class="intro-bio bio-personal">When I'm not designing, I'm usually chasing light with my camera, planning my next trip, or playing guitar in a band with my friends. I like going to new places and trying new media in my art &mdash; each one turns a piece of my life into something I haven't experienced before.</p>
+      </div>
     </div>
     <div class="intro-frame contact">
       <div class="intro-contact">
@@ -796,6 +831,26 @@ const clock=new THREE.Clock();
   updateCursor();
 })();
 
+})();
+</script>
+<script>
+(function(){
+  var root=document.documentElement;
+  var here=document.body.dataset.rail;
+  var from=window.__railFrom;
+
+  // Settle into this page's own state: About flips to the photo and slides in
+  // the personal bio; Work and Play go back to the cartoon and the pro bio.
+  if(here==='about'){
+    setTimeout(function(){root.classList.add('rail-about');}, from?420:3000);
+  }else if(from==='about'){
+    setTimeout(function(){root.classList.remove('rail-about');},420);
+  }
+
+  // Hand this page's state to whichever tab is clicked next.
+  Array.prototype.forEach.call(document.querySelectorAll('.nav-tabs a'),function(a){
+    a.addEventListener('click',function(){sessionStorage.setItem('railFrom',here);});
+  });
 })();
 </script>
 </body>

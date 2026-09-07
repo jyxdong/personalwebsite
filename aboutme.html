@@ -24,7 +24,7 @@
   --sidegap:24px;
   --midgap:8px;
 }
-html,body{height:100%}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{
   font-family:'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight:400;
@@ -63,16 +63,23 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .no-intro-anim .intro-frame{animation:none;opacity:1;transform:none}
 .intro-name{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:19.5cqi;line-height:1.1;color:#111;white-space:nowrap}
 .intro-photo{margin-top:18px;width:100%;aspect-ratio:1/1;border-radius:16px;background:#d7d7d7;object-fit:cover;display:block}
-/* Flip card: cartoon avatar on the front, photo on the back. Auto-flips 3s
-   after the page is shown, spinning around the vertical centre axis. */
+/* Flip card: cartoon avatar on the front, photo on the back. Which face shows
+   is driven by the `rail-about` class on <html> (see the rail hand-off below). */
 .intro-photo-flip{margin-top:18px;width:100%;aspect-ratio:1/1;perspective:1200px}
 .intro-photo-flip .flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.45,.05,.25,1)}
-.intro-photo-flip.flipped .flip-inner{transform:rotateY(180deg)}
 .intro-photo-flip .intro-photo{position:absolute;inset:0;margin-top:0;width:100%;height:100%;aspect-ratio:auto;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .intro-photo-flip .intro-photo.back{transform:rotateY(180deg);overflow:hidden}
 /* Zoom + drop the photo so the real head lands where the cartoon head is. */
 .intro-photo-flip .intro-photo.back img{width:100%;height:100%;object-fit:cover;display:block;transform:translateY(15%) scale(1.4)}
-@media (prefers-reduced-motion:reduce){.intro-photo-flip .flip-inner{transition:none}}
+html.rail-about .intro-photo-flip .flip-inner{transform:rotateY(180deg)}
+.intro-bio-stack{display:grid;width:100%;overflow:hidden}
+.intro-bio-stack .intro-bio{grid-area:1/1;align-self:center;transition:transform .6s cubic-bezier(.4,0,.2,1),opacity .45s ease}
+.bio-personal{transform:translateY(105%);opacity:0}
+html.rail-about .bio-pro{transform:translateY(-105%);opacity:0}
+html.rail-about .bio-personal{transform:none;opacity:1}
+@media (prefers-reduced-motion:reduce){
+  .intro-photo-flip .flip-inner,.intro-bio-stack .intro-bio{transition:none}
+}
 .intro-bio{font-size:16px;font-weight:400;line-height:1.2;color:#111}
 .intro-contact{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .intro-icons{display:flex;align-items:center;gap:10px}
@@ -99,24 +106,24 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .dial-item.active{color:var(--ink)}
 .dial-item:focus-visible{outline:2px solid #FF8418;outline-offset:2px;border-radius:6px}
 
-.dial-panel{position:absolute;left:280px;right:0;top:0;bottom:0;padding:56px 48px;overflow-y:auto}
-/* The copy and the photo strip together fill the middle 50% of the frame, so
-   there is a 25% band of white above and below them. */
+.dial-panel{position:absolute;left:280px;right:0;top:0;bottom:0;overflow:hidden;container-type:size}
+/* The copy sits directly on top of the photo strip; the strip is 40% of the
+   frame height and the pair is centred, so the white bands above and below
+   come out equal. */
 .dial-page{position:absolute;inset:0;padding-left:48px;
   display:flex;flex-direction:column;justify-content:center;
   opacity:0;visibility:hidden;transform:translateY(14px);
   transition:opacity .4s ease,transform .4s ease,visibility .4s}
 .dial-page.active{opacity:1;visibility:visible;transform:none}
-.dial-inner{height:50%;display:flex;flex-direction:column;min-height:0}
-.dial-text{flex:1;min-height:0;overflow:hidden;padding-right:48px}
-.dial-eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#a5a5a5;margin-bottom:14px}
-.dial-lede{font-size:19px;line-height:1.45;max-width:46ch;color:var(--ink)}
-/* Photo strip: 66% of the centred block, i.e. 33% of the frame height. Scrolls
-   sideways and bleeds off the right edge so it reads as "there is more over
-   there". */
-.dial-strip{flex:none;height:66%;display:flex;gap:12px;
+.dial-inner{display:flex;flex-direction:column;min-height:0;max-height:100%}
+.dial-text{flex:none;overflow:hidden;padding-right:48px;padding-bottom:20px}
+.dial-lede{font-size:15px;line-height:1.4;max-width:54ch;color:#2b2b2b}
+/* Photo strip: 40% of the frame height (cqh is measured against the panel).
+   Scrolls sideways and bleeds off the right edge so it reads as "there is more
+   over there". */
+.dial-strip{flex:none;height:40cqh;display:flex;gap:12px;
   overflow-x:auto;overflow-y:hidden;padding-right:48px;
-  scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  scroll-snap-type:x proximity;scrollbar-width:none;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
   cursor:grab}
 .dial-strip::-webkit-scrollbar{height:0}
 .dial-strip.dragging{cursor:grabbing;scroll-snap-type:none}
@@ -132,8 +139,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
   .dial{--r:320px;--step:8.5deg;left:-228px}
   .dial-panel{left:250px}
   .dial-page{padding-left:36px}
-  .dial-inner{height:62%}
-  .dial-strip{height:53%}
+  .dial-strip{height:44cqh}
   .dial-text,.dial-strip{padding-right:36px}
 }
 
@@ -141,7 +147,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
    side-by-side, and let the page scroll since content no longer fits one
    fixed-height row. ── */
 @media (max-width:860px){
-  html,body{height:auto}
+  html,body{height:auto;overflow:visible}
   body{overflow-y:auto}
   .shell{flex-direction:column;height:auto}
   #introRail{width:100%}
@@ -162,7 +168,19 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 }
 </style>
 </head>
-<body>
+<body data-rail="about">
+<script>
+// Carry the rail state over from the page we came from, so the portrait and
+// bio can animate from it instead of snapping. Runs before first paint.
+(function(){
+  var from=sessionStorage.getItem('railFrom');
+  sessionStorage.removeItem('railFrom');
+  window.__railFrom=from;
+  var root=document.documentElement;
+  if(from) root.classList.add('no-intro-anim');
+  if(from==='about') root.classList.add('rail-about');
+})();
+</script>
 <div id="navWrap">
   <nav>
     <div class="nav-tabs">
@@ -175,7 +193,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
   <div id="introRail" aria-label="About Ginny">
     <div class="intro-frame id">
       <div class="intro-name">Ginny Dong</div>
-      <div class="intro-photo-flip" id="introPhotoFlip">
+      <div class="intro-photo-flip">
         <div class="flip-inner">
           <img class="intro-photo front" src="images/PersonalImage.png" alt="Illustrated portrait of Ginny Dong"/>
           <div class="intro-photo back"><img src="images/AboutmePic.jpg" alt="Photo of Ginny Dong"/></div>
@@ -183,7 +201,10 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
       </div>
     </div>
     <div class="intro-frame bio">
-      <p class="intro-bio">When I'm not designing, I'm usually chasing light with my camera, planning my next trip, or playing guitar in a band with my friends. I like going to new places, talking to strangers, and trying new media in my art &mdash; each one turns a piece of my life into something I haven't experienced before.</p>
+      <div class="intro-bio-stack">
+        <p class="intro-bio bio-pro">Ginny is a UX designer with a background in human factors psychology and visual arts. She studies how people think and decide, and turn that into interfaces that are clear and easy to trust.</p>
+        <p class="intro-bio bio-personal">When I'm not designing, I'm usually chasing light with my camera, planning my next trip, or playing guitar in a band with my friends. I like going to new places and trying new media in my art &mdash; each one turns a piece of my life into something I haven't experienced before.</p>
+      </div>
     </div>
     <div class="intro-frame contact">
       <div class="intro-contact">
@@ -216,8 +237,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
       <article class="dial-page active" id="page-art" data-key="art">
         <div class="dial-inner">
           <div class="dial-text">
-            <p class="dial-eyebrow">Art</p>
-            <p class="dial-lede">Ink, clay, film, whatever medium I haven't ruined yet. I like the first hour with a new material, before I know what I'm doing.</p>
+            <p class="dial-lede">I really like trying out different media. A big part of the fun is not always knowing how something will turn out. Different materials can give you completely different results, so it sometimes feels a little like opening a blind box. I enjoy experimenting, making mistakes, and seeing what happens along the way. It keeps making art fun for me because there's always something new to try.</p>
           </div>
           <div class="dial-strip">
             <img src="images/AboutMePics/Art1.webp" alt="Artwork by Ginny 1" loading="lazy" decoding="async"/>
@@ -232,8 +252,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
       <article class="dial-page" id="page-photography" data-key="photography">
         <div class="dial-inner">
           <div class="dial-text">
-            <p class="dial-eyebrow">Photography</p>
-            <p class="dial-lede">Mostly chasing light. Strangers on the street, friends mid-sentence, the same corner in four different seasons.</p>
+            <p class="dial-lede">I really enjoy shooting film and developing it myself. I like how the whole process feels slower and more intentional. Since a roll only has around 36 shots, I become much more careful about what I choose to photograph. If I take a thousand digital photos, I might never look back at most of them, but with film, the time and effort I put into each roll makes every photo feel more meaningful and worth keeping.</p>
           </div>
           <div class="dial-strip">
             <img src="images/AboutMePics/Film1.webp" alt="Photograph by Ginny 1" loading="lazy" decoding="async"/>
@@ -249,7 +268,6 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
       <article class="dial-page" id="page-trip" data-key="trip">
         <div class="dial-inner">
           <div class="dial-text">
-            <p class="dial-eyebrow">Trip</p>
             <p class="dial-lede">I start planning the next one before I've unpacked the last. Growing up between places made moving feel like the default setting.</p>
           </div>
           <div class="dial-strip">
@@ -263,21 +281,20 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
       <article class="dial-page" id="page-band" data-key="band">
         <div class="dial-inner">
           <div class="dial-text">
-            <p class="dial-eyebrow">Band</p>
-            <p class="dial-lede">Guitar, a handful of chords, and friends generous enough to let it slide. We are loud on purpose.</p>
+            <p class="dial-lede">I play bass and guitar in a band. We mostly cover songs from bands we like, and every once in a while we try writing something of our own. I honestly don't understand music theory at all, but I still really enjoy playing with everyone. Being on stage together is probably my favorite part &mdash; it's just fun, a little chaotic, and always feels different from practicing alone.</p>
           </div>
           <div class="dial-strip">
-            <img src="images/AboutMePics/Band1.webp" alt="Ginny playing with the band 1" loading="lazy" decoding="async"/>
-            <img src="images/AboutMePics/Band2.webp" alt="Ginny playing with the band 2" loading="lazy" decoding="async"/>
-            <img src="images/AboutMePics/Band3.webp" alt="Ginny playing with the band 3" loading="lazy" decoding="async"/>
-            <img src="images/AboutMePics/Band4.webp" alt="Ginny playing with the band 4" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Band0.webp" alt="Ginny playing with the band 1" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Band1.webp" alt="Ginny playing with the band 2" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Band2.webp" alt="Ginny playing with the band 3" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Band3.webp" alt="Ginny playing with the band 4" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Band4.webp" alt="Ginny playing with the band 5" loading="lazy" decoding="async"/>
           </div>
         </div>
       </article>
       <article class="dial-page" id="page-moments" data-key="moments">
         <div class="dial-inner">
           <div class="dial-text">
-            <p class="dial-eyebrow">Moments</p>
             <p class="dial-lede">The in-between things I keep taking pictures of &mdash; a bowl that came out crooked, a bus window, a good afternoon.</p>
           </div>
           <div class="dial-strip">
@@ -292,20 +309,6 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
     </div>
   </div>
 </div>
-<script>
-(function(){
-  const flip=document.getElementById('introPhotoFlip');
-  if(!flip) return;
-  let timer=null;
-  function schedule(){
-    clearTimeout(timer);
-    flip.classList.remove('flipped');
-    timer=setTimeout(()=>flip.classList.add('flipped'),3000);
-  }
-  schedule();
-  window.addEventListener('pageshow',e=>{if(e.persisted) schedule();});
-})();
-</script>
 <script>
 (function(){
   const dial=document.getElementById('dial');
@@ -379,6 +382,26 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
       down=false;strip.classList.remove('dragging');
     }));
     strip.addEventListener('click',e=>{if(moved) e.preventDefault();},true);
+  });
+})();
+</script>
+<script>
+(function(){
+  var root=document.documentElement;
+  var here=document.body.dataset.rail;
+  var from=window.__railFrom;
+
+  // Settle into this page's own state: About flips to the photo and slides in
+  // the personal bio; Work and Play go back to the cartoon and the pro bio.
+  if(here==='about'){
+    setTimeout(function(){root.classList.add('rail-about');}, from?420:3000);
+  }else if(from==='about'){
+    setTimeout(function(){root.classList.remove('rail-about');},420);
+  }
+
+  // Hand this page's state to whichever tab is clicked next.
+  Array.prototype.forEach.call(document.querySelectorAll('.nav-tabs a'),function(a){
+    a.addEventListener('click',function(){sessionStorage.setItem('railFrom',here);});
   });
 })();
 </script>
