@@ -42,8 +42,8 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .nav-tabs{flex:1;display:flex;justify-content:center;gap:10px}
 .nav-tabs a{flex:1;max-width:260px;height:40px;border-radius:999px;border:none;cursor:pointer;font-size:20px;font-weight:400;background:#f4f4f4;color:#000;transition:background .2s;display:flex;align-items:center;justify-content:center;text-decoration:none}
 .nav-tabs a:hover:not(.active){background:#e9e9e9}
-.nav-tabs a.tab-about.active{background:#CBFF71;color:#000}
-.nav-tabs a.tab-work.active{background:#FF8418;color:#000}
+.nav-tabs a.tab-work.active{background:#CBFF71;color:#000}
+.nav-tabs a.tab-about.active{background:#FF8418;color:#000}
 .nav-tabs a.tab-play.active{background:#00D0FF;color:#000}
 .shell{flex:1;min-height:0;display:flex;gap:var(--midgap);margin:var(--midgap) var(--sidegap) var(--sidegap) var(--sidegap)}
 #contentWrap{--view-inset:24px;flex:1;min-width:0;background:#fff;border-radius:40px;overflow:hidden;position:relative}
@@ -147,8 +147,8 @@ if(sessionStorage.getItem('aboutFromPlay')){
 <div id="navWrap">
   <nav>
     <div class="nav-tabs">
-      <a href="index.html" class="tab-about active">About</a>
-      <a href="work.html" class="tab-work">Work</a>
+      <a href="index.html" class="tab-work active">Work</a>
+      <a href="aboutme.html" class="tab-about">About</a>
       <a href="play.html" class="tab-play" onclick="sessionStorage.setItem('playFromAbout','1')">Play</a>
     </div>  </nav>
 </div>
@@ -319,6 +319,31 @@ fillL.position.set(-5,4,-6); lightRig.add(fillL);
 const rimL = new THREE.DirectionalLight(0xffffff, 0.35);
 rimL.position.set(0,-6,4); lightRig.add(rimL);
 
+// Soft studio reflections used only by the plate materials.
+function makePlateEnvironment(){
+  const studio=new THREE.Scene();
+  studio.background=new THREE.Color(.32,.33,.34);
+  function softbox(w,h,x,y,z,intensity){
+    const material=new THREE.MeshBasicMaterial({
+      color:new THREE.Color(intensity,intensity,intensity),side:THREE.DoubleSide
+    });
+    const panel=new THREE.Mesh(new THREE.PlaneGeometry(w,h),material);
+    panel.position.set(x,y,z); panel.lookAt(0,0,0); studio.add(panel);
+  }
+  softbox(10,7,-6,7,5,2.6);
+  softbox(7,11,7,2,-5,1.5);
+  softbox(12,4,0,-5,3,.7);
+  softbox(3,12,-7,0,-3,.055);
+  const pmrem=new THREE.PMREMGenerator(renderer);
+  const target=pmrem.fromScene(studio,.06,.1,50);
+  pmrem.dispose();
+  studio.traverse(node=>{
+    if(node.isMesh){node.geometry.dispose();node.material.dispose();}
+  });
+  return target;
+}
+const plateEnvironment=makePlateEnvironment();
+
 // ── Materials ────────────────────────────────────────────────────────────
 const structureMaterial=new THREE.MeshStandardMaterial({
   color:0x2a2a2a, roughness:.6, metalness:.25
@@ -326,8 +351,10 @@ const structureMaterial=new THREE.MeshStandardMaterial({
 const M = {
   pole:  structureMaterial,
   hoop:  new THREE.MeshStandardMaterial({color:0x666666, roughness:.5,  metalness:.35}),
-  back:  new THREE.MeshStandardMaterial({color:0xe6e7e8, roughness:.46, metalness:.4}),
-  frame: new THREE.MeshStandardMaterial({color:0xf1f1ef, roughness:.42, metalness:.44}),
+  back:  new THREE.MeshStandardMaterial({color:0xc8cacc, roughness:.48, metalness:.65,
+    envMap:plateEnvironment.texture,envMapIntensity:.75}),
+  frame: new THREE.MeshStandardMaterial({color:0xe4e5e5, roughness:.3, metalness:.72,
+    envMap:plateEnvironment.texture,envMapIntensity:.85}),
   arm:   structureMaterial,
 };
 
@@ -355,16 +382,7 @@ const TEX = {
   artisk: new THREE.TextureLoader().load('images/ArtiskSign.svg'),
   lumino: new THREE.TextureLoader().load('images/LuminoSign.png'),
   remember: new THREE.TextureLoader().load('images/RememberSign.svg'),
-  proj5: mkTex((c,s)=>{
-    c.fillStyle='#101e62'; c.fillRect(0,0,s,s);
-    const cols=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c77dff','#ff9f43'];
-    let ci=0;
-    for(let r=0;r<5;r++) for(let cl=0;cl<7;cl++){
-      c.beginPath(); c.arc((cl+.5)*s/7,(r+.5)*s/6,s*.048,0,Math.PI*2);
-      c.fillStyle=cols[ci++%cols.length]; c.fill();
-    }
-    label(c,s,'Project 05');
-  }),
+  proj5: new THREE.TextureLoader().load('images/AboutMeSign.svg'),
 };
 
 // Treat the artwork as printed colour rather than a reflective surface.
@@ -399,7 +417,15 @@ function triShape(w,h,r){
 }
 function circleShape(r){
   const s=new THREE.Shape();
-  s.absarc(0,0,r,0,Math.PI*2,false);
+  // Close with the exact starting vertex. A full absarc leaves a tiny sin(2π)
+  // seam that the extrusion bevel turns into a notch at the rightmost edge.
+  const segments=192;
+  s.moveTo(r,0);
+  for(let i=1;i<segments;i++){
+    const angle=i/segments*Math.PI*2;
+    s.lineTo(r*Math.cos(angle),r*Math.sin(angle));
+  }
+  s.closePath();
   return s;
 }
 
@@ -455,21 +481,22 @@ const DEFS=[
   {label:'Artisk Redesign', key:'artisk',   shape:'hrect',    w:3.3, h:1.65, y:-0.9,  deg:70, textureAspect:1395/384},
   {label:'Lumino',          key:'lumino',   shape:'square',   w:2.1, h:2.1,  y:0.8,   deg:140},
   {label:'Remember',        key:'remember', shape:'circle',   w:2.1, h:2.1,  y:2.55,  deg:195},
-  {label:'Project 05',      key:'proj5',    shape:'hrect',    w:2.85,h:1.45, y:4.4,   deg:25},
+  {label:'ABOUT ME',        key:'proj5',    shape:'hrect',    w:2.85,h:1.45, y:4.4,   deg:25, textureAspect:495/215},
 ];
 
 const PROJECT_PAGES={
   playground:'play.html',
   artisk:'artisk.html',
   lumino:'lumino.html',
-  remember:'remember.html'
+  remember:'remember.html',
+  proj5:'aboutme.html'
 };
 const clickables=[];
 
 function buildSign(def){
   const shape=def.shape,w=def.w,h=def.h,y=def.y,key=def.key;
   const angle = def.deg * Math.PI/180;
-  const D=.026, FRONT_BW=.13, REAR_BW=.18;
+  const D=.026, FRONT_BW=.13, REAR_BW=.12;
   const BODY_BEV_T=.005, REAR_RIM_DEPTH=.04, REAR_RIM_BEV_T=.014;
   const ARM_RADIUS=.024, REAR_CLEARANCE=.006;
   const fmat=new THREE.MeshBasicMaterial({map:TEX[key],toneMapped:false});
@@ -508,15 +535,14 @@ function buildSign(def){
 
   const hit=[];
 
-  // A thin, flat aluminium base carries one independent embossed rim on each
-  // side. The rear centre itself remains a single uninterrupted flat surface.
+  // Pressed aluminium with a rolled perimeter and shallow reinforcing ribs.
   const bodyBevT=BODY_BEV_T, bodyBevS=.009;
   const ringDepth=.028, ringBevT=.011, ringBevS=.017;
-  const rearRimBevT=REAR_RIM_BEV_T, rearRimBevS=.021;
+  const rearRimBevT=REAR_RIM_BEV_T, rearRimBevS=.028;
   function mkRing(outerShape, holeShape, curveSegs, depth, bevelT, bevelS,material){
     const rs=outerShape.clone(); rs.holes.push(holeShape.clone());
     const geo=new THREE.ExtrudeGeometry(rs,{depth:depth,bevelEnabled:true,
-      bevelThickness:bevelT,bevelSize:bevelS,bevelSegments:6,curveSegments:curveSegs});
+      bevelThickness:bevelT,bevelSize:bevelS,bevelSegments:8,curveSegments:curveSegs});
     return new THREE.Mesh(geo,material);
   }
 
@@ -552,6 +578,19 @@ function buildSign(def){
   rearRaisedRim.rotation.y=Math.PI;
   rearRaisedRim.position.z=rearSurface;
   sg.add(rearRaisedRim); hit.push(rearRaisedRim);
+
+  if(shape==='hrect'||shape==='square'){
+    const ribGeo=new THREE.ExtrudeGeometry(rrShape(w*.56,.035,.017),{
+      depth:.006,bevelEnabled:true,bevelThickness:.004,
+      bevelSize:.014,bevelSegments:6,curveSegments:16
+    });
+    [-1,1].forEach(side=>{
+      const rib=new THREE.Mesh(ribGeo,M.back);
+      rib.rotation.y=Math.PI;
+      rib.position.set(0,side*h*.24,rearSurface);
+      sg.add(rib); hit.push(rib);
+    });
+  }
 
   hit.forEach(m=>{ m.userData.sign={def:def,grp:grp,sg:sg,angle:angle}; clickables.push(m); });
   return {def:def,grp:grp,sg:sg,angle:angle};
@@ -695,9 +734,9 @@ finePointer.addEventListener('change',resetPointer);
 // Shift the projection within a full-size canvas, rather than moving the
 // canvas itself and exposing its clipped lower/right edges inside the panel.
 function applyCardsOffset(){
-  if(cardsShift===0){camera.clearViewOffset();return;}
+  // A negative vertical view offset moves the signpost down by 50 CSS pixels.
   camera.setViewOffset(viewportWidth,viewportHeight,
-    viewportWidth*.36*cardsShift,(viewportHeight*.38+180)*cardsShift,
+    viewportWidth*.36*cardsShift,(viewportHeight*.38+180)*cardsShift-50,
     viewportWidth,viewportHeight);
 }
 
@@ -732,6 +771,9 @@ const clock=new THREE.Clock();
     camera.lookAt(controls.target);
     if(tw.t>=1){tweens.splice(i,1); if(tw.onDone) tw.onDone();}
   }
+  // Temporarily disabled: idle orbit (one turn in about 40 seconds).
+  // controls.autoRotate=!reducedMotion.matches&&!focused&&!busy&&!cardsView&&!cardsMotion&&pressedPointer===null;
+  // controls.autoRotateSpeed=1.5*60*Math.min(dt,.05);
   controls.update();
   if(cardsMotion){
     const previousShift=cardsShift;
