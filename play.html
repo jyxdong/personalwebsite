@@ -99,7 +99,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .waterfall-col.narrow{flex:1}
 .waterfall-col.wide{flex:1.6}
 .ph-card{background:#e4e4e4;border-radius:22px;width:100%;transform-origin:center center;
-  transition:transform .75s cubic-bezier(.16,1,.3,1)}
+  transition:transform .98s cubic-bezier(.16,1,.3,1)}
 .ph-card.h-sm{aspect-ratio:1/0.75}
 .ph-card.h-md{aspect-ratio:1/1}
 .ph-card.h-lg{aspect-ratio:1/1.3}
@@ -135,6 +135,36 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .play-item.expanded .img-card-caption{display:block}
 .img-card-caption.visible{opacity:1}
 .img-card-caption a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Gallery item: one cover card in the grid; expanded it becomes a
+   lightbox whose box stays put while prev/next swap the image inside it,
+   so portrait and landscape frames don't jump around. ── */
+.gallery-item.expanded .ph-card{background:transparent}
+.gallery-item.expanded .ph-card img{object-fit:contain}
+.gallery-item .ph-card img{transition:opacity .22s ease}
+.gallery-item .ph-card img.swapping{opacity:0}
+.gallery-arrow{display:none;position:absolute;top:50%;transform:translateY(-50%);
+  width:46px;height:46px;padding:0;border:none;border-radius:999px;background:#fff;color:#111;
+  cursor:pointer;align-items:center;justify-content:center;
+  box-shadow:0 2px 12px rgba(0,0,0,.14);transition:background .2s;z-index:5}
+.gallery-arrow svg{width:20px;height:20px}
+.gallery-arrow:hover{background:#f0f0f0}
+.gallery-arrow.prev{left:14px}
+.gallery-arrow.next{right:14px}
+.gallery-item.expanded .gallery-arrow{display:flex}
+
+/* Footer row under the lightbox box: title/meta on the left, counter on the
+   right, both inset by however far the *cover* image sits in from the box
+   edge — so the line stays put no matter which photo is showing. */
+.gallery-foot{display:none;align-items:baseline;justify-content:space-between;gap:24px;
+  margin-top:14px;opacity:0;transition:opacity .35s ease}
+.gallery-item.expanded .gallery-foot{display:flex}
+.gallery-foot.visible{opacity:1}
+.gallery-foot .img-card-caption{display:block;opacity:0;margin-top:0}
+.gallery-foot.visible .img-card-caption{opacity:1}
+.gallery-title{color:var(--ink)}
+.gallery-meta{margin-left:26px}
+.gallery-count{font-size:13px;color:var(--muted);white-space:nowrap;flex-shrink:0}
 
 /* ── Scroll card: a tall full-page capture. Expanded, the frame itself
    becomes a fixed viewing window you scroll inside, with its caption
@@ -217,8 +247,27 @@ if(sessionStorage.getItem('playFromAbout')){
               </div>
               <p class="img-card-caption">Self portrait of Ginny, created in 2025</p>
             </div>
-            <div class="ph-card h-lg"></div>
-            <div class="ph-card h-sm"></div>
+            <div class="play-item gallery-item" id="sfItem">
+              <div class="ph-card img-card gallery-card" style="aspect-ratio:1375/2000">
+                <img class="gallery-img" src="images/PlayPics/SF-Color-4.webp" alt="Colored film taken in San Francisco"/>
+                <button class="gallery-arrow prev" type="button" aria-label="Previous photo">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="gallery-arrow next" type="button" aria-label="Next photo">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+              <div class="gallery-foot">
+                <p class="img-card-caption"><span class="gallery-title">Colored Film Taken in San Francisco</span><span class="gallery-meta">2026, Portra 160</span></p>
+                <div class="gallery-count">1 / 6</div>
+              </div>
+            </div>
+            <div class="play-item" id="gazeItem">
+              <div class="ph-card img-card" style="aspect-ratio:1597/2000">
+                <img src="images/PlayPics/Gaze.webp" alt="Gaze"/>
+              </div>
+              <p class="img-card-caption"><span class="gallery-title">Gaze</span><span class="gallery-meta">2024, Acrylic on Canvas</span></p>
+            </div>
           </div>
           <div class="waterfall-col wide">
             <div class="play-item" id="playItem">
@@ -227,9 +276,37 @@ if(sessionStorage.getItem('playFromAbout')){
               </div>
               <p class="img-card-caption">I am a very obsessed Stardew Valley player. While working on my own farm, I design and code my own mods when the game doesn't do what I want. Visit my nexus homepage: <a href="https://www.nexusmods.com/profile/jyxdong/mods" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">nexusmods.com/profile/jyxdong/mods</a></p>
             </div>
-            <div class="ph-card h-sm"></div>
-            <div class="ph-card h-md"></div>
-            <div class="ph-card h-lg"></div>
+            <div class="play-item gallery-item" id="crowdItem">
+              <div class="ph-card img-card gallery-card" style="aspect-ratio:2000/1326">
+                <img class="gallery-img" src="images/PlayPics/One-Pair-Crowd-2.webp" alt="One Pair, Crowd"/>
+                <button class="gallery-arrow prev" type="button" aria-label="Previous photo">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="gallery-arrow next" type="button" aria-label="Next photo">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+              <div class="gallery-foot">
+                <p class="img-card-caption"><span class="gallery-title">One, Pair, Crowd</span><span class="gallery-meta">2026, Boston &amp; San Francisco, B&amp;W Film</span></p>
+                <div class="gallery-count">1 / 6</div>
+              </div>
+            </div>
+            <div class="play-item gallery-item" id="runawayItem">
+              <div class="ph-card img-card gallery-card" style="aspect-ratio:2000/1600">
+                <img class="gallery-img" src="images/PlayPics/Runaway-1.webp" alt="Album cover design for Runaway"/>
+                <button class="gallery-arrow prev" type="button" aria-label="Previous photo">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="gallery-arrow next" type="button" aria-label="Next photo">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+              <div class="gallery-foot">
+                <p class="img-card-caption"><span class="gallery-title">Album Cover Design for my band&rsquo;s song &ldquo;Runaway&rdquo;</span></p>
+                <div class="gallery-count">1 / 4</div>
+              </div>
+            </div>
+            <!-- <div class="ph-card h-lg"></div> -->
           </div>
           <div class="waterfall-col narrow">
             <div class="play-item scroll-item" id="wattItem">
@@ -238,8 +315,13 @@ if(sessionStorage.getItem('playFromAbout')){
               </div>
               <p class="img-card-caption">27 Watt Studio is a photography studio founded by my friends and I. I work as an assistant photographer while mainly responsible for social media and web design.</p>
             </div>
-            <div class="ph-card h-md"></div>
-            <div class="ph-card h-sm"></div>
+            <div class="play-item" id="glitchItem">
+              <div class="ph-card img-card" style="aspect-ratio:1/1">
+                <img src="images/PlayPics/Goldfish.webp" alt="In Glitch"/>
+              </div>
+              <p class="img-card-caption"><span class="gallery-title">In Glitch</span><span class="gallery-meta">2025, Acrylic on Canvas</span></p>
+            </div>
+            <!-- <div class="ph-card h-sm"></div> -->
           </div>
         </div>
       </div>
@@ -294,7 +376,7 @@ if(sessionStorage.getItem('playFromAbout')){
     return (parts.length===2 && parts[1]) ? parts[0]/parts[1] : 1;
   }
   function sizeToFrame(ratio, frameRect){
-    if(ratio >= 1){
+    if(ratio > 1){          // square counts as tall: 70% of the frame height
       var w = frameRect.width*0.7;
       return {w:w, h:w/ratio};
     }
@@ -371,7 +453,7 @@ if(sessionStorage.getItem('playFromAbout')){
     return {isExpanded:function(){return expanded;}, collapse:collapse};
   }
 
-  ['playItem','selfieItem'].forEach(function(id){
+  ['playItem','selfieItem','glitchItem','gazeItem'].forEach(function(id){
     simpleItems.push(makeExpandItem(document.getElementById(id)));
   });
 
@@ -450,9 +532,165 @@ if(sessionStorage.getItem('playFromAbout')){
     else{ window.open('https://www.27wattmedia.com/', '_blank', 'noopener'); }
   });
 
+  // ── Photo galleries: the cover card expands into a fixed lightbox box
+  // (image letterboxed inside it) so paging between portrait and landscape
+  // shots never resizes or re-centers the frame. Arrows/←→ switch photos.
+  function makeGallery(itemId, srcs, coverIdx){
+    var item = document.getElementById(itemId);
+    var card = item.querySelector('.gallery-card');
+    var img = item.querySelector('.gallery-img');
+    var foot = item.querySelector('.gallery-foot');
+    var count = item.querySelector('.gallery-count');
+    var coverRatioStyle = card.style.aspectRatio;
+    var coverRatio = (function(){
+      var parts = String(coverRatioStyle).split('/').map(Number);
+      return (parts.length===2 && parts[1]) ? parts[0]/parts[1] : 1;
+    })();
+    var idx = coverIdx;
+    var expanded = false;
+    var preloaded = false;
+
+    function preload(){                          // only once the set is opened
+      if(preloaded) return;
+      preloaded = true;
+      srcs.forEach(function(src){ var im = new Image(); im.src = src; });
+    }
+
+    function setCount(){ count.textContent = (idx+1) + ' / ' + srcs.length; }
+
+    function show(i){
+      idx = (i + srcs.length) % srcs.length;
+      setCount();
+      img.classList.add('swapping');
+      var next = new Image();
+      next.onload = next.onerror = function(){
+        img.src = srcs[idx];
+        img.classList.remove('swapping');
+      };
+      next.src = srcs[idx];
+    }
+
+    function flip(applyChanges){
+      var first = item.getBoundingClientRect();
+      applyChanges();
+      var last = item.getBoundingClientRect();
+      var dx = (first.left+first.width/2) - (last.left+last.width/2);
+      var dy = (first.top+first.height/2) - (last.top+last.height/2);
+      var scale = last.width ? first.width/last.width : 1;
+      item.style.transition = 'none';
+      item.style.transform = 'translate('+dx+'px,'+dy+'px) scale('+scale+')';
+      item.getBoundingClientRect(); // force reflow
+      requestAnimationFrame(function(){
+        item.style.transition = 'transform .6s cubic-bezier(.16,1,.3,1)';
+        item.style.transform = 'translate(0,0) scale(1)';
+      });
+    }
+
+    function expand(){
+      expanded = true;
+      preload();
+      var frameRect = frame.getBoundingClientRect();
+      flip(function(){
+        item.classList.add('expanded');
+        var w = frameRect.width*0.68;
+        var h = frameRect.height*0.72;
+        // How far in from the box edge the cover photo renders (0 when it is
+        // width-constrained). The footer keeps this inset for every photo.
+        var inset = (coverRatio < w/h) ? (w - h*coverRatio)/2 : 0;
+        foot.style.paddingLeft = inset+'px';
+        foot.style.paddingRight = inset+'px';
+        card.style.aspectRatio = 'auto';
+        card.style.width = w+'px';
+        card.style.height = h+'px';
+        item.style.width = w+'px';
+        item.style.left = '0px';
+        item.style.top = '0px';
+        var r = item.getBoundingClientRect();
+        item.style.left = (frameRect.width/2 - r.width/2)+'px';
+        item.style.top = (frameRect.height/2 - r.height/2)+'px';
+      });
+      scrim.classList.add('active');
+      item.addEventListener('transitionend', function onEnd(e){
+        if(e.propertyName !== 'transform') return;
+        item.removeEventListener('transitionend', onEnd);
+        if(expanded) foot.classList.add('visible');
+      });
+    }
+
+    function collapse(){
+      expanded = false;
+      foot.classList.remove('visible');
+      flip(function(){
+        item.classList.remove('expanded');
+        item.style.width = '';
+        item.style.left = '';
+        item.style.top = '';
+        card.style.width = '';
+        card.style.height = '';
+        card.style.aspectRatio = coverRatioStyle;
+        foot.style.paddingLeft = '';
+        foot.style.paddingRight = '';
+        img.classList.remove('swapping');
+        img.src = srcs[coverIdx];
+        idx = coverIdx;
+        setCount();
+      });
+      scrim.classList.remove('active');
+      item.addEventListener('transitionend', function onEnd(e){
+        if(e.propertyName !== 'transform') return;
+        item.removeEventListener('transitionend', onEnd);
+        item.style.transition = '';
+        item.style.transform = '';
+      });
+    }
+
+    setCount();
+
+    item.querySelector('.gallery-arrow.prev').addEventListener('click', function(e){
+      e.stopPropagation(); show(idx-1);
+    });
+    item.querySelector('.gallery-arrow.next').addEventListener('click', function(e){
+      e.stopPropagation(); show(idx+1);
+    });
+
+    item.addEventListener('click', function(e){
+      if(waterfall.classList.contains('stacked')) return; // let it disperse first
+      e.stopPropagation();
+      if(expanded) collapse(); else expand();
+    });
+
+    return {
+      isExpanded:function(){return expanded;},
+      collapse:collapse,
+      prev:function(){show(idx-1);},
+      next:function(){show(idx+1);}
+    };
+  }
+
+  function seq(prefix, n){
+    var out = [];
+    for(var i=1;i<=n;i++) out.push('images/PlayPics/'+prefix+i+'.webp');
+    return out;
+  }
+
+  var galleries = [
+    makeGallery('crowdItem', seq('One-Pair-Crowd-', 6), 1),  // cover: photo 2
+    makeGallery('sfItem',    seq('SF-Color-', 6),       3),  // cover: photo 4
+    makeGallery('runawayItem', seq('Runaway-', 4),      0)
+  ];
+
+  document.addEventListener('keydown', function(e){
+    var open = galleries.filter(function(g){ return g.isExpanded(); })[0];
+    if(!open) return;
+    if(e.key === 'ArrowLeft'){ open.prev(); }
+    else if(e.key === 'ArrowRight'){ open.next(); }
+    else if(e.key === 'Escape'){ open.collapse(); }
+  });
+
   scrim.addEventListener('click', function(){
     simpleItems.forEach(function(it){ if(it.isExpanded()) it.collapse(); });
     if(wattExpanded) wattCollapse();
+    galleries.forEach(function(g){ if(g.isExpanded()) g.collapse(); });
   });
 })();
 </script>

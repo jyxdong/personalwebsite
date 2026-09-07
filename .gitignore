@@ -4,3 +4,8 @@
 # Original camera files for the About page — only the .webp versions are committed
 images/AboutMePics/*.JPG
 images/AboutMePics/*.jpg
+
+# Original camera/mockup files for the Play page — only the .webp versions are committed
+images/PlayPics/*.JPG
+images/PlayPics/*.jpg
+images/PlayPics/*.jpeg
