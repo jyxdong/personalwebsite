@@ -54,26 +54,26 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 #contentWrap.cards-view #lbl,#contentWrap.cards-view #hint{visibility:hidden}
 #wrap:active{cursor:grabbing}
 canvas{display:block}
-.cards-button{position:absolute;right:var(--view-inset);bottom:var(--view-inset);z-index:3;min-height:40px;padding:8px 24px;border:0;border-radius:999px;background:#CBFF71;color:#000;font-family:inherit;font-size:20px;line-height:24px;font-weight:400;text-decoration:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s,bottom .7s cubic-bezier(.65,0,.35,1)}
-#contentWrap.cards-view .cards-button{bottom:calc(100% - var(--view-inset) - 40px)}
+.cards-button{position:absolute;right:var(--view-inset);bottom:var(--view-inset);z-index:3;box-sizing:border-box;min-height:46px;padding:9px 34px;border:2px solid #000;border-radius:999px;background:#fff;color:#000;font-family:inherit;font-size:20px;line-height:24px;font-weight:400;text-decoration:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:background .2s,bottom .7s cubic-bezier(.65,0,.35,1)}
+#contentWrap.cards-view .cards-button{bottom:calc(100% - var(--view-inset) - 46px)}
 .cards-button:hover{background:#e9e9e9}
 .cards-button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
-#projectCards{position:absolute;z-index:2;top:calc(var(--view-inset) + 56px);right:var(--view-inset);bottom:var(--view-inset);width:65%;padding:4px;overflow-y:auto;overscroll-behavior:contain;visibility:hidden;pointer-events:none;transition:visibility 0s .65s}
+#projectCards{position:absolute;z-index:2;top:calc(var(--view-inset) + 56px);right:var(--view-inset);bottom:var(--view-inset);left:var(--view-inset);box-sizing:border-box;padding:4px;overflow-y:auto;overscroll-behavior:contain;visibility:hidden;pointer-events:none;transition:visibility 0s .65s}
 #contentWrap.cards-view #projectCards{visibility:visible;pointer-events:auto;transition-delay:0s}
-.project-grid{min-height:100%;display:grid;align-content:center;grid-template-rows:repeat(3,auto);gap:12px}
-.project-card{display:grid;grid-template-columns:minmax(96px,28%) minmax(0,1fr);background:#f4f4f4;border-radius:28px;overflow:hidden;text-decoration:none;color:var(--ink);opacity:0;transform:translateY(100vh);transition:transform .65s cubic-bezier(.65,0,.35,1),opacity .4s ease}
+.project-grid{min-height:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:24px}
+.project-card{display:flex;flex-direction:column;height:100%;background:#f4f4f4;border-radius:30px;overflow:hidden;text-decoration:none;color:var(--ink);opacity:0;transform:translateY(100vh);transition:transform .65s cubic-bezier(.65,0,.35,1),opacity .4s ease}
 #contentWrap.cards-view .project-card{transform:translateY(0);opacity:1;transition-delay:.7s}
 #contentWrap.cards-view .project-card:nth-child(2){transition-delay:.84s}
 #contentWrap.cards-view .project-card:nth-child(3){transition-delay:.98s}
 .project-card:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-.project-thumb{position:relative;width:100%;aspect-ratio:1/1;align-self:center;overflow:hidden}
-.project-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:28px;transition:transform .35s cubic-bezier(.4,0,.2,1)}
-.project-card:hover .project-thumb img{transform:scale(.94)}
-.project-body{padding:16px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
-.project-body h2{font-size:20px;line-height:1.15;letter-spacing:-.01em;font-weight:400}
-.project-body p{margin-top:8px;font-size:14px;line-height:1.4;color:#2b2b2b}
-.project-tags{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
-.project-tag{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:#2b2b2b;border:1px solid #2b2b2b;border-radius:999px;padding:2px 8px}
+.project-thumb{position:relative;flex:none;width:100%;height:auto;aspect-ratio:1/1;overflow:hidden}
+.project-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:30px;transition:inset .35s cubic-bezier(.4,0,.2,1),width .35s cubic-bezier(.4,0,.2,1),height .35s cubic-bezier(.4,0,.2,1),border-radius .35s cubic-bezier(.4,0,.2,1)}
+.project-card:hover .project-thumb img{inset:8px;width:calc(100% - 16px);height:calc(100% - 16px);border-radius:22px}
+.project-body{flex-shrink:0;margin-top:auto;padding:24px 24px 30px;display:flex;flex-direction:column;align-items:flex-start}
+.project-body h2{font-size:24px;line-height:1.15;letter-spacing:-.01em;font-weight:400}
+.project-body p{margin-top:12px;height:63px;overflow:hidden;font-size:15px;line-height:1.4;color:#2b2b2b}
+.project-tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
+.project-tag{font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:#2b2b2b;border:1px solid #2b2b2b;border-radius:999px;padding:2px 12px}
 @media (prefers-reduced-motion:reduce){
   #wrap,#contentWrap::before,#contentWrap.cards-view::before,#projectCards,#contentWrap.cards-view #projectCards,.cards-button,.project-card,#contentWrap.cards-view .project-card,.project-thumb img{transition:none}
 }
@@ -86,8 +86,8 @@ canvas{display:block}
 #lbl.on{opacity:1}
 #lbl.clickable{pointer-events:auto;cursor:pointer}
 #lbl.clickable:hover{background:#f4f4f4}
-#hint{position:absolute;bottom:4.5%;left:50%;transform:translateX(-50%);font-size:12px;color:#c8c8c8;letter-spacing:.06em;pointer-events:none;opacity:0;transition:opacity .35s}
-#hint.on{opacity:1}
+#hint{position:absolute;bottom:calc(11% - 26px);left:50%;transform:translateX(-50%);font-size:11.5px;line-height:1.4;color:#2b2b2b;letter-spacing:.04em;pointer-events:none;opacity:0;transition:opacity .35s}
+#hint.on{opacity:.7}
 #err{position:absolute;top:10px;left:10px;right:10px;background:#fee;color:#a00;font:12px monospace;padding:10px;white-space:pre-wrap;display:none;z-index:999;border-radius:6px}
 
 /* ── Intro rail: three stacked white frames, a column sibling of the content
@@ -148,13 +148,10 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   .intro-frame.bio{flex:none}
   #contentWrap{--view-inset:16px;min-height:420px}
   .cards-button{right:16px;bottom:16px;max-width:calc(100% - 32px);font-size:16px;padding:8px 20px}
-  .project-card{grid-template-columns:minmax(84px,28%) minmax(0,1fr)}
-  .project-body{padding:16px}
-  .project-body h2{font-size:20px}
-  .project-body p{font-size:14px}
-}
-@media (max-width:540px){
-  .project-card{grid-template-columns:minmax(0,1fr)}
+  #projectCards{right:16px;left:16px}
+  .project-grid{height:auto;min-height:100%;grid-template-columns:1fr;gap:24px}
+  .project-card{height:auto}
+  .project-thumb{flex:none;aspect-ratio:1/1}
 }
 </style>
 </head>
@@ -262,6 +259,27 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   const button=content.querySelector('.cards-button');
   const label=button.querySelector('span');
   const arrow=button.querySelector('[aria-hidden]');
+  const projectCards=[...cards.querySelectorAll('.project-card')];
+
+  function sizeProjectCards(){
+    const availableHeight=cards.clientHeight-8;
+    projectCards.forEach(card=>{
+      card.style.height='auto';
+      const width=card.getBoundingClientRect().width;
+      const body=card.querySelector('.project-body');
+      const contentHeight=width+body.scrollHeight;
+      const frameIsTallerThanCardRatio=availableHeight>width*1.7;
+      const height=frameIsTallerThanCardRatio
+        ? Math.max(width*1.7,contentHeight)
+        : Math.max(availableHeight,contentHeight);
+      card.style.height=Math.ceil(height)+'px';
+    });
+  }
+
+  new ResizeObserver(sizeProjectCards).observe(cards);
+  window.addEventListener('load',sizeProjectCards);
+  sizeProjectCards();
+
   button.addEventListener('click',function(){
     const showCards=content.classList.toggle('cards-view');
     wrap.inert=showCards;
@@ -662,10 +680,12 @@ function focusSign(entry){
   const q=new THREE.Quaternion();
   entry.sg.getWorldQuaternion(q);
   const frontDir=new THREE.Vector3(0,0,1).applyQuaternion(q);
-  const toCam=sgp.clone().addScaledVector(frontDir,3.8);
-  toCam.y=sgp.y;
+  const focusTarget=sgp.clone();
+  focusTarget.y-=.22;
+  const toCam=sgp.clone().addScaledVector(frontDir,4.7);
+  toCam.y=focusTarget.y;
 
-  tween(camera.position,toCam,controls.target,sgp,.65,function(){
+  tween(camera.position,toCam,controls.target,focusTarget,.65,function(){
     busy=false;
     ltxt.textContent=entry.def.label;
     lbl.classList.add('on'); hint.classList.add('on');
