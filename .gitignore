@@ -4,6 +4,9 @@
 # Original camera files for the About page — only the .webp versions are committed
 images/AboutMePics/*.JPG
 images/AboutMePics/*.jpg
+images/AboutMePics/*.jpeg
+images/AboutMePics/*.JPEG
+images/AboutMePics/*.HEIC
 
 # Original camera/mockup files for the Play page — only the .webp versions are committed
 images/PlayPics/*.JPG
