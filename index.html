@@ -836,9 +836,9 @@ const clock=new THREE.Clock();
     camera.lookAt(controls.target);
     if(tw.t>=1){tweens.splice(i,1); if(tw.onDone) tw.onDone();}
   }
-  // Idle orbit (one turn in about 30 seconds), independent of frame rate.
+  // Idle orbit (one turn in about 20 seconds), independent of frame rate.
   controls.autoRotate=!reducedMotion.matches&&!focused&&!busy&&!cardsView&&!cardsMotion&&pressedPointer===null;
-  controls.autoRotateSpeed=2*60*Math.min(dt,.05);
+  controls.autoRotateSpeed=3*60*Math.min(dt,.05);
   controls.update();
   if(cardsMotion){
     const previousShift=cardsShift;
