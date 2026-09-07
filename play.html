@@ -50,8 +50,8 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .nav-tabs{flex:1;display:flex;justify-content:center;gap:10px}
 .nav-tabs a{flex:1;max-width:260px;height:40px;border-radius:999px;border:none;cursor:pointer;font-size:20px;font-weight:400;background:#f4f4f4;color:#000;transition:background .2s;display:flex;align-items:center;justify-content:center;text-decoration:none}
 .nav-tabs a:hover:not(.active){background:#e9e9e9}
-.nav-tabs a.tab-about.active{background:#CBFF71;color:#000}
-.nav-tabs a.tab-work.active{background:#FF8418;color:#000}
+.nav-tabs a.tab-work.active{background:#CBFF71;color:#000}
+.nav-tabs a.tab-about.active{background:#FF8418;color:#000}
 .nav-tabs a.tab-play.active{background:#00D0FF;color:#000}
 
 /* ── Shell: left intro rail (identical to index.html) + right content frame ── */
@@ -172,8 +172,8 @@ if(sessionStorage.getItem('playFromAbout')){
 <div id="navWrap">
   <nav>
     <div class="nav-tabs">
-      <a href="index.html" class="tab-about" onclick="sessionStorage.setItem('aboutFromPlay','1')">About</a>
-      <a href="work.html" class="tab-work">Work</a>
+      <a href="index.html" class="tab-work" onclick="sessionStorage.setItem('aboutFromPlay','1')">Work</a>
+      <a href="aboutme.html" class="tab-about">About</a>
       <a href="play.html" class="tab-play active">Play</a>
     </div>  </nav>
 </div>
