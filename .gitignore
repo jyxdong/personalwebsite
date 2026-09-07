@@ -1,2 +1,6 @@
 .DS_Store
 .claude/settings.local.json
+
+# Original camera files for the About page — only the .webp versions are committed
+images/AboutMePics/*.JPG
+images/AboutMePics/*.jpg

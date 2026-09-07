@@ -82,6 +82,61 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .intro-icon:hover{background:#e9e9e9}
 .intro-icon svg{width:16px;height:16px}
 
+/* ── Dial nav: the five About sections laid out along a circle whose centre
+   sits off the left edge of the content frame, so only the right arc shows.
+   Selecting an item spins the wheel until that item points at 3 o'clock. ── */
+.about-body{position:absolute;inset:0}
+.dial{--r:360px;--step:8deg;--sel:0;
+  position:absolute;left:-250px;top:50%;width:0;height:0;z-index:2;
+  transform:rotate(calc(var(--sel) * var(--step) * -1));
+  transition:transform .6s cubic-bezier(.35,.02,.2,1)}
+.dial-item{position:absolute;left:0;top:0;transform-origin:0 50%;
+  transform:rotate(calc(var(--i) * var(--step))) translateX(var(--r));
+  white-space:nowrap;font-family:inherit;font-size:20px;font-weight:400;
+  color:#c9c9c9;background:none;border:0;padding:3px 10px;cursor:pointer;
+  transition:color .35s ease}
+.dial-item:hover{color:#9a9a9a}
+.dial-item.active{color:var(--ink)}
+.dial-item:focus-visible{outline:2px solid #FF8418;outline-offset:2px;border-radius:6px}
+
+.dial-panel{position:absolute;left:280px;right:0;top:0;bottom:0;padding:56px 48px;overflow-y:auto}
+/* The copy and the photo strip together fill the middle 50% of the frame, so
+   there is a 25% band of white above and below them. */
+.dial-page{position:absolute;inset:0;padding-left:48px;
+  display:flex;flex-direction:column;justify-content:center;
+  opacity:0;visibility:hidden;transform:translateY(14px);
+  transition:opacity .4s ease,transform .4s ease,visibility .4s}
+.dial-page.active{opacity:1;visibility:visible;transform:none}
+.dial-inner{height:50%;display:flex;flex-direction:column;min-height:0}
+.dial-text{flex:1;min-height:0;overflow:hidden;padding-right:48px}
+.dial-eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#a5a5a5;margin-bottom:14px}
+.dial-lede{font-size:19px;line-height:1.45;max-width:46ch;color:var(--ink)}
+/* Photo strip: 66% of the centred block, i.e. 33% of the frame height. Scrolls
+   sideways and bleeds off the right edge so it reads as "there is more over
+   there". */
+.dial-strip{flex:none;height:66%;display:flex;gap:12px;
+  overflow-x:auto;overflow-y:hidden;padding-right:48px;
+  scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  cursor:grab}
+.dial-strip::-webkit-scrollbar{height:0}
+.dial-strip.dragging{cursor:grabbing;scroll-snap-type:none}
+.dial-strip img,.dial-slot{flex:none;height:100%;width:auto;border-radius:16px;
+  object-fit:cover;background:#f2f2f2;scroll-snap-align:start;
+  -webkit-user-drag:none;user-select:none}
+.dial-slot{aspect-ratio:3/4}
+@media (prefers-reduced-motion:reduce){.dial,.dial-page{transition:none}}
+
+/* Shorter viewports: pull the wheel in so the top and bottom items stay inside
+   the frame. */
+@media (max-height:820px){
+  .dial{--r:320px;--step:8.5deg;left:-228px}
+  .dial-panel{left:250px}
+  .dial-page{padding-left:36px}
+  .dial-inner{height:62%}
+  .dial-strip{height:53%}
+  .dial-text,.dial-strip{padding-right:36px}
+}
+
 /* ── Small screens: stack the sign frame below the intro rail instead of
    side-by-side, and let the page scroll since content no longer fits one
    fixed-height row. ── */
@@ -92,6 +147,18 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
   #introRail{width:100%}
   .intro-frame.bio{flex:none}
   #contentWrap{min-height:420px}
+  /* No room for the wheel: fall back to a plain row of section links. */
+  .about-body{position:static}
+  .dial{position:static;transform:none;width:auto;height:auto;
+    display:flex;flex-wrap:wrap;gap:10px;padding:24px 24px 0}
+  .dial-item{position:static;transform:none;padding:4px 2px}
+  .dial-panel{position:static;padding:0}
+  .dial-page{position:static;padding:20px 0 32px 24px;height:auto;
+    display:none;opacity:1;visibility:visible;transform:none}
+  .dial-page.active{display:block}
+  .dial-inner{height:auto}
+  .dial-text{overflow:visible;padding-right:24px}
+  .dial-strip{flex:none;height:180px;padding-right:24px}
 }
 </style>
 </head>
@@ -136,7 +203,94 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
     </div>
   </div>
 
-  <div id="contentWrap"></div>
+  <div id="contentWrap">
+    <div class="about-body">
+      <div class="dial" id="dial" role="tablist" aria-label="About sections" aria-orientation="vertical" tabindex="0">
+      <button class="dial-item active" type="button" style="--i:0" data-key="art" aria-controls="page-art">Art</button>
+      <button class="dial-item" type="button" style="--i:1" data-key="photography" aria-controls="page-photography">Photography</button>
+      <button class="dial-item" type="button" style="--i:2" data-key="trip" aria-controls="page-trip">Trip</button>
+      <button class="dial-item" type="button" style="--i:3" data-key="band" aria-controls="page-band">Band</button>
+      <button class="dial-item" type="button" style="--i:4" data-key="moments" aria-controls="page-moments">Moments</button>
+      </div>
+      <div class="dial-panel">
+      <article class="dial-page active" id="page-art" data-key="art">
+        <div class="dial-inner">
+          <div class="dial-text">
+            <p class="dial-eyebrow">Art</p>
+            <p class="dial-lede">Ink, clay, film, whatever medium I haven't ruined yet. I like the first hour with a new material, before I know what I'm doing.</p>
+          </div>
+          <div class="dial-strip">
+            <img src="images/AboutMePics/Art1.webp" alt="Artwork by Ginny 1" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Art2.webp" alt="Artwork by Ginny 2" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Art3.webp" alt="Artwork by Ginny 3" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Art4.webp" alt="Artwork by Ginny 4" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Art5.webp" alt="Artwork by Ginny 5" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Art6.webp" alt="Artwork by Ginny 6" loading="lazy" decoding="async"/>
+          </div>
+        </div>
+      </article>
+      <article class="dial-page" id="page-photography" data-key="photography">
+        <div class="dial-inner">
+          <div class="dial-text">
+            <p class="dial-eyebrow">Photography</p>
+            <p class="dial-lede">Mostly chasing light. Strangers on the street, friends mid-sentence, the same corner in four different seasons.</p>
+          </div>
+          <div class="dial-strip">
+            <img src="images/AboutMePics/Film1.webp" alt="Photograph by Ginny 1" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Film2.webp" alt="Photograph by Ginny 2" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Film3.webp" alt="Photograph by Ginny 3" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Film4.webp" alt="Photograph by Ginny 4" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Film5.webp" alt="Photograph by Ginny 5" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Film6.webp" alt="Photograph by Ginny 6" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Film7.webp" alt="Photograph by Ginny 7" loading="lazy" decoding="async"/>
+          </div>
+        </div>
+      </article>
+      <article class="dial-page" id="page-trip" data-key="trip">
+        <div class="dial-inner">
+          <div class="dial-text">
+            <p class="dial-eyebrow">Trip</p>
+            <p class="dial-lede">I start planning the next one before I've unpacked the last. Growing up between places made moving feel like the default setting.</p>
+          </div>
+          <div class="dial-strip">
+            <div class="dial-slot"></div>
+            <div class="dial-slot"></div>
+            <div class="dial-slot"></div>
+            <div class="dial-slot"></div>
+          </div>
+        </div>
+      </article>
+      <article class="dial-page" id="page-band" data-key="band">
+        <div class="dial-inner">
+          <div class="dial-text">
+            <p class="dial-eyebrow">Band</p>
+            <p class="dial-lede">Guitar, a handful of chords, and friends generous enough to let it slide. We are loud on purpose.</p>
+          </div>
+          <div class="dial-strip">
+            <img src="images/AboutMePics/Band1.webp" alt="Ginny playing with the band 1" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Band2.webp" alt="Ginny playing with the band 2" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Band3.webp" alt="Ginny playing with the band 3" loading="lazy" decoding="async"/>
+            <img src="images/AboutMePics/Band4.webp" alt="Ginny playing with the band 4" loading="lazy" decoding="async"/>
+          </div>
+        </div>
+      </article>
+      <article class="dial-page" id="page-moments" data-key="moments">
+        <div class="dial-inner">
+          <div class="dial-text">
+            <p class="dial-eyebrow">Moments</p>
+            <p class="dial-lede">The in-between things I keep taking pictures of &mdash; a bowl that came out crooked, a bus window, a good afternoon.</p>
+          </div>
+          <div class="dial-strip">
+            <div class="dial-slot"></div>
+            <div class="dial-slot"></div>
+            <div class="dial-slot"></div>
+            <div class="dial-slot"></div>
+          </div>
+        </div>
+      </article>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
 (function(){
@@ -150,6 +304,82 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
   }
   schedule();
   window.addEventListener('pageshow',e=>{if(e.persisted) schedule();});
+})();
+</script>
+<script>
+(function(){
+  const dial=document.getElementById('dial');
+  if(!dial) return;
+  const items=Array.prototype.slice.call(dial.querySelectorAll('.dial-item'));
+  const pages=Array.prototype.slice.call(document.querySelectorAll('.dial-page'));
+  let sel=0;
+
+  function select(i){
+    sel=Math.max(0,Math.min(items.length-1,i));
+    dial.style.setProperty('--sel',sel);
+    items.forEach((el,n)=>el.classList.toggle('active',n===sel));
+    const key=items[sel].dataset.key;
+    pages.forEach(p=>p.classList.toggle('active',p.dataset.key===key));
+  }
+  select(0);
+
+  items.forEach((el,i)=>el.addEventListener('click',()=>select(i)));
+
+  dial.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'){select(sel+1);e.preventDefault();}
+    if(e.key==='ArrowUp'||e.key==='ArrowLeft'){select(sel-1);e.preventDefault();}
+  });
+
+  // Spin the wheel with the trackpad while the pointer is over the nav.
+  let wheelLock=false;
+  dial.addEventListener('wheel',e=>{
+    e.preventDefault();
+    if(wheelLock) return;
+    if(Math.abs(e.deltaY)<6) return;
+    wheelLock=true;
+    select(sel+(e.deltaY>0?1:-1));
+    setTimeout(()=>{wheelLock=false;},420);
+  },{passive:false});
+
+  // Drag vertically to spin, one step per ~70px.
+  let startY=null,startSel=0;
+  dial.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.dial-item')&&e.pointerType==='mouse') return;
+    startY=e.clientY;startSel=sel;dial.setPointerCapture(e.pointerId);
+  });
+  dial.addEventListener('pointermove',e=>{
+    if(startY===null) return;
+    select(startSel+Math.round((startY-e.clientY)/70));
+  });
+  ['pointerup','pointercancel'].forEach(t=>dial.addEventListener(t,()=>{startY=null;}));
+})();
+</script>
+<script>
+(function(){
+  // Photo strips: trackpad wheel and click-drag both scroll sideways.
+  document.querySelectorAll('.dial-strip').forEach(strip=>{
+    strip.addEventListener('wheel',e=>{
+      if(Math.abs(e.deltaY)<=Math.abs(e.deltaX)) return;
+      strip.scrollLeft+=e.deltaY;
+      e.preventDefault();
+    },{passive:false});
+
+    let down=false,startX=0,startLeft=0,moved=0;
+    strip.addEventListener('pointerdown',e=>{
+      down=true;moved=0;startX=e.clientX;startLeft=strip.scrollLeft;
+      strip.setPointerCapture(e.pointerId);
+    });
+    strip.addEventListener('pointermove',e=>{
+      if(!down) return;
+      const dx=e.clientX-startX;
+      if(Math.abs(dx)>3){moved=1;strip.classList.add('dragging');}
+      strip.scrollLeft=startLeft-dx;
+    });
+    ['pointerup','pointercancel'].forEach(t=>strip.addEventListener(t,()=>{
+      down=false;strip.classList.remove('dragging');
+    }));
+    strip.addEventListener('click',e=>{if(moved) e.preventDefault();},true);
+  });
 })();
 </script>
 </body>
