@@ -1,0 +1,55 @@
+/* Shared portfolio mark. The three tabs stay centered independently of the
+   mark by balancing it with an equal-width spacer on the right. */
+nav{
+  display:grid;
+  grid-template-columns:40px minmax(0,800px) 40px;
+  justify-content:space-between;
+}
+
+nav::after{
+  content:"";
+  width:40px;
+  height:40px;
+}
+
+.nav-tabs{
+  width:100%;
+  min-width:0;
+}
+
+.nav-home{
+  --logo-accent:#CBFF71;
+  --logo-idle:#4A4A4A;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:var(--logo-idle);
+  text-decoration:none;
+  transition:color .2s ease,transform .2s ease;
+}
+
+.nav-home.logo-about{--logo-accent:#FF8418}
+.nav-home.logo-play{--logo-accent:#00D0FF}
+
+.nav-home-mark{
+  display:block;
+  width:32px;
+  height:32px;
+}
+
+.nav-home:hover{
+  color:var(--logo-accent);
+  transform:scale(1.05);
+}
+
+.nav-home:focus-visible{
+  color:var(--logo-accent);
+  outline:2px solid var(--ink,#111);
+  outline-offset:2px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .nav-home{transition:none}
+}

@@ -141,12 +141,70 @@ html.rail-about .bio-personal{transform:none;opacity:1}
    side-by-side, and let the page scroll since content no longer fits one
    fixed-height row. ── */
 @media (max-width:860px){
+  :root{--sidegap:12px}
   html,body{height:auto;overflow:visible}
-  body{overflow-y:auto}
-  .shell{flex-direction:column;height:auto}
-  #introRail{width:100%}
-  .intro-frame.bio{flex:none}
-  #contentWrap{--view-inset:16px;min-height:420px}
+  body{min-height:100dvh;overflow-y:auto}
+  #navWrap{margin:12px var(--sidegap) 0}
+  .shell{flex-direction:column;height:auto;min-height:0}
+  #introRail{
+    width:100%;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,2fr);
+    grid-template-rows:auto auto;
+    gap:var(--midgap)
+  }
+  .intro-frame{border-radius:22px}
+  .intro-frame.id{
+    grid-column:1;
+    grid-row:1 / 3;
+    padding:12px 10px;
+    align-self:stretch;
+    display:flex;
+    flex-direction:column
+  }
+  .intro-name{font-size:min(19.5cqi,30px)}
+  .intro-photo-flip{
+    width:min(56%,96px);
+    aspect-ratio:890 / 1117;
+    margin:auto auto 0;
+    overflow:hidden
+  }
+  .intro-photo-flip .intro-photo.front{
+    top:-52.8%;
+    left:-40.4%;
+    width:191.8%;
+    height:auto;
+    max-width:none;
+    border-radius:0
+  }
+  .intro-frame.bio{
+    grid-column:2;
+    grid-row:1;
+    min-height:0;
+    padding:12px 14px;
+    align-items:center
+  }
+  .intro-bio-stack{display:flex;flex-direction:column;gap:12px;overflow:visible}
+  .intro-bio-stack .intro-bio{
+    transform:none!important;
+    opacity:1!important;
+    transition:none;
+    font-size:clamp(13px,3.6vw,16px);
+    line-height:1.25;
+    text-wrap:pretty
+  }
+  .intro-bio-stack .bio-personal{display:none}
+  .intro-frame.contact{
+    grid-column:2;
+    grid-row:2;
+    padding:12px 14px
+  }
+  .intro-contact{align-items:center;gap:10px}
+  .intro-email{font-size:clamp(13px,3.6vw,16px)}
+  .intro-icons{gap:8px}
+  .intro-icon{width:36px;height:36px}
+  .intro-icon svg{width:18px;height:18px}
+  #contentWrap{--view-inset:16px;min-height:0}
   .cards-button{right:16px;bottom:16px;max-width:calc(100% - 32px);font-size:16px;padding:8px 20px}
   #projectCards{right:16px;left:16px}
   .project-grid{height:auto;min-height:100%;grid-template-columns:1fr;gap:24px}
@@ -154,6 +212,8 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   .project-thumb{flex:none;aspect-ratio:1/1}
 }
 </style>
+<link rel="stylesheet" href="nav-logo.css?v=2">
+<link rel="icon" type="image/svg+xml" href="images/favicon-work.svg">
 </head>
 <body data-rail="pro">
 <script>
@@ -170,11 +230,13 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 </script>
 <div id="navWrap">
   <nav>
+    <a href="index.html" class="nav-home logo-work" aria-label="Back to Work home"><svg class="nav-home-mark" viewBox="0 0 111 111" aria-hidden="true"><path d="M55.5 0C86.1518 0 111 24.8482 111 55.5C111 86.1518 86.1518 111 55.5 111C24.8482 111 0 86.1518 0 55.5C0 24.8482 24.8482 0 55.5 0ZM47.5 55.5L44 89H62C80.2254 89 95 74.2254 95 56C95 37.7746 80.2254 23 62 23H44L47.5 55.5ZM30 31.5C25.5817 31.5 22 42.2452 22 55.5C22 68.7548 25.5817 79.5 30 79.5C34.4183 79.5 37 55.5 37 55.5C36.9956 55.459 34.4145 31.5 30 31.5Z" fill="currentColor"/></svg></a>
     <div class="nav-tabs">
       <a href="index.html" class="tab-work active">Work</a>
       <a href="aboutme.html" class="tab-about">About</a>
       <a href="play.html" class="tab-play">Play</a>
-    </div>  </nav>
+    </div>
+  </nav>
 </div>
 <div class="shell">
   <div id="introRail" aria-label="About Ginny">
@@ -811,7 +873,14 @@ function resize(){
   if(w===renderedWidth&&h===renderedHeight) return;
   renderedWidth=w; renderedHeight=h;
   viewportWidth=w; viewportHeight=h;
-  renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+  const frameAspect=w/h;
+  const fitAspect=.86;
+  const baseFov=42;
+  camera.aspect=frameAspect;
+  camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(
+    Math.tan(THREE.MathUtils.degToRad(baseFov/2))*Math.max(1,fitAspect/frameAspect)
+  ));
+  renderer.setSize(w,h,false); camera.updateProjectionMatrix();
   applyCardsOffset();
   camera.lookAt(controls.target);
   renderer.render(scene,camera);
