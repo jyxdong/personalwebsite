@@ -12,3 +12,7 @@ images/AboutMePics/*.HEIC
 images/PlayPics/*.JPG
 images/PlayPics/*.jpg
 images/PlayPics/*.jpeg
+
+# Figma exports for the Artisk case page — only the .webp versions are committed
+images/ArtiskFinal*.svg
+images/ArtiskFinal*.jpg

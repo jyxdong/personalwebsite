@@ -179,6 +179,11 @@ section.block:first-of-type{padding-top:56px;margin-top:48px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
 .ph-inline + .sec-grid{margin-top:32px}
+/* A media block followed by another heading row needs the same breathing
+   room the .sec-grid + .sec-grid pairing gets. */
+.page-frame + .sec-grid,
+.carousel + .sec-grid,
+.bento-1 + .sec-grid{margin-top:44px}
 
 .sec-head{position:relative}
 .sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
@@ -196,6 +201,24 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
 .bento-1 .cell .ph{margin-top:16px;aspect-ratio:16/9}
 .bento-1 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .bento-1 .cell .placeholder-note{margin-top:10px;font-size:12.5px;color:var(--faint);font-style:italic}
+
+/* ── Bento grid (selection criteria) — hairline only, headings are L3
+   (h3, subordinate to the section's own H2), body copy is L4. Matches the
+   same component in lumino.html and remember.html. ──────────────────── */
+.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
+.bento-3 .cell:first-child{border-left:none}
+.bento-3 .cell h3{font-size:15px;font-weight:400}
+.bento-3 .cell h3.highlight{font-size:clamp(18px,1.8vw,20px)}
+.bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+@media (max-width:860px){
+  .bento-3{grid-template-columns:1fr}
+  .bento-3 .cell{border-left:none;border-top:1px solid var(--line)}
+  .bento-3 .cell:first-child{border-top:none}
+}
+
+/* Serif lead line inside a cell — the site's shared highlight treatment. */
+.highlight{font-family:'Source Serif 4',serif;font-style:normal;font-weight:400}
 
 /* ── Toggle: flat segmented control, matching the site's flat aesthetic —
    no shadows or gradients, just a gray track with a white active pill. ── */
@@ -216,6 +239,68 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
 .carousel-btn svg{width:18px;height:18px}
 .carousel-btn.prev{left:16px}
 .carousel-btn.next{right:16px}
+
+/* ── Full-length page frame: a fixed 3:2 landscape window onto a full-height
+   page shot. The page scrolls inside the frame instead of being cropped to
+   a hero crop, so the whole layout stays readable in place. ───────────── */
+.page-frame{position:relative;margin-top:12px;width:100%;aspect-ratio:3/2;border-radius:var(--r-sm);overflow:hidden;background:#ececec;border:1px solid var(--line)}
+.page-frame-track{display:flex;width:100%;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+/* overscroll-behavior:none kills both halves of the problem at the ends of
+   the page shot: the elastic rubber-band bounce, and the scroll chaining
+   that would otherwise hand the gesture up to the article column once this
+   page hits its top or bottom. */
+.page-frame-scroll{flex:0 0 100%;width:100%;height:100%;overflow-y:auto;overscroll-behavior:none}
+.page-frame-scroll img{display:block;width:100%;height:auto}
+
+/* ── MacBook frame around the page window. Drawn entirely in CSS — lid,
+   bezel, notch, tapered base — so it stays sharp at any width and costs
+   no bytes. Proportions follow a 14" MacBook Pro, whose display is
+   1.54:1, near enough to the 3:2 window sitting inside it. Every length
+   is a percentage of the lid's width, so the whole assembly scales as
+   one piece. ───────────────────────────────────────────────────────── */
+.laptop{margin-top:12px;width:100%}
+.laptop-lid{
+  position:relative;
+  width:85.4%;
+  margin:0 auto;
+  background:#0b0b0d;
+  border-radius:14px 14px 4px 4px;
+  padding:1.6% 1.5% 3.2%;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
+}
+.laptop-notch{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:11.5%;aspect-ratio:175/37;
+  background:#0b0b0d;
+  border-radius:0 0 8px 8px;
+  z-index:3;
+}
+.laptop-notch::after{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:5%;aspect-ratio:1;border-radius:50%;background:#26282c;
+}
+.laptop-base{
+  position:relative;
+  width:100%;
+  aspect-ratio:1750/62;
+  background:linear-gradient(180deg,#dcdee2 0%,#c8ccd2 55%,#a8adb5 100%);
+  border-radius:3px 3px 11px 11px;
+}
+/* Finger recess along the front edge of the base. */
+.laptop-base::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:16.5%;height:42%;
+  background:linear-gradient(180deg,#f0f1f3,#dee1e5);
+  border-radius:0 0 10px 10px;
+}
+/* Inside the lid the window is the screen itself: no border, no gap, and
+   only the slight corner rounding a real display has. */
+.laptop .page-frame{margin-top:0;border:none;border-radius:4px;background:#fff}
+
+/* ── Page foot: the same two exits every case page ends on. ──────────── */
+footer.pagefoot{border-top:1px solid var(--line);margin-top:56px;padding:28px 0 48px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer.pagefoot a{font-size:12.5px;color:var(--muted);text-decoration:none;cursor:pointer}
+footer.pagefoot a:hover{color:var(--ink)}
 
 .next-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:54ch}
 .next-list li{font-size:15px;line-height:1.5;color:#2b2b2b;padding-left:18px;position:relative}
@@ -247,16 +332,20 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
   .bento-1 .cell:first-child{border-top:none}
 }
 </style>
+<link rel="stylesheet" href="nav-logo.css?v=2">
+<link rel="icon" type="image/svg+xml" href="images/favicon-work.svg">
 </head>
 <body>
 
 <div id="navWrap">
   <nav>
+    <a href="index.html" class="nav-home logo-work" aria-label="Back to Work home"><svg class="nav-home-mark" viewBox="0 0 111 111" aria-hidden="true"><path d="M55.5 0C86.1518 0 111 24.8482 111 55.5C111 86.1518 86.1518 111 55.5 111C24.8482 111 0 86.1518 0 55.5C0 24.8482 24.8482 0 55.5 0ZM47.5 55.5L44 89H62C80.2254 89 95 74.2254 95 56C95 37.7746 80.2254 23 62 23H44L47.5 55.5ZM30 31.5C25.5817 31.5 22 42.2452 22 55.5C22 68.7548 25.5817 79.5 30 79.5C34.4183 79.5 37 55.5 37 55.5C36.9956 55.459 34.4145 31.5 30 31.5Z" fill="currentColor"/></svg></a>
     <div class="nav-tabs">
       <a href="index.html" class="tab-work active">Work</a>
       <a href="aboutme.html" class="tab-about">About</a>
       <a href="play.html" class="tab-play">Play</a>
-    </div>  </nav>
+    </div>
+  </nav>
 </div>
 
 <div class="shell">
@@ -264,12 +353,13 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
    <div class="rail">
     <div class="rail-toc">
      <ul id="tocList">
-      <li data-target="problem"><a href="#problem">Problem</a></li>
-      <li data-target="insights"><a href="#insights">Insights</a></li>
-      <li data-target="process"><a href="#process">Process</a></li>
-      <li data-target="decisions"><a href="#decisions">Key decisions</a></li>
-      <li data-target="reflection"><a href="#reflection">Reflection & next steps</a></li>
-     </ul>
+                <li data-target="audit"><a href="#audit">Page audit</a></li>
+                <li data-target="imagery"><a href="#imagery">Image generation</a></li>
+                <li data-target="layout"><a href="#layout">Content &amp; layout</a></li>
+                <li data-target="responsive"><a href="#responsive">Responsive</a></li>
+                <li data-target="final-design"><a href="#final-design">Final design</a></li>
+                <li data-target="reflection"><a href="#reflection">Reflection</a></li>
+              </ul>
     </div>
     <a href="work.html" class="rail-home">
       <span>Back to works</span>
@@ -292,7 +382,7 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
 
       <header class="hero">
         <h2>Artisk</h2>
-        <p class="dek">Applying a new liquid-glass brand system to two text-heavy pages — FAQ and About — without trading away readability.</p>
+        <p class="dek">Designed the FAQ and About pages for an AI branding tool, from audit through final visual.</p>
 
         <div class="meta">
           <div class="meta-item"><span class="k">Role</span><span class="v">UX / Visual Design</span></div>
@@ -306,55 +396,19 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
     </div>
 
     <main>
-      <!-- Every block below is the same repeatable unit: a small tag, an H2,
-           and its paired body content in a two-column row. A section can
-           hold one block or several, back to back. -->
-      <section class="block reveal" id="problem">
+      <!-- Each block is the same repeatable unit: a small tag, an H2, and
+           its paired body content in a two-column row. -->
+      <section class="block reveal" id="audit">
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">Problem statement</div>
-              <h2>Brand without breaking two text-heavy pages</h2>
-            </div>
-            <div class="sec-body">
-              <p>Artisk is a company that builds AI-empowered design tools for brands. It rebranded from a loud, high-contrast look to a softer liquid-glass visual language built on translucency and depth. As part of the team redesign, I brought two text-heavy pages — FAQ and About — onto the new system.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="block reveal" id="insights">
-        <div class="sec-measure">
-          <div class="sec-grid">
-            <div class="sec-head">
+              <div class="tag">Page audit</div>
               <h2>Two pages, two jobs</h2>
             </div>
             <div class="sec-body">
-              <p>FAQ and About are task pages: one is where a user solves a specific question without contacting support, the other is where a user reads to decide whether to trust the product. Whatever the brand layer looked like, it couldn't get in the way of those two jobs.</p>
-            </div>
-          </div>
-
-          <div class="sec-grid">
-            <div class="sec-head">
-              <div class="tag">Insight</div>
-              <h2>Readability needs to be improved</h2>
-            </div>
-            <div class="sec-body">
-              <p>The neon-on-black look was high-contrast by default, so the About page's uniform wall of text still felt legible. Moving to a softer material removed that crutch and exposed the real issue: the information had no hierarchy, and nothing guided the eye.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="block reveal" id="process">
-        <div class="sec-measure">
-          <div class="sec-grid">
-            <div class="sec-head">
-              <div class="tag">Process</div>
-              <h2>Auditing each page against its job</h2>
-            </div>
-            <div class="sec-body">
-              <p>I audited both pages against what each is for — the FAQ against scannability, the About page against readability — then treated the glass material as a layering tool rather than a skin, deciding where it could earn its place and where it had to stay off the text. In parallel, I produced the banner imagery as one coordinated AI-generated set spanning both pages.</p>
+              <p>Artisk builds AI-powered design tools for brands: logo and brand-kit generation for founders and small teams who can't hire an agency. The component framework and site IA were already settled when I joined. The FAQ and About pages were not.</p>
+              <p>Both are task pages with different tasks. One is where a user solves a specific question without contacting support. The other is where a user reads to decide whether to trust the product. Each was failing its own job in a different way.</p>
+              <p>The FAQ held 25 questions in one ungrouped stack, so anyone arriving with a single question had to scan all of them. The About page ran as continuous narrative with no hierarchy, nothing pacing the read or separating one idea from the next.</p>
             </div>
           </div>
           <div class="carousel-toggle" id="processCarouselToggle" role="tablist" aria-label="Original page toggle">
@@ -363,8 +417,8 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
           </div>
           <div class="carousel" id="processCarousel">
             <div class="carousel-track">
-              <img class="carousel-slide" src="images/ArtiskOriginalAbout.jpg" alt="Original Artisk About page">
-              <img class="carousel-slide" src="images/ArtiskOriginalFAQ.jpg" alt="Original Artisk FAQ page">
+              <img class="carousel-slide" src="images/ArtiskOriginalAbout.jpg" alt="Artisk About page before the redesign">
+              <img class="carousel-slide" src="images/ArtiskOriginalFAQ.jpg" alt="Artisk FAQ page before the redesign">
             </div>
             <button class="carousel-btn prev" aria-label="Previous image">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -376,31 +430,116 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
         </div>
       </section>
 
-      <section class="block reveal" id="decisions">
+      <section class="block reveal" id="imagery">
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">Key decisions</div>
-              <h2>Three decisions across two pages</h2>
+              <div class="tag">Image generation</div>
+              <h2>Seventeen candidates down to two</h2>
+            </div>
+            <div class="sec-body">
+              <p>Artisk's visual world is quiet UI with one loud accent: white surfaces, generous spacing, a single lime green, and soft translucent 3D forms as the only imagery. The banner is the one large image on each page, so it had to extend that world rather than compete with it.</p>
+              <p>I generated seventeen candidates and cut them against two rules.</p>
             </div>
           </div>
-          <div class="bento-1">
+          <div class="ph ph-inline" style="aspect-ratio:2000/848;background:none"><img src="images/ArtiskBannerCandidates.webp" width="2000" height="848" loading="lazy" decoding="async" alt="Contact sheet of fifteen generated banner candidates"></div>
+          <div class="bento-3">
             <div class="cell">
-              <h3>FAQ: brand applied without breaking scannability</h3>
-              <div class="ph"><span class="cap">FAQ before / after</span></div>
-              <p>The FAQ already had its structure — search, categories, an accordion of answers. My work was bringing it onto the new visual system while protecting how scannable it was: keeping glass on the structural layer (search, category rail, cards) and answers on solid, high-contrast surfaces, so a user could still scan straight to the one question they came with.</p>
-              <p class="placeholder-note">[Placeholder — specific spacing / hierarchy / component-alignment adjustments]</p>
+              <h3 class="highlight">Room for the title</h3>
+              <p>The banner carries the page title, so it needs a calm zone for the type to sit in. Edge-to-edge texture ruled out the crystal lattice, the green maze and the electric cloud.</p>
             </div>
             <div class="cell">
-              <h3>About: same information, made readable</h3>
-              <div class="ph"><span class="cap">About before / after</span></div>
-              <p>I didn't change what the page says; I changed how it's represented. Same information, rebuilt around a clear visual hierarchy — paced sections, a reading rhythm, defined weight — so a block people skim past became something they can actually read.</p>
+              <h3 class="highlight">One motif that repeats</h3>
+              <p>One focal form, re-rendered in a second hue, becomes a signature across both pages. Matte clay was the wrong material, and the mist and silk compositions were shapeless.</p>
             </div>
             <div class="cell">
-              <h3>One visual system across both pages</h3>
-              <div class="ph"><span class="cap">AI banner set (FAQ + About)</span></div>
-              <p>I created the banner imagery as one coordinated AI-generated set, so both pages open with a consistent signature and each gets an entry point that anchors the content. The same rule held throughout: translucency lowers text contrast, so glass carries depth and structure, never body copy.</p>
+              <h3 class="highlight">The pair</h3>
+              <p>Only the two orbital compositions passed both. FAQ took the lavender, About the green: separate identities that still read as one set.</p>
             </div>
+          </div>
+          <div class="ph ph-inline" style="aspect-ratio:2818/980;background:none"><img src="images/ArtiskBannerFinal.webp" width="2818" height="980" loading="lazy" decoding="async" alt="The two selected banners: green for About, lavender for FAQ"></div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="layout">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Content &amp; layout</div>
+              <h2>FAQ: 25 questions into 8 categories</h2>
+            </div>
+            <div class="sec-body">
+              <p>Grouped by topic, the first screen shows category headings instead of twenty-five separate questions. Every answer stays collapsed until it is asked for.</p>
+              <p>Wireframed before any visual was applied, because the grouping had to hold on its own. The numbered rail that mirrors the categories came later, at the visual stage.</p>
+            </div>
+          </div>
+          <div class="page-frame">
+            <div class="page-frame-track">
+              <div class="page-frame-scroll"><img src="images/ArtiskWireframeFAQ.webp" width="1992" height="6430" loading="lazy" decoding="async" alt="FAQ wireframe showing questions grouped into categories"></div>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>About: five named sections</h2>
+            </div>
+            <div class="sec-body">
+              <p>Same information, rebuilt around a reading rhythm. The page breaks into five named sections: Our story, Mission and Vision, What we stand for, Who we serve, and an FAQ block to close. Two-column rows alternate image and text so the eye has a reason to keep moving, and hierarchy comes from position and white space rather than type size.</p>
+              <p>Two structural passes, shown side by side below.</p>
+            </div>
+          </div>
+          <div class="page-frame">
+            <div class="page-frame-track">
+              <div class="page-frame-scroll"><img src="images/ArtiskWireframeAbout.webp" width="2200" height="4037" loading="lazy" decoding="async" alt="Two About page wireframe variants side by side"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="responsive">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Responsive</div>
+              <h2>What holds and what reflows</h2>
+            </div>
+            <div class="sec-body">
+              <p>Desktop first. The FAQ keeps its 260px category rail beside the answers down to 900px, where the rail becomes a numbered index stacked above them and goes on working as a jump list. On About, the alternating image and text rows stack at 992px, the two-column value grid collapses at the same point, and the four audience cards step to two and then to one at 640px.</p>
+              <p>Two details took the most care. The alternation is dropped rather than mirrored, so a stacked page reads in one order instead of leaving every second row image-first. And the hand-set line breaks in the Mission and Vision copy switch off below 992px, so the paragraphs rewrap instead of breaking mid-thought.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final design: both pages at full length. The 3:2 frame is a fixed
+           landscape window; each page scrolls inside it, so nothing is
+           cropped away to make a hero shot. -->
+      <section class="block reveal" id="final-design">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Final design</div>
+              <h2>Both pages, at full length</h2>
+            </div>
+            <div class="sec-body">
+              <p>Toggle between the two pages. Each is shown at its full height and scrolls inside the frame, rather than being cropped to a single screen.</p>
+            </div>
+          </div>
+          <div class="carousel-toggle" id="finalDesignToggle" role="tablist" aria-label="Final design page toggle">
+            <button class="toggle-btn active" data-index="0" role="tab" aria-selected="true">FAQ</button>
+            <button class="toggle-btn" data-index="1" role="tab" aria-selected="false">About</button>
+          </div>
+          <div class="laptop">
+            <div class="laptop-lid">
+              <div class="laptop-notch" aria-hidden="true"></div>
+              <div class="page-frame" id="finalDesignFrame">
+                <div class="page-frame-track" id="finalDesignTrack">
+                  <div class="page-frame-scroll" data-index="0"><img src="images/ArtiskFinalFAQ.webp" width="1512" height="4475" loading="lazy" decoding="async" alt="Final design — Artisk FAQ page, full length"></div>
+                  <div class="page-frame-scroll" data-index="1"><img src="images/ArtiskFinalAbout.webp" width="1512" height="4509" loading="lazy" decoding="async" alt="Final design — Artisk About page, full length"></div>
+                </div>
+              </div>
+            </div>
+            <div class="laptop-base" aria-hidden="true"></div>
           </div>
         </div>
       </section>
@@ -409,15 +548,21 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
         <div class="sec-measure">
           <div class="sec-grid">
             <div class="sec-head">
-              <div class="tag">Reflection & next steps</div>
-              <h2>Execution within an existing structure</h2>
+              <div class="tag">Reflection</div>
+              <h2>Defensible, not yet proven</h2>
             </div>
             <div class="sec-body">
-              <p>This was a team redesign, so my focus was execution within an existing structure — applying the brand system and protecting readability, not rebuilding the pages' architecture. Taking it further, the honest next steps are a contrast and accessibility audit (glass on text-heavy pages puts legibility most at risk) and testing on lower-end screens and in bright light, where translucency degrades most.</p>
+              <p>Neither page shipped with analytics or user testing, so I can say the structure is defensible but not that it works. That gap is the honest limit of this project.</p>
+              <p>With instrumentation, the FAQ is the easier of the two to measure: category expand rate, search usage, and support-ticket volume. Ticket volume is the real signal, since an FAQ that does its job should pull tickets down. For the About page I'd watch scroll depth and how many readers reach the CTA at the bottom.</p>
             </div>
           </div>
         </div>
       </section>
+
+      <footer class="pagefoot">
+        <a href="index.html">Back to home</a>
+        <a id="backToTop2">Back to top</a>
+      </footer>
     </main>
    </div>
   </div>
@@ -520,6 +665,32 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
     carousel.querySelector('.carousel-btn.prev').addEventListener('click', () => showSlide(idx - 1));
     carousel.querySelector('.carousel-btn.next').addEventListener('click', () => showSlide(idx + 1));
   }
+
+  // Final-design frame: the toggle slides the track sideways between the two
+  // full-length page shots, and resets the incoming page to its top so a
+  // reader never lands mid-page on a tab they haven't opened yet.
+  const finalDesignToggle = document.getElementById('finalDesignToggle');
+  if (finalDesignToggle) {
+    const fdTrack = document.getElementById('finalDesignTrack');
+    const fdSlides = Array.from(fdTrack.querySelectorAll('.page-frame-scroll'));
+    const fdBtns = Array.from(finalDesignToggle.querySelectorAll('.toggle-btn'));
+    fdBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const i = Number(btn.dataset.index);
+        fdBtns.forEach((b, n) => {
+          const on = n === i;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        fdTrack.style.transform = `translateX(-${i * 100}%)`;
+        fdSlides[i].scrollTop = 0;
+      });
+    });
+  }
+
+  document.querySelectorAll('#backToTop, #backToTop2').forEach(el => {
+    el.addEventListener('click', () => scroller.scrollTo({ top: 0, behavior: 'smooth' }));
+  });
 })();
 </script>
 </body>
