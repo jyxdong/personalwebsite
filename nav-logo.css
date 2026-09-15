@@ -19,7 +19,7 @@ nav::after{
 
 .nav-home{
   --logo-accent:#CBFF71;
-  --logo-idle:#4A4A4A;
+  --logo-idle:var(--canvas,#D7D7D7);
   width:40px;
   height:40px;
   border-radius:50%;

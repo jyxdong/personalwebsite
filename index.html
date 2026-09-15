@@ -769,7 +769,16 @@ function unfocus(){
   if(busy||!focused) return; busy=true;
   lbl.classList.remove('on','clickable'); lbl.onclick=null; hint.classList.remove('on');
   tween(camera.position,savedCam,controls.target,savedTgt,.55,function(){
-    focused=null; busy=false; controls.enabled=!cardsView;
+    focused=null;
+    busy=false;
+    // A return click happens while OrbitControls is disabled. Explicitly
+    // release our pointer state and restart auto-rotation so the controls do
+    // not remain paused after the focus tween finishes.
+    pressedPointer=null;
+    drag=false;
+    controls.enabled=!cardsView;
+    controls.autoRotate=!reducedMotion.matches&&!cardsView;
+    controls.update();
   });
 }
 
@@ -836,7 +845,13 @@ canvas.addEventListener('pointerup',function(e){
   if(wasDrag||busy||e.button!==0||document.elementFromPoint(e.clientX,e.clientY)!==canvas) return;
   const sign=signAt(e.clientX,e.clientY);
   if(focused) unfocus();
-  else if(sign) focusSign(sign);
+  else if(sign){
+    // OrbitControls registers its own pointerup cleanup after this listener.
+    // Let that cleanup finish before disabling the controls for the focus
+    // tween; otherwise its internal drag state remains active and blocks
+    // auto-rotation when the viewer returns to the signpost.
+    requestAnimationFrame(function(){focusSign(sign);});
+  }
 });
 function resetPointer(){pressedPointer=null;drag=false;cursorInside=false;hideCursor();}
 window.addEventListener('pointerup',function(e){
