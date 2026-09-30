@@ -51,7 +51,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 #contentWrap::before{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;background:rgba(255,255,255,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);transition:backdrop-filter .9s cubic-bezier(.7,0,1,.35),-webkit-backdrop-filter .9s cubic-bezier(.7,0,1,.35),background .9s cubic-bezier(.7,0,1,.35)}
 #contentWrap.cards-view::before{background:rgba(255,255,255,.16);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition-duration:1.5s;transition-delay:.42s;transition-timing-function:ease}
 #contentWrap.cards-view #wrap{pointer-events:none}
-#contentWrap.cards-view #lbl,#contentWrap.cards-view #hint{visibility:hidden}
+#contentWrap.cards-view #signInfo{visibility:hidden}
 #wrap:active{cursor:grabbing}
 canvas{display:block;width:100%;height:100%;background:#fff}
 .cards-button{position:absolute;right:var(--view-inset);bottom:var(--view-inset);z-index:3;box-sizing:border-box;min-height:46px;padding:9px 34px;border:2px solid #000;border-radius:999px;background:#fff;color:#000;font-family:inherit;font-size:20px;line-height:24px;font-weight:400;text-decoration:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:background .2s,bottom .7s cubic-bezier(.65,0,.35,1)}
@@ -82,12 +82,35 @@ canvas{display:block;width:100%;height:100%;background:#fff}
   #c.custom-cursor{cursor:none}
   #signCursor.on{visibility:visible}
 }
-#lbl{position:absolute;bottom:11%;left:50%;transform:translateX(-50%);background:#fff;color:#000;border:2px solid #000;border-radius:999px;padding:9px 34px;font-size:20px;font-weight:400;pointer-events:none;opacity:0;transition:opacity .35s,background .2s;white-space:nowrap;display:flex;align-items:center;gap:12px}
-#lbl.on{opacity:1}
+/* Over empty canvas the badge becomes a large open hand (grab) that closes
+   while pressed or dragging (grabbing). Signs and the focused view keep the
+   text badge. */
+/* 2.5px per grid pixel, so each pixel lands on whole device pixels on 2x
+   screens. */
+#signCursor .cursor-hand{display:none;width:42.5px;overflow:visible}
+#signCursor .hand-open{height:47.5px}
+#signCursor .hand-closed{height:30px}
+#signCursor[data-mode="grab"],#signCursor[data-mode="grabbing"]{padding:0;border:0;background:none}
+#signCursor[data-mode="grab"] .cursor-label,#signCursor[data-mode="grabbing"] .cursor-label{display:none}
+#signCursor[data-mode="grab"] .hand-open,#signCursor[data-mode="grabbing"] .hand-closed{display:block}
+/* ── Focused sign: the sign slides right (see focusSign) and its project info
+   fills the left. Narrow frames stack the info at the bottom instead. ── */
+#signInfo{position:absolute;z-index:1;top:50%;left:clamp(24px,6%,72px);width:min(36%,400px);display:flex;flex-direction:column;align-items:flex-start;pointer-events:none;opacity:0;transform:translate(-16px,-50%);transition:opacity .35s ease,transform .35s ease}
+#signInfo.on{opacity:1;transform:translate(0,-50%)}
+#signInfo h2{font-size:32px;line-height:1.15;letter-spacing:-.01em;font-weight:400}
+#signInfo p{margin-top:12px;font-size:16px;line-height:1.4;color:#2b2b2b}
+#signInfo p:empty,#signInfo .project-tags:empty{display:none}
+/* About Me / Playground have no card copy: just the title and button,
+   centred in the column and kept close together. */
+#signInfo.no-card{align-items:center;text-align:center}
+#signInfo.no-card #lbl{margin-top:24px}
+#lbl{margin-top:64px;background:#fff;color:#000;border:2px solid #000;border-radius:999px;padding:9px 34px;font-size:20px;font-weight:400;transition:background .2s;white-space:nowrap;display:flex;align-items:center;gap:12px}
 #lbl.clickable{pointer-events:auto;cursor:pointer}
 #lbl.clickable:hover{background:#f4f4f4}
-#hint{position:absolute;bottom:calc(11% - 26px);left:50%;transform:translateX(-50%);font-size:11.5px;line-height:1.4;color:#2b2b2b;letter-spacing:.04em;pointer-events:none;opacity:0;transition:opacity .35s}
-#hint.on{opacity:.7}
+#wrap.focus-stacked #signInfo{top:auto;right:var(--view-inset);bottom:calc(var(--view-inset) + 58px);left:var(--view-inset);width:auto;transform:translateY(16px)}
+#wrap.focus-stacked #signInfo.on{transform:none}
+#wrap.focus-stacked #signInfo h2{font-size:24px}
+@media (prefers-reduced-motion:reduce){#signInfo{transition:none}}
 #err{position:absolute;top:10px;left:10px;right:10px;background:#fee;color:#a00;font:12px monospace;padding:10px;white-space:pre-wrap;display:none;z-index:999;border-radius:6px}
 
 /* ── Intro rail: three stacked white frames, a column sibling of the content
@@ -212,7 +235,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   .project-thumb{flex:none;aspect-ratio:1/1}
 }
 </style>
-<link rel="stylesheet" href="nav-logo.css?v=2">
+<link rel="stylesheet" href="nav-logo.css?v=3">
 <link rel="icon" type="image/svg+xml" href="images/favicon-work.svg">
 </head>
 <body data-rail="pro">
@@ -252,7 +275,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     <div class="intro-frame bio">
       <div class="intro-bio-stack">
         <p class="intro-bio bio-pro">Ginny is a UX designer with a background in human factors psychology and visual arts. She studies how people think and decide, and turn that into interfaces that are clear and easy to trust.</p>
-        <p class="intro-bio bio-personal">When I'm not designing, I'm usually chasing light with my camera, planning my next trip, or playing guitar in a band with my friends. I like going to new places and trying new media in my art &mdash; each one turns a piece of my life into something I haven't experienced before.</p>
+        <p class="intro-bio bio-personal">When I'm not designing, I'm chasing light with my camera, planning my next trip, or spending time as a guitarist in a band. New places and new art media each bring a brand-new experience to my life.</p>
       </div>
     </div>
     <div class="intro-frame contact">
@@ -276,8 +299,12 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   <div id="contentWrap">
     <div id="wrap">
       <canvas id="c"></canvas>
-      <div id="lbl"><span id="ltxt">Sign</span><span>→</span></div>
-      <div id="hint">Click anywhere to return</div>
+      <div id="signInfo">
+        <h2 id="infoTitle"></h2>
+        <p id="infoDesc"></p>
+        <div class="project-tags" id="infoTags"></div>
+        <div id="lbl"><span id="ltxt">View</span><span>→</span></div>
+      </div>
       <div id="err"></div>
     </div>
     <section id="projectCards" aria-label="Projects as cards" aria-hidden="true" inert>
@@ -311,7 +338,8 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     <button class="cards-button" type="button" aria-controls="projectCards" aria-expanded="false"><span>View projects as cards</span><span aria-hidden="true">↓</span></button>
   </div>
 </div>
-<div id="signCursor" aria-hidden="true">↔ DRAG</div>
+<!-- Pixel hands drawn on a 17-column grid, echoing the classic grab cursor. -->
+<div id="signCursor" aria-hidden="true" data-mode="grab"><span class="cursor-label"></span><svg class="cursor-hand hand-open" viewBox="0 0 17 19" shape-rendering="crispEdges"><path fill="#fff" d="M8 1h2v1h-2zM8 2h2v1h-2zM11 2h2v1h-2zM5 3h2v1h-2zM8 3h2v1h-2zM11 3h2v1h-2zM5 4h2v1h-2zM8 4h2v1h-2zM11 4h2v1h-2zM14 4h2v1h-2zM5 5h2v1h-2zM8 5h2v1h-2zM11 5h2v1h-2zM14 5h2v1h-2zM5 6h2v1h-2zM8 6h2v1h-2zM11 6h2v1h-2zM14 6h2v1h-2zM5 7h2v1h-2zM8 7h2v1h-2zM11 7h2v1h-2zM14 7h2v1h-2zM5 8h2v1h-2zM8 8h2v1h-2zM11 8h2v1h-2zM14 8h2v1h-2zM5 9h2v1h-2zM8 9h2v1h-2zM11 9h2v1h-2zM14 9h2v1h-2zM1 10h3v1h-3zM5 10h2v1h-2zM8 10h2v1h-2zM11 10h2v1h-2zM14 10h2v1h-2zM1 11h15v1h-15zM2 12h14v1h-14zM3 13h13v1h-13zM4 14h12v1h-12zM4 15h11v1h-11zM5 16h10v1h-10zM5 17h10v1h-10z"/><path fill="#000" d="M8 0h2v1h-2zM7 1h1v1h-1zM10 1h3v1h-3zM5 2h3v1h-3zM10 2h1v1h-1zM13 2h1v1h-1zM4 3h1v1h-1zM7 3h1v1h-1zM10 3h1v1h-1zM13 3h3v1h-3zM4 4h1v1h-1zM7 4h1v1h-1zM10 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM4 5h1v1h-1zM7 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM4 6h1v1h-1zM7 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM16 6h1v1h-1zM4 7h1v1h-1zM7 7h1v1h-1zM10 7h1v1h-1zM13 7h1v1h-1zM16 7h1v1h-1zM4 8h1v1h-1zM7 8h1v1h-1zM10 8h1v1h-1zM13 8h1v1h-1zM16 8h1v1h-1zM1 9h4v1h-4zM7 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM16 9h1v1h-1zM0 10h1v1h-1zM4 10h1v1h-1zM7 10h1v1h-1zM10 10h1v1h-1zM13 10h1v1h-1zM16 10h1v1h-1zM0 11h1v1h-1zM16 11h1v1h-1zM1 12h1v1h-1zM16 12h1v1h-1zM2 13h1v1h-1zM16 13h1v1h-1zM3 14h1v1h-1zM16 14h1v1h-1zM3 15h1v1h-1zM15 15h1v1h-1zM4 16h1v1h-1zM15 16h1v1h-1zM4 17h1v1h-1zM15 17h1v1h-1zM4 18h12v1h-12z"/></svg><svg class="cursor-hand hand-closed" viewBox="0 0 17 12" shape-rendering="crispEdges"><path fill="#fff" d="M8 1h2v1h-2zM11 1h2v1h-2zM5 2h2v1h-2zM8 2h2v1h-2zM11 2h2v1h-2zM14 2h2v1h-2zM5 3h2v1h-2zM8 3h2v1h-2zM11 3h2v1h-2zM14 3h2v1h-2zM1 4h3v1h-3zM5 4h11v1h-11zM1 5h15v1h-15zM2 6h14v1h-14zM3 7h13v1h-13zM4 8h12v1h-12zM4 9h11v1h-11zM5 10h10v1h-10z"/><path fill="#000" d="M8 0h2v1h-2zM11 0h2v1h-2zM5 1h3v1h-3zM10 1h1v1h-1zM13 1h3v1h-3zM4 2h1v1h-1zM7 2h1v1h-1zM10 2h1v1h-1zM13 2h1v1h-1zM16 2h1v1h-1zM1 3h4v1h-4zM7 3h1v1h-1zM10 3h1v1h-1zM13 3h1v1h-1zM16 3h1v1h-1zM0 4h1v1h-1zM4 4h1v1h-1zM16 4h1v1h-1zM0 5h1v1h-1zM16 5h1v1h-1zM1 6h1v1h-1zM16 6h1v1h-1zM2 7h1v1h-1zM16 7h1v1h-1zM3 8h1v1h-1zM16 8h1v1h-1zM3 9h1v1h-1zM15 9h1v1h-1zM4 10h1v1h-1zM15 10h1v1h-1zM4 11h12v1h-12z"/></svg></div>
 
 <script>
 (function(){
@@ -385,7 +413,10 @@ const wrap   = document.getElementById('wrap');
 const canvas = document.getElementById('c');
 const lbl    = document.getElementById('lbl');
 const ltxt   = document.getElementById('ltxt');
-const hint   = document.getElementById('hint');
+const signInfo  = document.getElementById('signInfo');
+const infoTitle = document.getElementById('infoTitle');
+const infoDesc  = document.getElementById('infoDesc');
+const infoTags  = document.getElementById('infoTags');
 
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
@@ -401,7 +432,7 @@ renderer.toneMappingExposure = 1.0;
 
 const scene  = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42,1,0.1,200);
-// Default view: front-facing Remember and Playground signs, matching the
+// Default view: front-facing the Lumino sign (deg 200), matching the
 // intended opening composition (290° orbit at the original camera distance).
 camera.position.set(-11.17, 0.5, 4.06);
 
@@ -591,12 +622,15 @@ scene.add(pole);
 // and its flat face reads tangentially (sideways), not straight out at the
 // pole. A sign at 25° shows its face to someone standing near 25°+90°/-90°
 // around the pole; the back shows from the opposite tangential side.
+// The five signs split the circle into even 72° slots, but each one sits
+// 144° on from the sign above it, so neighbours alternate sides of the pole
+// instead of climbing a tidy spiral.
 const DEFS=[
-  {label:'PLAYGROUND',      key:'playground',shape:'square',  w:2.2, h:2.2,  y:-1.9,  deg:200},
-  {label:'Artisk Redesign', key:'artisk',   shape:'hrect',    w:3.3, h:1.65, y:-0.9,  deg:70, textureAspect:1395/384},
-  {label:'Lumino',          key:'lumino',   shape:'square',   w:2.1, h:2.1,  y:0.8,   deg:140},
-  {label:'Remember',        key:'remember', shape:'circle',   w:2.1, h:2.1,  y:2.55,  deg:195},
-  {label:'ABOUT ME',        key:'proj5',    shape:'hrect',    w:2.85,h:1.45, y:4.4,   deg:25, textureAspect:495/215},
+  {label:'PLAYGROUND',      key:'playground',shape:'square',  w:2.2, h:2.2,  y:-1.9,  deg:272, title:'Playground'},
+  {label:'Artisk Redesign', key:'artisk',   shape:'hrect',    w:3.3, h:1.65, y:-0.9,  deg:128, textureAspect:1395/384},
+  {label:'Lumino',          key:'lumino',   shape:'square',   w:2.1, h:2.1,  y:2.55,  deg:200},
+  {label:'Remember',        key:'remember', shape:'circle',   w:2.1, h:2.1,  y:0.8,   deg:344},
+  {label:'ABOUT ME',        key:'proj5',    shape:'hrect',    w:2.85,h:1.45, y:4.4,   deg:56, textureAspect:495/215, title:'About Me'},
 ];
 
 const PROJECT_PAGES={
@@ -731,6 +765,25 @@ let viewportWidth=1, viewportHeight=1;
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
 const savedCam=new THREE.Vector3(), savedTgt=new THREE.Vector3();
 
+// Fill the focus panel from the matching project card, so the description
+// and tags live in one place.
+function fillSignInfo(def){
+  const page=PROJECT_PAGES[def.key];
+  const card=page&&document.querySelector('.project-card[href="'+page+'"]');
+  infoTitle.textContent=card ? card.querySelector('h2').textContent : (def.title||def.label);
+  infoDesc.textContent=card ? card.querySelector('p').textContent : '';
+  infoTags.replaceChildren(...(card ?
+    Array.from(card.querySelectorAll('.project-tag'),t=>t.cloneNode(true)) : []));
+  ltxt.textContent=card ? 'View' : 'Explore';
+  signInfo.classList.toggle('no-card',!card);
+}
+
+// Stacked (narrow) frames use a fixed focus distance; larger = less zoomed.
+const FOCUS_DIST=5.8;
+// Wide frames size the sign to the free area right of the info column:
+// the share of that area it may fill, and the gap (px) kept from the column.
+const FOCUS_FILL=.85, FOCUS_GAP=48;
+
 function focusSign(entry){
   if(busy) return; busy=true; focused=entry;
   savedCam.copy(camera.position); savedTgt.copy(controls.target);
@@ -742,15 +795,43 @@ function focusSign(entry){
   const q=new THREE.Quaternion();
   entry.sg.getWorldQuaternion(q);
   const frontDir=new THREE.Vector3(0,0,1).applyQuaternion(q);
-  const focusTarget=sgp.clone();
-  focusTarget.y-=.22;
-  const toCam=sgp.clone().addScaledVector(frontDir,4.7);
-  toCam.y=focusTarget.y;
+  // Slide camera and target together so the face stays square-on while the
+  // sign lands right of the project info. Narrow frames push the sign up and
+  // put the info underneath instead.
+  const tanHalf=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+  const stacked=camera.aspect<1.1;
+  wrap.classList.toggle('focus-stacked',stacked);
+  fillSignInfo(entry.def);
+  let dist=FOCUS_DIST, shift, lift=.22;
+  if(stacked){
+    shift=new THREE.Vector3(0,-dist*tanHalf*.4,0);
+  } else {
+    // The info column stays centred in the frame (CSS); the sign centres on
+    // 48vh (converted to frame pixels).
+    const W=viewportWidth, H=viewportHeight;
+    const cy=innerHeight*.48-canvas.getBoundingClientRect().top;
+    // Free area: from the info column (plus a gap) to the right edge, and
+    // from cy up to the top / down to just above the cards button.
+    const x0=signInfo.offsetLeft+signInfo.offsetWidth+FOCUS_GAP, x1=W-40;
+    const halfAvail=Math.min(cy-32,H-100-cy);
+    // Largest scale (px per world unit) that fits the sign in that area, and
+    // the camera distance that produces it.
+    const scale=FOCUS_FILL*Math.min((x1-x0)/entry.def.w,2*halfAvail/entry.def.h);
+    dist=THREE.MathUtils.clamp(H/(2*scale*tanHalf),3,10);
+    const halfH=dist*tanHalf;
+    shift=new THREE.Vector3().crossVectors(frontDir,camera.up).normalize()
+      .multiplyScalar(halfH*camera.aspect*((x0+x1)/W-1));
+    // The extra 100/H cancels the constant 50px downward view offset in
+    // applyCardsOffset.
+    lift=halfH*(1-2*cy/H+100/H);
+  }
+  const focusTarget=sgp.clone().add(shift);
+  focusTarget.y-=lift;
+  const toCam=focusTarget.clone().addScaledVector(frontDir,dist);
 
   tween(camera.position,toCam,controls.target,focusTarget,.65,function(){
     busy=false;
-    ltxt.textContent=entry.def.label;
-    lbl.classList.add('on'); hint.classList.add('on');
+    signInfo.classList.add('on');
     const page=PROJECT_PAGES[entry.def.key];
     if(page){
       lbl.classList.add('clickable');
@@ -767,7 +848,8 @@ function focusSign(entry){
 
 function unfocus(){
   if(busy||!focused) return; busy=true;
-  lbl.classList.remove('on','clickable'); lbl.onclick=null; hint.classList.remove('on');
+  signInfo.classList.remove('on');
+  lbl.classList.remove('clickable'); lbl.onclick=null;
   tween(camera.position,savedCam,controls.target,savedTgt,.55,function(){
     focused=null;
     busy=false;
@@ -785,6 +867,7 @@ function unfocus(){
 // ── Pointer feedback and click ───────────────────────────────────────────
 const ray=new THREE.Raycaster(), mp=new THREE.Vector2();
 const signCursor=document.getElementById('signCursor');
+const cursorLabel=signCursor.querySelector('.cursor-label');
 const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)');
 let drag=false, pressedPointer=null, downX=0, downY=0;
 let cursorInside=false, cursorX=0, cursorY=0;
@@ -805,8 +888,11 @@ function hideCursor(){
 
 function updateCursor(){
   if(cardsView||!cursorInside||!finePointer.matches||busy||document.elementFromPoint(cursorX,cursorY)!==canvas){hideCursor();return;}
-  const text=focused ? 'BACK ↩' : drag ? '↔' : signAt(cursorX,cursorY) ? 'EXPLORE ↗' : '↔ DRAG';
-  if(signCursor.textContent!==text) signCursor.textContent=text;
+  const onSign=!focused&&!drag&&signAt(cursorX,cursorY);
+  const text=focused ? 'BACK ↩' : onSign ? 'EXPLORE ↗' : '';
+  const mode=text ? 'label' : drag||pressedPointer!==null ? 'grabbing' : 'grab';
+  if(signCursor.dataset.mode!==mode) signCursor.dataset.mode=mode;
+  if(cursorLabel.textContent!==text) cursorLabel.textContent=text;
   // Keep the badge centered on the actual hit point, including near edges.
   signCursor.style.transform=`translate(${cursorX}px,${cursorY}px) translate(-50%,-50%)`;
   signCursor.classList.add('on');

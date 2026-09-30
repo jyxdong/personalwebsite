@@ -1,20 +1,35 @@
-/* Shared portfolio mark. The three tabs stay centered independently of the
-   mark by balancing it with an equal-width spacer on the right. */
+/* Shared portfolio mark on the left, section tabs right-aligned so the nav
+   mirrors the left rail / content split below it. */
 nav{
-  display:grid;
-  grid-template-columns:40px minmax(0,800px) 40px;
+  display:flex;
   justify-content:space-between;
 }
 
-nav::after{
-  content:"";
-  width:40px;
-  height:40px;
+/* Tabs hug their labels instead of stretching to 260px. The grid keeps all
+   three the same width (that of the widest label). */
+.nav-tabs{
+  flex:none;
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:1fr;
 }
 
-.nav-tabs{
-  width:100%;
-  min-width:0;
+.nav-tabs a{
+  max-width:none;
+  padding:0 36px;
+}
+
+/* Phones: not enough room for fixed-width pills, so let the tabs fill the
+   space next to the mark again. */
+@media (max-width:560px){
+  .nav-tabs{
+    flex:1;
+    min-width:0;
+  }
+  .nav-tabs a{
+    min-width:0;
+    padding:0 8px;
+  }
 }
 
 .nav-home{
@@ -22,6 +37,7 @@ nav::after{
   --logo-idle:var(--canvas,#D7D7D7);
   width:40px;
   height:40px;
+  flex-shrink:0;
   border-radius:50%;
   display:grid;
   place-items:center;

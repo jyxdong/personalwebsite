@@ -99,8 +99,8 @@ body (flex column, height:100%, overflow:hidden — no page scroll by default)
 ```
 
 - `nav` is a single white pill (`border-radius:999px`) containing the
-  centered `.nav-tabs` (About/Work/Play) plus small circular icon buttons
-  (e.g. theme/menu) at the ends.
+  logo mark on the left and right-aligned `.nav-tabs` (Work/About/Play), each
+  pill sized to its label (see [nav-logo.css](nav-logo.css)).
 - The active tab gets its section's accent as `background`, `color:#000`;
   inactive tabs are `#f4f4f4` with `#e9e9e9` on hover.
 - Content lives inside white rounded panels sitting on the `--canvas` gray

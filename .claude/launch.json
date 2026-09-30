@@ -8,6 +8,12 @@
       "port": 8765
     },
     {
+      "name": "portfolio-node",
+      "runtimeExecutable": "/usr/local/bin/node",
+      "runtimeArgs": ["/Users/jyxdong/Documents/personalwebsite/.claude/serve.js", "8765"],
+      "port": 8765
+    },
+    {
       "name": "portfolio-attach",
       "url": "http://localhost:8765",
       "port": 8765
