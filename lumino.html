@@ -210,7 +210,8 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 }
 
 /* ── Sections ──────────────────────────────────────────────────────────── */
-main{padding:8px 64px 8px}
+/* Bottom padding keeps the last lines clear of the floating Back to top. */
+main{padding:8px 64px 56px}
 section.block{padding-top:96px;scroll-margin-top:24px}
 
 /* Reading column: capped at the same 900px measure as the header above,
@@ -241,10 +242,11 @@ section.block{padding-top:96px;scroll-margin-top:24px}
 }
 .ph-inline + .sec-grid,
 .ph-row + .sec-grid,
-.stat-cells + .sec-grid,
+.persona-pair + .sec-grid,
 .bento-3 + .sec-grid,
 .metrics-row + .sec-grid,
-.highlight-row + .sec-grid{margin-top:48px}
+.highlight-row + .sec-grid,
+.direction-row + .sec-grid{margin-top:48px}
 .scenario-img + .sec-grid{margin-top:96px}
 
 /* The tag floats above sec-head instead of taking up flow space, so
@@ -273,8 +275,8 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
 .bento-3 .cell h3.highlight{font-size:clamp(18px,1.8vw,20px)}
 .bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
-/* Small diagram between a cell's keyword and its explanation. */
-.cell-figure{display:block;width:100%;height:auto;margin:18px 0 4px}
+/* Diagram at the top of a cell, with the keyword and explanation below it. */
+.cell-figure{display:block;width:100%;height:auto;margin-bottom:20px}
 
 /* ── Insight cells — same tag/H2/body type as a normal sec-grid, just
    boxed and run side by side instead of the full two-column width. ────── */
@@ -286,12 +288,20 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .insight-cells .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
 .insight-cells + .sec-grid{margin-top:96px}
 
-/* ── Stat callouts (Research to insight) — three columns, a big H2-style
-   figure over a normal paragraph, sitting above the insight cells. ─────── */
-.stat-cells{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.stat-cells.stat-cells-2{grid-template-columns:repeat(2,1fr)}
-.stat-cells h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(28px,3.4vw,38px);line-height:1;letter-spacing:-.01em;color:var(--ink)}
-.stat-cells p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
+/* ── Persona pair (Target Users) — child and parent side by side, boxed
+   the same way as the bento cells in System and User (hairline frame,
+   28px cells, highlight name). Each column is a subgrid over the same row
+   tracks, so Moment / At night / Needs line up across both users however
+   the copy wraps. ──────────────────────────────────────────────────────── */
+.persona-pair{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;row-gap:6px;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.persona{display:grid;grid-row:span 4;grid-template-rows:subgrid;padding:28px}
+.persona + .persona{border-left:1px solid var(--line)}
+.persona-head{padding-bottom:10px}
+.persona .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.persona h3.highlight{font-size:clamp(18px,1.8vw,20px);line-height:1.3}
+.persona-row{display:grid;grid-template-columns:72px 1fr;column-gap:16px;align-items:baseline}
+.persona-row dt{font-size:12.5px;color:var(--faint)}
+.persona-row dd{font-size:15px;line-height:1.4;color:#2b2b2b}
 
 /* ── Metrics row (Final Design) — a stat on the left, same H2-style figure
    as the research stats, and a bordered pull-quote on the right. ───────── */
@@ -302,16 +312,44 @@ ul.insights em{font-style:italic;color:var(--ink)}
    weight, same size as whatever context it sits in. ────────────────────── */
 .highlight{font-family:'Source Serif 4',serif;font-style:normal;font-weight:400}
 #system .sec-body p.highlight{font-size:18px}
-.stat-cells h2.highlight,
 .metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
 .metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
 
 /* ── Highlight row (Reflection + Next Steps) — three centered cards, each
    a larger centered "highlight" line over a normal paragraph. ──────────── */
 .highlight-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
-.highlight-row.cols-2{grid-template-columns:repeat(2,1fr)}
 .highlight-item .highlight{display:block;text-align:left;font-size:clamp(18px,1.8vw,20px);line-height:1.3}
 .highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+
+/* ── Directions (Physical Design) — each direction's copy sits beside its
+   own sketch, and the two pairs share one row: four components across.
+   Both sketches live in one 1404×738 image; each frame is a 592px-wide
+   window onto it (cover + object-position), cropped tight to its own
+   drawing (mushroom inked at x 79–498, house at x 755–1337, both run the
+   full height): the mushroom at x 0–592, the house at x 750–1342
+   (750 / (1404−592) = 92.4%). Both windows share one width so the two
+   frames stay the same size.
+   Framed like the bento cells: hairline box, 28px cells, a divider
+   between the two directions. Inside each cell the copy takes the wider
+   share (7:5), so its lines run longer and the sketch sits further right.
+   Four columns only fit the copy once the
+   content reaches ~870px (a 1336px viewport); narrower than that the pairs
+   stack, and below 600px each pair stacks too. ────────────────────────── */
+.direction-row{margin-top:32px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.direction{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:20px;align-items:center;padding:28px}
+.direction + .direction{border-left:1px solid var(--line)}
+.direction .highlight-item .highlight{margin-top:0}
+.direction-sketch{aspect-ratio:592/738}
+.direction-sketch img{display:block;width:100%;height:100%;object-fit:cover;object-position:0 50%}
+.direction-sketch.is-house img{object-position:92.4% 50%}
+@media (max-width:1335px){
+  .direction-row{grid-template-columns:1fr}
+  .direction + .direction{border-left:none;border-top:1px solid var(--line)}
+}
+@media (max-width:600px){
+  .direction{grid-template-columns:1fr;gap:16px}
+  .direction-sketch{width:100%;max-width:320px;justify-self:center}
+}
 .metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
 .metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
 .metrics-row .quote cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:var(--faint)}
@@ -360,16 +398,25 @@ ul.insights em{font-style:italic;color:var(--ink)}
    share (largest = darkest), so color reinforces the arc instead of adding a
    second thing to decode; every slice is also named and numbered in the
    legend, so identity is never carried by color alone. ─────────────────── */
-/* The toggle stands on its own to the left; only the chart panel is framed. */
-.survey{margin-top:32px;display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start}
+/* Toggle on the left, unframed chart panel on the right; the two share one
+   horizontal center line. */
+.survey{margin-top:32px;display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:center}
 /* Vertical version of the site's pill nav: one grey track, the active
    question lifted out of it as a white pill. */
-.survey-toggle{display:flex;flex-direction:column;gap:2px;background:#f4f4f4;border-radius:22px;padding:6px;align-self:start}
+.survey-toggle{display:flex;flex-direction:column;gap:2px;background:#f4f4f4;border-radius:22px;padding:6px}
 .survey-tab{appearance:none;border:none;background:none;cursor:pointer;padding:11px 16px;border-radius:999px;font:inherit;font-size:15px;line-height:1.3;color:var(--muted);text-align:center;transition:background .2s,color .2s,box-shadow .2s}
 .survey-tab:hover:not([aria-selected="true"]){color:var(--ink)}
 .survey-tab[aria-selected="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(17,17,17,.10)}
+/* With JS, a single white knob slides to the selected tab instead of each
+   tab painting its own background. */
+.survey-toggle{position:relative}
+.survey-tab{position:relative;z-index:1}
+.survey-knob{display:none;position:absolute;top:0;left:0;border-radius:999px;background:var(--paper);box-shadow:0 1px 3px rgba(17,17,17,.10);transition:transform .45s cubic-bezier(.65,0,.35,1),width .45s cubic-bezier(.65,0,.35,1),height .45s cubic-bezier(.65,0,.35,1)}
+.survey-toggle.has-knob .survey-knob{display:block}
+.survey-toggle.has-knob .survey-tab[aria-selected="true"]{background:none;box-shadow:none}
+@media (prefers-reduced-motion:reduce){.survey-knob{transition:none}}
 /* Chart left, question + legend right. */
-.survey-panel{position:relative;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;min-width:0;height:276px;padding:24px;border:1px solid var(--line);border-radius:var(--r-sm)}
+.survey-panel{position:relative;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;min-width:0;height:276px;padding:24px 0 24px 24px}
 .survey-pie{width:190px;height:190px;flex-shrink:0}
 .survey-pie path{stroke-width:1;transition:opacity .15s}
 .survey-pie.dimmed path:not(.is-hovered){opacity:.45}
@@ -389,7 +436,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
   .survey{grid-template-columns:1fr;gap:16px}
   .survey-toggle{flex-direction:row;overflow-x:auto;border-radius:999px}
   .survey-tab{flex:1 0 auto;white-space:nowrap}
-  .survey-panel{grid-template-columns:1fr;justify-items:center;gap:24px;height:auto;padding:24px 20px}
+  .survey-panel{grid-template-columns:1fr;justify-items:center;gap:24px;height:auto;padding:24px 0}
   .survey-readout{text-align:left;width:100%}
 }
 
@@ -398,16 +445,50 @@ ul.insights em{font-style:italic;color:var(--ink)}
    labels, lines) is positioned in % against a compact fixed-aspect-ratio box
    so it scales together; below 900px it collapses to a plain stacked column. ── */
 .device-annotate{position:relative;margin-top:40px;width:100%;aspect-ratio:900/500}
-.device-annotate .device-lines{position:absolute;inset:0;width:100%;height:100%}
+/* Stacking: render at the bottom, leader lines over it (their ends land on
+   the device itself), labels on top. */
+.device-annotate .device-lines{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 .device-annotate .device-lines line{stroke:var(--muted);stroke-width:1}
-.device-annotate .device-img{position:absolute}
-.device-annotate .device-label{position:absolute}
+.device-annotate .device-img{position:absolute;z-index:1}
+.device-annotate .device-label{position:absolute;z-index:3}
 @media (max-width:900px){
   .device-annotate{aspect-ratio:auto;max-width:100%}
   .device-annotate .device-lines{display:none}
   .device-annotate .device-img,.device-annotate .device-label{position:static;left:auto!important;right:auto!important;top:auto!important;width:100%!important;margin-top:24px}
   .device-annotate .device-img{margin-top:0}
 }
+
+/* ── Interface evolution: stage toggle | morphing screens | stage notes.
+   Card positions per stage are set in JS (see the evolve script); CSS only
+   animates between them. Narrow containers stack the three parts and turn
+   the toggle horizontal. ── */
+.evolve-wrap{margin-top:48px;container-type:inline-size}
+.evolve{display:grid;grid-template-columns:max-content minmax(0,1fr) 210px;column-gap:32px;align-items:center}
+/* Same look as the survey toggle (.survey-toggle / .survey-tab), plus a
+   white knob that slides to the selected stage (positioned in JS). */
+.evolve-steps{position:relative;display:flex;flex-direction:column;gap:2px;padding:6px;border-radius:22px;background:#f4f4f4;touch-action:none;user-select:none}
+.evolve-knob{position:absolute;top:0;left:0;border-radius:999px;background:var(--paper);box-shadow:0 1px 3px rgba(17,17,17,.10);transition:transform .45s cubic-bezier(.65,0,.35,1),width .45s cubic-bezier(.65,0,.35,1),height .45s cubic-bezier(.65,0,.35,1)}
+.evolve-steps button{position:relative;z-index:1;padding:11px 16px;border:0;border-radius:999px;background:none;font:inherit;font-size:15px;line-height:1.3;color:var(--muted);text-align:center;white-space:nowrap;cursor:pointer;transition:color .2s}
+.evolve-steps button:hover:not([aria-checked="true"]),.evolve-steps button[aria-checked="true"]{color:var(--ink)}
+.evolve-steps button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.evolve-stage{position:relative}
+/* --move / --fade are lengthened in JS for the wireframe ↔ hi-fi step, where
+   C drops out and B splits in two. */
+.evolve-card{position:absolute;top:0;left:0;margin:0;opacity:0;transform-origin:50% 0;transition:transform var(--move,.6s) cubic-bezier(.65,0,.35,1),opacity var(--fade,.45s) ease}
+.evolve-card img{display:block;width:100%;aspect-ratio:368/788;object-fit:contain}
+.evolve-card figcaption{margin-top:8px;text-align:center;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+.evolve-notes{display:grid}
+.evolve-notes article{grid-area:1/1;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease,visibility .35s}
+.evolve-notes article.on{opacity:1;visibility:visible;transform:none}
+.evolve-notes .tag{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
+.evolve-notes h3{margin-top:8px;font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35}
+.evolve-notes article p{margin-top:12px}
+@container (max-width:720px){
+  .evolve{grid-template-columns:minmax(0,1fr);row-gap:24px}
+  .evolve-steps{flex-direction:row;border-radius:999px}
+  .evolve-steps button{flex:1 0 auto}
+}
+@media (prefers-reduced-motion:reduce){.evolve-knob,.evolve-card,.evolve-notes article{transition:none}}
 
 /* ── Pull quote: flat, no fill — a hairline rule carries it. Its size is
    intentionally its own, not one of the type-scale tiers, since it's a
@@ -419,10 +500,28 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .next-list li{font-size:15px;line-height:1.5;color:#2b2b2b;padding-left:18px;position:relative}
 .next-list li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--line)}
 
-/* Footer links: L5 */
-footer.pagefoot{border-top:1px solid var(--line);margin-top:56px;padding:28px 0 48px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-footer.pagefoot a{font-size:12.5px;color:var(--muted);text-decoration:none;cursor:pointer}
-footer.pagefoot a:hover{color:var(--ink)}
+/* ── Back to top: a floating pill-grey button, same fill as the rail's
+   "Back to works". Fixed to the viewport so it works for both scroll
+   models (the #pageScroll box on desktop, the window on mobile); on
+   desktop it sits 24px inside the content frame's bottom-right corner.
+   Hidden with visibility (not just opacity) until the reader has scrolled,
+   so it's out of the tab order and the accessibility tree while unused. ─ */
+.to-top{
+  position:fixed;z-index:20;
+  right:calc(var(--sidegap) + 24px);bottom:calc(var(--sidegap) + 24px);
+  width:44px;height:44px;border:none;border-radius:999px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:#e4e4e4;color:var(--ink);box-shadow:0 1px 3px rgba(17,17,17,.10);
+  opacity:0;visibility:hidden;transform:translateY(8px);
+  transition:opacity .2s ease,transform .2s ease,visibility .2s,background .2s;
+}
+.to-top.show{opacity:1;visibility:visible;transform:none}
+.to-top:hover{background:#dadada}
+.to-top:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.to-top{transform:none;transition:opacity .01s,visibility .01s}}
+/* The title only takes focus programmatically (after Back to top), so it
+   needs no ring of its own. */
+#pageTitle:focus{outline:none}
 
 /* ── Scroll reveal ─────────────────────────────────────────────────────── */
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}
@@ -452,7 +551,9 @@ footer.pagefoot a:hover{color:var(--ink)}
   .bento-3,.insight-cells{grid-template-columns:1fr}
   .bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
   .bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
-  .stat-cells{grid-template-columns:1fr;gap:20px}
+  .to-top{right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px))}
+  .persona-pair{grid-template-columns:1fr}
+  .persona + .persona{border-left:none;border-top:1px solid var(--line)}
   .metrics-row{grid-template-columns:1fr;gap:20px}
   .highlight-row{grid-template-columns:1fr;gap:24px}
 }
@@ -489,7 +590,7 @@ footer.pagefoot a:hover{color:var(--ink)}
       <li data-target="reflection"><a href="#reflection">Reflection and Next Steps</a></li>
      </ul>
     </div>
-    <a href="work.html" class="rail-home">
+    <a href="index.html" class="rail-home">
       <span>Back to works</span>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     </a>
@@ -501,15 +602,13 @@ footer.pagefoot a:hover{color:var(--ink)}
    <div id="pageScroll">
     <div class="inner">
       <p class="crumb">
-        <a href="index.html">Home</a>
-        <span class="sep">/</span>
-        <a href="work.html">Work</a>
+        <a href="index.html">Work</a>
         <span class="sep">/</span>
         <span class="cur">Lumino</span>
       </p>
 
       <header class="hero">
-        <h2>Lumino</h2>
+        <h2 id="pageTitle" tabindex="-1">Lumino</h2>
         <p class="dek">A companion that guides young children to sleep on their own.</p>
 
         <div class="meta">
@@ -567,17 +666,17 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
-          <div class="stat-cells">
-            <div class="stat">
-              <h2 class="highlight">30%</h2>
+          <div class="bento-3">
+            <div class="cell">
+              <h3 class="highlight">30%</h3>
               <p>of toddlers and preschoolers are affected by bedtime problems and night wakings.</p>
             </div>
-            <div class="stat">
-              <h2 class="highlight">59%</h2>
+            <div class="cell">
+              <h3 class="highlight">59%</h3>
               <p>of 4-6-year-old children experience nighttime fears.</p>
             </div>
-            <div class="stat">
-              <h2 class="highlight">Night waking</h2>
+            <div class="cell">
+              <h3 class="highlight">Night waking</h3>
               <p>is among the top sleep concerns parents raise with pediatricians.</p>
             </div>
           </div>
@@ -588,14 +687,24 @@ footer.pagefoot a:hover{color:var(--ink)}
             </div>
           </div>
 
-          <div class="stat-cells stat-cells-2">
-            <div class="stat">
-              <h2 class="highlight">Primary users:</h2>
-              <p>Kids that fall within age 4-6, entering the stage of sleeping alone in their own room.</p>
+          <div class="persona-pair">
+            <div class="persona">
+              <div class="persona-head">
+                <div class="tag">Primary user</div>
+                <h3 class="highlight">Kids aged 4-6</h3>
+              </div>
+              <dl class="persona-row"><dt>Moment</dt><dd>First nights alone in their own room</dd></dl>
+              <dl class="persona-row"><dt>At night</dt><dd>Wakes, calls out, needs a parent close</dd></dl>
+              <dl class="persona-row"><dt>Needs</dt><dd>A parent's presence, one-touch controls</dd></dl>
             </div>
-            <div class="stat">
-              <h2 class="highlight">Secondary users:</h2>
-              <p>Parents who have young children and want a second channel that helps keep their child's sleep more secure.</p>
+            <div class="persona">
+              <div class="persona-head">
+                <div class="tag">Secondary user</div>
+                <h3 class="highlight">Their parents</h3>
+              </div>
+              <dl class="persona-row"><dt>Moment</dt><dd>Supporting the move out of co-sleeping</dd></dl>
+              <dl class="persona-row"><dt>At night</dt><dd>Re-enters the room 1-2 times a night</dd></dl>
+              <dl class="persona-row"><dt>Needs</dt><dd>A second channel to keep sleep secure</dd></dl>
             </div>
           </div>
 
@@ -610,6 +719,7 @@ footer.pagefoot a:hover{color:var(--ink)}
 
           <div class="survey" id="survey">
             <div class="survey-toggle" role="tablist" aria-label="Survey questions">
+              <span class="survey-knob" aria-hidden="true"></span>
               <button class="survey-tab" role="tab" aria-selected="true" data-q="0">Responding at night</button>
               <button class="survey-tab" role="tab" aria-selected="false" data-q="2">Bedtime stress</button>
               <button class="survey-tab" role="tab" aria-selected="false" data-q="1">Re-entering the room</button>
@@ -672,18 +782,18 @@ footer.pagefoot a:hover{color:var(--ink)}
 
           <div class="bento-3">
             <div class="cell">
-              <h3 class="highlight">Screen-free</h3>
               <img class="cell-figure" src="images/LuminoInfographicScreen.svg" alt="A screen crossed out, replaced by a small glowing light">
+              <h3 class="highlight">Screen-free</h3>
               <p>Our users are 4 to 6, so the child's side stays fully tangible: a light to pat and two buttons to press, with no screen at bedtime.</p>
             </div>
             <div class="cell">
-              <h3 class="highlight">Accessible</h3>
               <img class="cell-figure" src="images/LuminoInfographicAccessible.svg" alt="The light sits on a bedside table within reach of the bed">
+              <h3 class="highlight">Accessible</h3>
               <p>It sits within arm's reach of the bed, so a child can work it alone in the dark. Parents reach the same controls through the app from wherever they are.</p>
             </div>
             <div class="cell">
-              <h3 class="highlight">Emotional</h3>
               <img class="cell-figure" src="images/LuminoInfographicEmotional.svg" alt="A glowing light between a child and a parent, connected to both">
+              <h3 class="highlight">Emotional</h3>
               <p>The light and a parent's own recorded voice keep the child company. The parent settles them without walking back in, so both sides get through the night.</p>
             </div>
           </div>
@@ -710,18 +820,22 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>From this range of early ideas, two directions emerged, each answering the brief differently: a simple mushroom nightlight, and a more playful glass house.</p>
             </div>
           </div>
-          <div class="highlight-row cols-2">
-            <div class="highlight-item">
-              <p class="highlight">Direction: Mushroom Nightlight</p>
-              <p class="highlight-body">A simple, familiar form the child can bond with. Comfort comes through soft light from the silicon top and physical buttons. The child presses the button to play a story or to reach a parent if still awake. The interaction stays minimal by design, keeping it usable for a young child alone in the dark.</p>
+          <div class="direction-row">
+            <div class="direction">
+              <div class="highlight-item">
+                <p class="highlight">Mushroom Nightlight</p>
+                <p class="highlight-body">A familiar form the child can bond with: a soft-glowing top and two buttons, one for a story and one to reach a parent. Safe and simple enough for a child to use alone.</p>
+              </div>
+              <div class="direction-sketch"><img src="images/LuminoProcess2.jpeg" alt="Sketch of the mushroom nightlight: a dome-shaped top on a cube base with two buttons and a clock display"></div>
             </div>
-            <div class="highlight-item">
-              <p class="highlight">Direction: Glass House</p>
-              <p class="highlight-body">A more playful, narrative concept. A translucent glass house paired with a magnetic figurine: placing the figurine inside the house triggers a warm glow through the glass. From the small screen inside, there will also be a gentle scene related to night that the child follows along with.</p>
+            <div class="direction">
+              <div class="highlight-item">
+                <p class="highlight">Glass House</p>
+                <p class="highlight-body">A playful, narrative concept: placing a magnetic figurine inside the translucent house makes it glow, while a small screen inside plays a gentle night scene to follow.</p>
+              </div>
+              <div class="direction-sketch is-house"><img src="images/LuminoProcess2.jpeg" alt="Sketch of the glass house: a translucent house on a base, with a figurine and a small moon-and-stars screen inside"></div>
             </div>
           </div>
-
-          <div class="ph ph-inline" style="aspect-ratio:1404/738;background:none"><img src="images/LuminoProcess2.jpeg" alt="Lumino design process"></div>
 
           <div class="sec-grid">
             <div class="sec-head">
@@ -775,8 +889,57 @@ footer.pagefoot a:hover{color:var(--ink)}
               <p>After exploring several interface directions, we chose to place graphic representations of the app’s content at the center of each screen. This created a clearer visual focus, made the controls easier to scan, and gave Lumino a friendlier, more cohesive character.</p>
             </div>
           </div>
-          <div class="ph ph-inline" style="aspect-ratio:3369/1895;background:none">
-            <img src="images/LuminoScreenDevelop.svg" alt="Lumino interface development showing several screen directions and the selected graphic-led approach">
+          <!-- Stage toggle (left) steps the screens from sketch to final; each
+               screen morphs into its successor in place so the lineage stays
+               visible. Card lineage: A = control list, B = device in focus
+               (splits into B1/B2 at hi-fi; B2 becomes the final), C = scene
+               picker (dropped after wireframes). -->
+          <div class="evolve-wrap">
+            <div class="evolve" id="evolve">
+              <div class="evolve-steps" role="radiogroup" aria-label="Design stage">
+                <span class="evolve-knob" aria-hidden="true"></span>
+                <button type="button" role="radio" aria-checked="true" data-step="0">Sketch</button>
+                <button type="button" role="radio" aria-checked="false" tabindex="-1" data-step="1">Wireframe</button>
+                <button type="button" role="radio" aria-checked="false" tabindex="-1" data-step="2">Hi-fi</button>
+                <button type="button" role="radio" aria-checked="false" tabindex="-1" data-step="3">Final</button>
+              </div>
+
+              <div class="evolve-stage" aria-hidden="true">
+                <figure class="evolve-card" data-card="sketchA"><img src="images/LuminoDev/sketch-1.svg" alt="" loading="lazy" decoding="async"><figcaption>A · List</figcaption></figure>
+                <figure class="evolve-card" data-card="sketchB"><img src="images/LuminoDev/sketch-3.svg" alt="" loading="lazy" decoding="async"><figcaption>B · Device</figcaption></figure>
+                <figure class="evolve-card" data-card="sketchC"><img src="images/LuminoDev/sketch-2.svg" alt="" loading="lazy" decoding="async"><figcaption>C · Scenes</figcaption></figure>
+                <figure class="evolve-card" data-card="wireA"><img src="images/LuminoDev/wire-1.svg" alt="" loading="lazy" decoding="async"><figcaption>A · List</figcaption></figure>
+                <figure class="evolve-card" data-card="wireB"><img src="images/LuminoDev/wire-2.svg" alt="" loading="lazy" decoding="async"><figcaption>B · Device</figcaption></figure>
+                <figure class="evolve-card" data-card="wireC"><img src="images/LuminoDev/wire-3.svg" alt="" loading="lazy" decoding="async"><figcaption>C · Scenes</figcaption></figure>
+                <figure class="evolve-card" data-card="hifiA" data-ratio="446/859"><img src="images/LuminoDev/hifi-1.svg" alt="" loading="lazy" decoding="async"><figcaption>A · List</figcaption></figure>
+                <figure class="evolve-card" data-card="hifiB1"><img src="images/LuminoDev/hifi-2.svg" alt="" loading="lazy" decoding="async"><figcaption>B1 · Device</figcaption></figure>
+                <figure class="evolve-card" data-card="hifiB2"><img src="images/LuminoDev/hifi-3.svg" alt="" loading="lazy" decoding="async"><figcaption>B2 · Controls</figcaption></figure>
+                <figure class="evolve-card" data-card="final"><img src="images/LuminoDev/final.svg" alt="" loading="lazy" decoding="async"><figcaption>Final</figcaption></figure>
+              </div>
+
+              <div class="evolve-notes" aria-live="polite">
+                <article class="on">
+                  <div class="tag">01 · Sketch</div>
+                  <h3>Three ways in</h3>
+                  <p>We sketched three directions for the parent app: a list of control cards (A), a layout built around the nightlight itself (B), and a scene picker (C).</p>
+                </article>
+                <article>
+                  <div class="tag">02 · Wireframe</div>
+                  <h3>Same controls, three structures</h3>
+                  <p>Each sketch became a mid-fi wireframe holding the same controls, brightness, rhythm, volume, timer and story, so we could compare how each one organised them.</p>
+                </article>
+                <article>
+                  <div class="tag">03 · Hi-fi</div>
+                  <h3>Two directions forward</h3>
+                  <p>The scene picker added a step parents didn't need at bedtime, so we set it aside. The control list went to hi-fi as it was, and the device layout got two takes: the nightlight alone, and with controls built into it.</p>
+                </article>
+                <article>
+                  <div class="tag">04 · Final</div>
+                  <h3>The content in focus</h3>
+                  <p>We kept the controls on the device: brightness lives in the lamp, volume in its base. With the nightlight at the centre, each screen has a clear focus and Lumino a friendlier character.</p>
+                </article>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -789,28 +952,30 @@ footer.pagefoot a:hover{color:var(--ink)}
               <h2>Putting the prototype in front of a parent</h2>
             </div>
             <div class="sec-body">
-              <p>We ran a moderated usability test of the app prototype with several parents of a four-year-old, using four task scenarios and a SUS-style rating. One walkthrough was recorded. All tasks were completed, which told us the structure held.</p>
+              <p>We ran a moderated usability test with parents of a four-year-old, using four task scenarios and a SUS-style rating. Every task was completed, so the structure held.</p>
             </div>
           </div>
           <div class="bento-3">
             <div class="cell">
-              <h3 class="highlight">A screen-free device with app-based control fit real bedtime routines</h3>
-              <p>Parents affirmed the pairing of a physical device for the child and remote control through the app. The child stays off screens while the parent stays in control from another room, matching how they already manage bedtime.</p>
+              <h3 class="highlight">Device for kids, app for parents</h3>
+              <p>Parents liked the split: the child stays off screens while they stay in control from another room, as they already do.</p>
             </div>
             <div class="cell">
-              <h3 class="highlight">The mushroom form felt safe to keep in a child's room</h3>
-              <p>Parents found the shape warm and approachable, and were comfortable placing it by the bed as a nightly companion. Its neutral, friendly form read as reassuring rather than tech-like.</p>
+              <h3 class="highlight">A form that felt safe by the bed</h3>
+              <p>Parents found the mushroom warm and approachable, and were happy to keep it by the bed. It read as friendly, not tech.</p>
             </div>
             <div class="cell">
-              <h3 class="highlight">Parents completed every task without help</h3>
-              <p>The core functions all worked. Parents set up stories, adjusted the light, and reached their child without confusion, and the simple controls held up even at the end of a long day.</p>
+              <h3 class="highlight">Every task done without any help</h3>
+              <p>Parents set up stories, adjusted the light, and reached their child without confusion, even at the end of a long day.</p>
             </div>
           </div>
 
           <div class="sec-grid">
-            <div class="sec-head"></div>
+            <div class="sec-head">
+              <h2>Improvements on function details</h2>
+            </div>
             <div class="sec-body">
-              <p>The structure held, but a few design details raised concern.</p>
+              <p>Parents also pointed out a few small gaps. Based on their suggestions, we refined these UI and function details.</p>
             </div>
           </div>
 
@@ -945,14 +1110,14 @@ footer.pagefoot a:hover{color:var(--ink)}
         </div>
       </section>
 
-      <footer class="pagefoot">
-        <a href="index.html">Back to home</a>
-        <a id="backToTop2">Back to top</a>
-      </footer>
     </main>
    </div>
   </div>
 </div>
+
+<button type="button" class="to-top" id="toTop" aria-label="Back to top">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
 <script>
 (function(){
@@ -1008,8 +1173,25 @@ footer.pagefoot a:hover{color:var(--ink)}
     happyPathObserver.observe(happyPathVideo);
   }
 
-  document.querySelectorAll('#backToTop, #backToTop2').forEach(el => {
-    el.addEventListener('click', () => scroller.scrollTo({ top: 0, behavior: 'smooth' }));
+  // Back to top. Desktop scrolls #pageScroll; at <=960px that box goes
+  // overflow:visible and the window scrolls instead, so read whichever is live.
+  const toTop = document.getElementById('toTop');
+  const pageTitle = document.getElementById('pageTitle');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const windowScrolls = () => getComputedStyle(scroller).overflowY === 'visible';
+  const syncToTop = () => {
+    const y = windowScrolls() ? window.scrollY : scroller.scrollTop;
+    toTop.classList.toggle('show', y > window.innerHeight * 0.6);
+  };
+  scroller.addEventListener('scroll', syncToTop, { passive: true });
+  window.addEventListener('scroll', syncToTop, { passive: true });
+  window.addEventListener('resize', syncToTop);
+  syncToTop();
+  toTop.addEventListener('click', () => {
+    (windowScrolls() ? window : scroller).scrollTo({ top: 0, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    // Land keyboard and screen-reader users at the top with the view, rather
+    // than on a button that's about to hide.
+    pageTitle.focus({ preventScroll: true });
   });
 
   // Survey block: four questions, one pie at a time. Answers are stored in
@@ -1158,14 +1340,30 @@ footer.pagefoot a:hover{color:var(--ink)}
       pie.querySelectorAll('path').forEach(p => p.classList.remove('is-hovered'));
     });
 
+    // Slide the knob to the selected tab's box (offsets are relative to the
+    // toggle, so it also tracks the horizontal, scrollable layout).
+    const toggle = survey.querySelector('.survey-toggle');
+    const knob = toggle.querySelector('.survey-knob');
+    function moveKnob(animate) {
+      const tab = tabs.find(t => t.getAttribute('aria-selected') === 'true');
+      knob.style.transition = animate ? '' : 'none';
+      knob.style.width = tab.offsetWidth + 'px';
+      knob.style.height = tab.offsetHeight + 'px';
+      knob.style.transform = `translate(${tab.offsetLeft}px,${tab.offsetTop}px)`;
+    }
+    toggle.classList.add('has-knob');
+    new ResizeObserver(() => moveKnob(false)).observe(toggle);
+
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.setAttribute('aria-selected', String(t === tab)));
+        moveKnob(true);
         render(Number(tab.dataset.q));
       });
     });
 
     render(0);
+    moveKnob(false);
   }
 
   // Reading-progress ruler: a fixed set of ticks; as #pageScroll moves, a
@@ -1314,6 +1512,132 @@ footer.pagefoot a:hover{color:var(--ink)}
   }
 
   document.querySelectorAll('.compare-slider').forEach(initComparer);
+})();
+</script>
+<script>
+// ── Interface evolution ───────────────────────────────────────────────────
+// Every card has a [slot, opacity, scale] for each of the four stages. Slots
+// 0–2 are the three columns; F is the centred, enlarged final position. A
+// card that is hidden at a stage still sits where its parent or child is, so
+// it fades in out of the screen it grew from (sketch → wireframe in place,
+// B splitting into B1/B2, B2 growing into the final).
+(function(){
+  const root=document.getElementById('evolve');
+  if(!root) return;
+  const steps=root.querySelector('.evolve-steps');
+  const buttons=Array.from(steps.querySelectorAll('button'));
+  const stage=root.querySelector('.evolve-stage');
+  const cards=Array.from(stage.querySelectorAll('.evolve-card'));
+  const notes=Array.from(root.querySelectorAll('.evolve-notes article'));
+  const F='final';
+  const LAYOUT={
+    sketchA:[[0,1],[0,0],[0,0],[0,0]],
+    sketchB:[[1,1],[1,0],[1,0],[1,0]],
+    sketchC:[[2,1],[2,0],[2,0],[2,0]],
+    wireA:  [[0,0],[0,1],[0,0],[0,0]],
+    wireB:  [[1,0],[1,1],[1,0],[1,0]],
+    wireC:  [[2,0],[2,1],[2,0,.85],[2,0,.85]],
+    hifiA:  [[0,0],[0,0],[0,1],[0,0,.9]],
+    hifiB1: [[1,0],[1,0],[1,1],[1,0,.9]],
+    hifiB2: [[1,0],[1,0],[2,1],[F,0]],
+    final:  [[2,0],[2,0],[2,0],[F,1]]
+  };
+  const GAP=20, FINAL_SCALE=1.35, IMG_RATIO=788/368, CAPTION=28;
+  let step=0, cardW=0, cardH=0, stageH=0;
+  const widths=new Map();
+
+  function place(animate){
+    cards.forEach(function(card){
+      const spec=LAYOUT[card.dataset.card][step];
+      const centred=spec[0]===F;
+      const s=(centred?FINAL_SCALE:1)*(spec[2]||1);
+      // Centre the card on its slot (cards with their own ratio are wider).
+      const x=(centred?1:spec[0])*(cardW+GAP)+(cardW-widths.get(card))/2;
+      const y=centred?0:(stageH-cardH*s)/2;
+      card.style.transition=animate?'':'none';
+      card.style.transform='translate('+x+'px,'+y+'px) scale('+s+')';
+      card.style.opacity=spec[1];
+    });
+  }
+
+  // The knob takes the selected button's box, so it lines up in either the
+  // vertical or the horizontal (narrow) toggle.
+  const knob=steps.querySelector('.evolve-knob');
+  function moveKnob(animate){
+    const b=buttons[step];
+    knob.style.transition=animate?'':'none';
+    knob.style.width=b.offsetWidth+'px';
+    knob.style.height=b.offsetHeight+'px';
+    knob.style.transform='translate('+b.offsetLeft+'px,'+b.offsetTop+'px)';
+  }
+
+  function measure(){
+    moveKnob(false);
+    cardW=(stage.clientWidth-2*GAP)/3;
+    cardH=cardW*IMG_RATIO+CAPTION;
+    stageH=cardH*FINAL_SCALE;
+    stage.style.height=stageH+'px';
+    // Every screen shares one height; a card with its own data-ratio (the
+    // hi-fi A screenshot is wider) gets a wider box instead of shrinking.
+    cards.forEach(function(card){
+      const r=card.dataset.ratio ? card.dataset.ratio.split('/') : null;
+      const w=r ? cardW*IMG_RATIO*r[0]/r[1] : cardW;
+      if(r) card.querySelector('img').style.aspectRatio=r[0]+'/'+r[1];
+      card.style.width=w+'px';
+      widths.set(card,w);
+    });
+    place(false);
+  }
+
+  function setStep(n,focus){
+    n=Math.max(0,Math.min(buttons.length-1,n));
+    if(n===step) return;
+    // Slow down any change that crosses wireframe ↔ hi-fi (stages 1 and 2).
+    const slow=Math.min(step,n)<=1&&Math.max(step,n)>=2;
+    stage.style.setProperty('--move',slow?'1.2s':'.6s');
+    stage.style.setProperty('--fade',slow?'.9s':'.45s');
+    step=n;
+    moveKnob(true);
+    buttons.forEach(function(b,i){
+      b.setAttribute('aria-checked',String(i===n));
+      b.tabIndex=i===n?0:-1;
+      if(i===n&&focus) b.focus();
+    });
+    notes.forEach(function(a,i){a.classList.toggle('on',i===n);});
+    place(true);
+  }
+
+  buttons.forEach(function(b,i){b.addEventListener('click',function(){setStep(i);});});
+  steps.addEventListener('keydown',function(e){
+    const d={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];
+    if(d){e.preventDefault();setStep(step+d,true);}
+    else if(e.key==='Home'){e.preventDefault();setStep(0,true);}
+    else if(e.key==='End'){e.preventDefault();setStep(buttons.length-1,true);}
+  });
+
+  // Drag the knob along the toggle; it snaps to the nearest stage.
+  function stepAt(e){
+    const row=getComputedStyle(steps).flexDirection==='row';
+    let best=step, bestD=Infinity;
+    buttons.forEach(function(b,i){
+      const r=b.getBoundingClientRect();
+      const d=row ? Math.abs(e.clientX-(r.left+r.width/2)) : Math.abs(e.clientY-(r.top+r.height/2));
+      if(d<bestD){bestD=d;best=i;}
+    });
+    return best;
+  }
+  steps.addEventListener('pointerdown',function(e){
+    if(e.button!==0) return;
+    steps.setPointerCapture(e.pointerId);
+    setStep(stepAt(e));
+  });
+  steps.addEventListener('pointermove',function(e){
+    if(steps.hasPointerCapture(e.pointerId)) setStep(stepAt(e));
+  });
+
+  new ResizeObserver(measure).observe(stage);
+  new ResizeObserver(function(){moveKnob(false);}).observe(steps);
+  measure();
 })();
 </script>
 </body>

@@ -168,16 +168,33 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     flex-direction:column
   }
   .intro-name{font-size:min(19.5cqi,30px)}
+  /* The portrait fills the space under the name. .flip-inner takes the
+     figure's own proportions (hair to bottom edge of PersonalImage.png:
+     x 305–1420, y 410–1707 of 1707) at the largest size that fits (cq units),
+     bottom-centred, and the square image is offset inside it — so the whole
+     head always shows, whatever the box's shape. The image's white backdrop
+     spills past the box and blends into the card. */
   .intro-photo-flip{
-    width:min(56%,96px);
-    aspect-ratio:890 / 1117;
-    margin:auto auto 0;
-    overflow:hidden
+    flex:1;
+    width:100%;
+    min-height:96px;
+    aspect-ratio:auto;
+    margin-top:8px;
+    overflow:hidden;
+    container-type:size;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center
+  }
+  .intro-photo-flip .flip-inner{
+    width:min(100cqw,100cqh * 1115 / 1297);
+    height:auto;
+    aspect-ratio:1115 / 1297
   }
   .intro-photo-flip .intro-photo.front{
-    top:-52.8%;
-    left:-40.4%;
-    width:191.8%;
+    top:-31.61%;
+    left:-27.35%;
+    width:153.09%;
     height:auto;
     max-width:none;
     border-radius:0
@@ -263,7 +280,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     </div>
     <div class="intro-frame bio">
       <div class="intro-bio-stack">
-        <p class="intro-bio bio-pro">Ginny is a UX designer with a background in human factors psychology and visual arts. She studies how people think and decide, and turn that into interfaces that are clear and easy to trust.</p>
+        <p class="intro-bio bio-pro">I'm a UX designer who codes and makes art. With a background in human factors psychology, computer science and visual arts, I study how people think and decide, then design and build interfaces that are clear and easy to trust.</p>
         <p class="intro-bio bio-personal">When I'm not designing, I'm chasing light with my camera, planning my next trip, or spending time as a guitarist in a band. New places and new art media each bring a brand-new experience to my life.</p>
       </div>
     </div>
