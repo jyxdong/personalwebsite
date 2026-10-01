@@ -245,7 +245,6 @@ section.block{padding-top:96px;scroll-margin-top:24px}
 .persona-pair + .sec-grid,
 .bento-3 + .sec-grid,
 .metrics-row + .sec-grid,
-.highlight-row + .sec-grid,
 .direction-row + .sec-grid{margin-top:48px}
 .scenario-img + .sec-grid{margin-top:96px}
 
@@ -315,9 +314,8 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
 .metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
 
-/* ── Highlight row (Reflection + Next Steps) — three centered cards, each
-   a larger centered "highlight" line over a normal paragraph. ──────────── */
-.highlight-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+/* ── Highlight item — a highlight line over a normal paragraph (Directions,
+   Final 3D Design labels). ───────────────────────────────────────────── */
 .highlight-item .highlight{display:block;text-align:left;font-size:clamp(18px,1.8vw,20px);line-height:1.3}
 .highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 
@@ -555,7 +553,6 @@ ul.insights em{font-style:italic;color:var(--ink)}
   .persona-pair{grid-template-columns:1fr}
   .persona + .persona{border-left:none;border-top:1px solid var(--line)}
   .metrics-row{grid-template-columns:1fr;gap:20px}
-  .highlight-row{grid-template-columns:1fr;gap:24px}
 }
 </style>
 <link rel="stylesheet" href="nav-logo.css?v=3">
@@ -1093,18 +1090,18 @@ ul.insights em{font-style:italic;color:var(--ink)}
             </div>
           </div>
 
-          <div class="highlight-row">
-            <div class="highlight-item">
-              <p class="highlight">Mapping the Flow Earlier</p>
-              <p class="highlight-body">Next time I'd map how the child and parent interact across the device and app before committing to any interface, so the split between physical and digital is grounded in the flow.</p>
+          <div class="bento-3">
+            <div class="cell">
+              <h3 class="highlight">Mapping the Flow Earlier</h3>
+              <p>Next time I'd map how child and parent move between device and app before any screen, so the physical and digital split follows the flow.</p>
             </div>
-            <div class="highlight-item">
-              <p class="highlight">Testing in Real Context</p>
-              <p class="highlight-body">The next step is testing within parents' actual evening routine rather than a neutral setting, since context does half the work here.</p>
+            <div class="cell">
+              <h3 class="highlight">Testing in Real Context</h3>
+              <p>The next step is testing within parents' actual evening routine rather than a neutral setting, since context does half the work here.</p>
             </div>
-            <div class="highlight-item">
-              <p class="highlight">Extending to Multiple Children</p>
-              <p class="highlight-body">The device management work opened up to support households with more than one child, and more than one Lumino. Given more time the interfaces can be further designed to support more Lumino Devices.</p>
+            <div class="cell">
+              <h3 class="highlight">Multi-Child Homes</h3>
+              <p>Device management opens the way to households with more than one child and more than one Lumino, which the app could grow to support.</p>
             </div>
           </div>
         </div>

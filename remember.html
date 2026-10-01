@@ -158,11 +158,9 @@ section.block{padding-top:96px;scroll-margin-top:24px}
 .ph-row + .sec-grid,
 .ph-row-captions + .sec-grid,
 .concept-compare-grid + .sec-grid,
-.stat-cells + .sec-grid,
 .bento-2 + .sec-grid,
 .bento-3 + .sec-grid,
-.metrics-row + .sec-grid,
-.highlight-row + .sec-grid{margin-top:48px}
+.metrics-row + .sec-grid{margin-top:48px}
 .insight-cells + .sec-grid{margin-top:96px}
 .sec-head{position:relative}
 .sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
@@ -218,23 +216,13 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .insight-cells .cell h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
 .insight-cells .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
 
-/* ── Stat callouts ────────────────────────────────────────────────────── */
-.stat-cells{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.stat-cells.stat-cells-2{grid-template-columns:repeat(2,1fr)}
-.stat-cells h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em;color:var(--ink)}
-.stat-cells p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
-
 .metrics-row{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
 .metrics-row .stat h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em;color:var(--ink)}
 
 .highlight{font-family:'Source Serif 4',serif;font-style:normal;font-weight:400}
-.stat-cells h2.highlight,
 .metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
 .metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
 
-.highlight-row{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
-.highlight-item .highlight{display:block;text-align:center;font-size:clamp(16px,1.6vw,18px);line-height:1.3}
-.highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
 .metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
 .metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
 .metrics-row .quote cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:var(--faint)}
@@ -284,9 +272,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
   .bento-2,.bento-3,.insight-cells,.insight-cells.cols-3{grid-template-columns:1fr}
   .bento-2 .cell,.bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
   .bento-2 .cell:first-child,.bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
-  .stat-cells{grid-template-columns:1fr;gap:20px}
   .metrics-row{grid-template-columns:1fr;gap:20px}
-  .highlight-row{grid-template-columns:1fr;gap:24px}
 }
 </style>
 <link rel="stylesheet" href="nav-logo.css?v=3">
@@ -488,17 +474,17 @@ ul.insights em{font-style:italic;color:var(--ink)}
             </div>
           </div>
 
-          <div class="stat-cells">
-            <div class="stat">
-              <h2 class="highlight">Specific details stay with us</h2>
+          <div class="bento-3">
+            <div class="cell">
+              <h3 class="highlight">Specific details stay</h3>
               <p>A small detail can make a memory stick, like someone keeping a receipt from a return for decades. It gives us something concrete to remember them by.</p>
             </div>
-            <div class="stat">
-              <h2 class="highlight">A new story feels like a gift</h2>
+            <div class="cell">
+              <h3 class="highlight">A new story feels like a gift</h3>
               <p>Hearing a story for the first time can show us a side of someone we never knew. For families, these stories can be especially meaningful.</p>
             </div>
-            <div class="stat">
-              <h2 class="highlight">Everyday things matter</h2>
+            <div class="cell">
+              <h3 class="highlight">Everyday things matter</h3>
               <p>People often wished they'd asked about ordinary things: a favorite soda, or who taught them to drive. They had thought there would be more time to ask.</p>
             </div>
           </div>
@@ -684,18 +670,18 @@ ul.insights em{font-style:italic;color:var(--ink)}
             </div>
           </div>
 
-          <div class="highlight-row">
-            <div class="highlight-item">
-              <p class="highlight">There Is No One Right Structure</p>
-              <p class="highlight-body">The real turning point wasn't choosing four views over a single page. It was giving up the assumption that one correct way to organize a person's life exists at all. Once that assumption was gone, four views that interfere by different amounts stopped being a compromise and became the answer.</p>
+          <div class="bento-3">
+            <div class="cell">
+              <h3 class="highlight">No One Right Structure</h3>
+              <p>The turning point was giving up the idea that one correct way to organize a person's life exists. After that, four views that interfere by different amounts became the answer, not a compromise.</p>
             </div>
-            <div class="highlight-item">
-              <p class="highlight">Go to Market for Real Users</p>
-              <p class="highlight-body">Remember has never had a real user. Before testing whether the four views work the way the research predicted, the project needs a way to actually reach the grieving families it was designed for.</p>
+            <div class="cell">
+              <h3 class="highlight">Reaching Real Users</h3>
+              <p>Remember has never had a real user. Before testing whether the four views work the way the research predicted, the project needs a way to actually reach the grieving families it was designed for.</p>
             </div>
-            <div class="highlight-item">
-              <p class="highlight">Designing for the Later Visitor</p>
-              <p class="highlight-body">A memorial's highest emotional value isn't the week it's built. It's years later, once someone's own memory of a voice or a face has started to soften. The product needs to keep accepting new contributions and stay worth opening long after it was first finished.</p>
+            <div class="cell">
+              <h3 class="highlight">The Later Visitor</h3>
+              <p>A memorial matters most years later, once someone's memory of a voice or a face has started to soften. It has to keep accepting new contributions and stay worth opening long after it was built.</p>
             </div>
           </div>
         </div>

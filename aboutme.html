@@ -52,9 +52,12 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 #introRail{flex-shrink:0;width:360px;display:flex;flex-direction:column;gap:var(--midgap)}
 .intro-frame{background:var(--paper,#fff);border-radius:28px;overflow:hidden;
   opacity:0;transform:translateX(-60px);animation:introSlide .6s cubic-bezier(.65,0,.35,1) forwards}
-.intro-frame.id{padding:28px 28px 24px;container-type:inline-size}
-.intro-frame.bio{padding:24px 28px;flex:1;min-height:0;display:flex;align-items:center}
-.intro-frame.contact{padding:16px 20px}
+.intro-frame.id{padding:28px 28px 24px;container-type:inline-size;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:space-between}
+/* The bio is a fixed size, its copy plus padding. The portrait card above
+   takes up any slack: on short viewports the photo shrinks, on tall ones the
+   card grows with the photo pinned to its bottom. */
+.intro-frame.bio{padding:24px;flex:none;display:flex;align-items:center}
+.intro-frame.contact{padding:16px 24px}
 .intro-frame:nth-child(1){animation-delay:.1s}
 .intro-frame:nth-child(2){animation-delay:.22s}
 .intro-frame:nth-child(3){animation-delay:.34s}
@@ -65,8 +68,10 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .intro-photo{margin-top:18px;width:100%;aspect-ratio:1/1;border-radius:16px;background:#d7d7d7;object-fit:cover;display:block}
 /* Flip card: cartoon avatar on the front, photo on the back. Which face shows
    is driven by the `rail-about` class on <html> (see the rail hand-off below). */
-.intro-photo-flip{margin-top:18px;width:100%;aspect-ratio:1/1;perspective:1200px}
-.intro-photo-flip .flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.45,.05,.25,1)}
+/* Square at full width, but allowed to shrink in height when the rail is
+   short; the card inside stays square at whichever side is smaller. */
+.intro-photo-flip{margin-top:18px;width:100%;aspect-ratio:1/1;perspective:1200px;min-height:0;container-type:size}
+.intro-photo-flip .flip-inner{position:relative;width:min(100cqw,100cqh);height:auto;aspect-ratio:1/1;margin:0 auto;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.45,.05,.25,1)}
 .intro-photo-flip .intro-photo{position:absolute;inset:0;margin-top:0;width:100%;height:100%;aspect-ratio:auto;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .intro-photo-flip .intro-photo.back{transform:rotateY(180deg);overflow:hidden}
 /* Zoom + drop the photo so the real head lands where the cartoon head is. */
@@ -85,7 +90,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 .intro-icons{display:flex;align-items:center;gap:10px}
 .intro-email{font-size:14px;color:#111;text-decoration:none;border-bottom:1px solid rgba(17,17,17,.25);padding-bottom:2px}
 .intro-email:hover{border-color:#111}
-.intro-icon{width:34px;height:34px;flex-shrink:0;border-radius:999px;background:#f4f4f4;display:flex;align-items:center;justify-content:center;color:#111;text-decoration:none;transition:background .2s}
+.intro-icon{width:30px;height:30px;flex-shrink:0;border-radius:999px;background:#f4f4f4;display:flex;align-items:center;justify-content:center;color:#111;text-decoration:none;transition:background .2s}
 .intro-icon:hover{background:#e9e9e9}
 .intro-icon svg{width:16px;height:16px}
 
@@ -127,6 +132,9 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   cursor:grab}
 .dial-strip::-webkit-scrollbar{height:0}
 .dial-strip.dragging{cursor:grabbing;scroll-snap-type:none}
+/* Snap off while the auto-play glide drives scrollLeft frame by frame, or the
+   browser would snap every intermediate position. */
+.dial-strip.auto{scroll-snap-type:none}
 .dial-strip img{flex:none;height:100%;width:auto;border-radius:16px;
   object-fit:cover;background:#f2f2f2;scroll-snap-align:start;
   -webkit-user-drag:none;user-select:none}
@@ -404,6 +412,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     items.forEach((el,n)=>el.classList.toggle('active',n===sel));
     const key=items[sel].dataset.key;
     pages.forEach(p=>p.classList.toggle('active',p.dataset.key===key));
+    document.dispatchEvent(new CustomEvent('dialchange'));
   }
   select(0);
 
@@ -464,6 +473,103 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     }));
     strip.addEventListener('click',e=>{if(moved) e.preventDefault();},true);
   });
+})();
+</script>
+<script>
+(function(){
+  // Auto-play: the active section's strip advances one photo at a time,
+  // easing in and out between them, and rewinds once it reaches the end.
+  // Hovering pauses it; wheel, drag or touch hands control to the reader
+  // until they've been idle for a few seconds.
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+
+  const DWELL=2000, IDLE=4000, STEP=500, REWIND=1500;
+  // Same curve as the intro rail's cubic-bezier(.65,0,.35,1).
+  const ease=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+  let timer=0, raf=0, gliding=null, hovering=false, idleUntil=0;
+
+  function activeStrip(){
+    const page=document.querySelector('.dial-page.active');
+    return page&&page.querySelector('.dial-strip');
+  }
+
+  // Next photo's left edge in scroll coordinates, clamped to the end of the
+  // strip; 0 once already at the end. Measured every time, since lazy images
+  // only take their width once they load.
+  function nextTarget(strip){
+    const max=strip.scrollWidth-strip.clientWidth;
+    if(max<=1) return null;
+    const cur=strip.scrollLeft;
+    if(cur>=max-2) return 0;
+    const origin=strip.getBoundingClientRect().left-cur;
+    const imgs=strip.querySelectorAll('img');
+    for(let i=0;i<imgs.length;i++){
+      const x=imgs[i].getBoundingClientRect().left-origin;
+      if(x>cur+2) return Math.min(x,max);
+    }
+    return max;
+  }
+
+  function glide(strip,to,dur){
+    const from=strip.scrollLeft, d=to-from, t0=performance.now();
+    gliding=strip;
+    strip.classList.add('auto');
+    function frame(now){
+      const p=Math.min(1,(now-t0)/dur);
+      strip.scrollLeft=from+d*ease(p);
+      if(p<1){raf=requestAnimationFrame(frame);return;}
+      raf=0;gliding=null;
+      strip.classList.remove('auto');
+      schedule(DWELL);
+    }
+    raf=requestAnimationFrame(frame);
+  }
+
+  function cancelGlide(){
+    if(raf){cancelAnimationFrame(raf);raf=0;}
+    if(gliding){gliding.classList.remove('auto');gliding=null;}
+  }
+
+  function schedule(delay){
+    clearTimeout(timer);
+    timer=setTimeout(tick,delay);
+  }
+
+  function tick(){
+    const strip=activeStrip();
+    if(!strip||hovering||document.hidden) return;
+    const wait=idleUntil-Date.now();
+    if(wait>0){schedule(wait);return;}
+    const to=nextTarget(strip);
+    if(to===null){schedule(DWELL);return;}
+    glide(strip,to,to<strip.scrollLeft?REWIND:STEP);
+  }
+
+  function takeOver(){
+    cancelGlide();
+    idleUntil=Date.now()+IDLE;
+    schedule(IDLE);
+  }
+
+  document.querySelectorAll('.dial-strip').forEach(strip=>{
+    strip.addEventListener('pointerenter',e=>{
+      if(e.pointerType!=='mouse') return;
+      hovering=true;clearTimeout(timer);
+    });
+    strip.addEventListener('pointerleave',e=>{
+      if(e.pointerType!=='mouse') return;
+      hovering=false;schedule(DWELL);
+    });
+    strip.addEventListener('pointerdown',takeOver);
+    strip.addEventListener('wheel',takeOver,{passive:true});
+  });
+
+  document.addEventListener('dialchange',()=>{cancelGlide();schedule(DWELL);});
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden) clearTimeout(timer); else schedule(DWELL);
+  });
+
+  schedule(DWELL);
 })();
 </script>
 <script>
