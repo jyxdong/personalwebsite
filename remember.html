@@ -6,31 +6,35 @@
 <title>Remember — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;1,300&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;1,350&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="case-transition.css"/>
 <script>
 if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classList.add('case-from-sign');
 </script>
 <script src="case-transition.js" defer></script>
-<link rel="preload" href="fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/Switzer-VariableItalic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/GeneralSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* ── Switzer (Fontshare, free for commercial use) — self-hosted variable
-   font carrying body copy and every label/tag. Serif headings are
-   unchanged and still come from Source Serif 4. ──────────────────────── */
-@font-face{font-family:'Switzer';src:url('fonts/Switzer-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
-@font-face{font-family:'Switzer';src:url('fonts/Switzer-VariableItalic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+/* ── General Sans (Fontshare, ITF Free Font License, free for commercial
+   use) — self-hosted variable font, any weight 200–700, carrying body copy
+   and every label/tag. Serif headings still come from Source Serif 4. Only
+   the upright is preloaded; the italic loads when a page first uses it. ── */
+@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-Variable.woff2') format('woff2');font-weight:200 700;font-style:normal;font-display:swap}
+@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-VariableItalic.woff2') format('woff2');font-weight:200 700;font-style:italic;font-display:swap}
 
 /* ── Reset ─────────────────────────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
 
+/* ── Tokens ────────────────────────────────────────────────────────────
+   Near-flat weights: body copy and highlights 400, <strong> 600, serif
+   H2s 350 — hierarchy comes mostly from size, color and spacing.
+--------------------------------------------------------------------------- */
 :root{
   --canvas:#D7D7D7;
   --paper:#ffffff;
-  --ink:#111111;
-  --muted:#63625f;
+  --ink:#000000;    /* every heading, highlight and <strong> */
+  --body:#4d4d4d;   /* running text, the dek and meta values: one dark gray */
   --faint:#9a9a97;
-  --line:rgba(17,17,17,.10);
+  --line:rgba(0,0,0,.10);
 
   --sidegap:24px;
   --midgap:8px;
@@ -41,7 +45,7 @@ if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classL
 }
 html,body{height:100%}
 body{
-  font-family:'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family:'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight:400;
   color:var(--ink);
   background:var(--canvas);
@@ -78,14 +82,14 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .content-frame{position:relative;flex:1;min-width:0;background:var(--paper);border-radius:var(--r-lg);overflow:hidden}
 #pageScroll{height:100%;background:var(--paper);overflow-y:auto;scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){#pageScroll{scroll-behavior:auto}}
-.inner{padding:56px 64px 40px}
+.inner{padding:56px 64px 0}
 
 /* ── Reading-progress ruler ───────────────────────────────────────────── */
 .progress-track{position:absolute;top:50%;right:24px;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:4px;z-index:5;pointer-events:none}
 .progress-track .tick{width:9px;height:2px;background:var(--line);transform-origin:right center;transition:transform .1s linear}
 .progress-track .tick.major{width:20px;background:var(--faint)}
 .progress-track .tick.end{width:20px;background:var(--faint);transition:transform .2s ease,background .2s ease}
-.progress-track .tick.end.active{background:var(--muted)}
+.progress-track .tick.end.active{background:var(--body)}
 .progress-track .tick.on{background:var(--ink)}
 @media (max-width:960px){.progress-track{display:none}}
 
@@ -94,32 +98,32 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .crumb a{color:var(--faint);text-decoration:none}
 .crumb a:hover{color:var(--ink)}
 .crumb span.sep{color:var(--line)}
-.crumb span.cur{color:var(--muted)}
+.crumb span.cur{color:var(--body)}
 
 /* ── Header ───────────────────────────────────────────────────────────── */
 header.hero{margin-top:20px;max-width:900px}
 header.hero h2{font-family:'Source Serif 4',serif;font-style:normal;font-size:clamp(32px,4vw,44px);line-height:1.1;letter-spacing:-.015em;font-weight:400}
-header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--muted)}
+header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--body)}
 
 .meta{margin-top:34px;display:flex;flex-wrap:nowrap;justify-content:space-between;gap:36px}
 .meta-item{display:flex;flex-direction:column;gap:5px}
 .meta-item .k{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.meta-item .v{font-size:12.5px;color:var(--muted);line-height:1.6}
+.meta-item .v{font-size:12.5px;color:var(--body);line-height:1.6}
 
 /* ── Placeholder image blocks ────────────────────────────────────────── */
 .ph{position:relative;background:repeating-linear-gradient(45deg,#ececec 0 12px,#f4f4f4 12px 24px);border-radius:var(--r-sm);overflow:hidden}
 .ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
-.ph-inline{margin-top:48px;width:100%;aspect-ratio:16/9}
-.ph-row{margin-top:48px;display:flex;gap:16px}
+.ph-inline{margin-top:32px;width:100%;aspect-ratio:16/9}
+.ph-row{margin-top:32px;display:flex;gap:16px}
 .ph-row .ph{margin-top:0;flex:1 1 0;aspect-ratio:16/9}
 .ph img,.ph video{width:100%;height:100%;object-fit:cover;display:block}
 .ph-row-captions{margin-top:24px;display:flex;gap:16px}
 .ph-row-captions .cap-block{flex:1 1 0}
 .ph-row-captions .cap-block .tag{display:block;margin-bottom:6px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.ph-row-captions .cap-block p{margin-top:0;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
-.ph .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 14px;background:linear-gradient(to top, rgba(17,17,17,.55), transparent);color:#fff;font-size:12.5px}
+.ph-row-captions .cap-block p{margin-top:0;font-size:15px;line-height:1.5;color:var(--body);max-width:none}
+.ph .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 14px;background:linear-gradient(to top, rgba(0,0,0,.55), transparent);color:#fff;font-size:12.5px}
 
-.concept-compare-grid{margin-top:48px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}
+.concept-compare-grid{margin-top:32px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}
 .concept-card{min-width:0;margin:0}
 .concept-media{position:relative;aspect-ratio:1440/820;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-sm);background:#f4f4f4}
 .concept-media img{display:block;width:100%;height:100%;object-fit:cover}
@@ -128,69 +132,69 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
 .concept-status.accepted{background:#339b68}
 .concept-card figcaption{padding:14px 2px 0}
 .concept-card figcaption .tag{display:block;margin-bottom:6px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.concept-card figcaption p{margin-top:0;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+.concept-card figcaption p{margin-top:0;font-size:15px;line-height:1.5;color:var(--body);max-width:none}
 
 /* ── Side-by-side scrollable wireframes ─────────────────────────────── */
-.linear-scroll-row{margin-top:48px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.linear-scroll-row{margin-top:32px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .linear-scroll-card{min-width:0}
 .linear-scroll-card figcaption{min-height:62px;padding:0 2px 14px;display:flex;flex-direction:column;gap:5px}
 .linear-scroll-card figcaption .tag{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.linear-scroll-card figcaption span:last-child{font-size:13px;line-height:1.45;color:var(--muted)}
+.linear-scroll-card figcaption span:last-child{font-size:13px;line-height:1.45;color:var(--body)}
 .linear-scroll-frame{width:100%;height:auto;aspect-ratio:4/3;overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--line);border-radius:var(--r-sm);background:#f4f4f4;scrollbar-width:thin;scrollbar-color:#b8b8b5 transparent}
 .linear-scroll-frame:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .linear-scroll-frame img{display:block;width:100%;height:auto}
 
 /* ── Sections ─────────────────────────────────────────────────────────── */
 /* Bottom padding keeps the last lines clear of the floating Back to top. */
-main{padding:8px 64px 56px}
-section.block{padding-top:96px;scroll-margin-top:24px}
+/* ── Vertical rhythm — three steps, each gap measured to the top of a tag
+   (or of the H2 when a block has no tag):
+   64  anything → the next heading block, section breaks included
+   32  a heading block → its own image / cards / interactive, and one
+       visual → the next visual under the same heading
+   12  a heading → its body copy, inside cards too ────────────────────── */
+main{padding:0 64px 56px}
+section.block{padding-top:64px;scroll-margin-top:24px}
 .sec-measure{max-width:900px}
-.sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
-.sec-grid.heading-only{grid-template-columns:1fr}
-.sec-grid + .sec-grid{margin-top:56px}
+/* Every block: a small tag (optional) over an H2, with its body copy
+   stacked directly under it in one column. */
+.sec-grid{display:grid;grid-template-columns:1fr;row-gap:12px;align-items:start}
+.sec-measure > * + .sec-grid{margin-top:64px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
+/* Body copy runs the full 900px measure, sharing one right edge with the
+   images; below 900px the 54ch cap keeps line length readable. */
 @media (min-width:901px){
   section.block .sec-body p,
   section.block .sec-body ul{max-width:none}
 }
-.ph-inline + .sec-grid,
-.ph-row + .sec-grid,
-.ph-row-captions + .sec-grid,
-.concept-compare-grid + .sec-grid,
-.bento-2 + .sec-grid,
-.bento-3 + .sec-grid,
-.metrics-row + .sec-grid{margin-top:48px}
-.insight-cells + .sec-grid{margin-top:96px}
-.sec-head{position:relative}
-.sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
-.sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
-section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+/* The tag sits in flow above the H2, so the gap above a block lands on
+   the tag itself, never on the H2 underneath it. */
+.sec-head .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
+.sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:350;font-size:clamp(22px,2.3vw,26px);line-height:1.25;letter-spacing:-.01em}
+section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:var(--body);max-width:54ch}
 
 ul.insights{margin-top:16px;display:flex;flex-direction:column;gap:14px;max-width:54ch}
-ul.insights li{display:flex;gap:14px;align-items:flex-start;font-size:15px;line-height:1.5;color:#2b2b2b}
+ul.insights li{display:flex;gap:14px;align-items:flex-start;font-size:15px;line-height:1.5;color:var(--body)}
 ul.insights .dot{flex-shrink:0;width:6px;height:6px;border-radius:1px;margin-top:8px;background:var(--faint)}
 ul.insights em{font-style:italic;color:var(--ink)}
 .methods{margin-top:16px;font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:16px}
 
-/* ── Bento grids ──────────────────────────────────────────────────────── */
-.bento-2{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.bento-2 .cell{padding:32px;border-left:1px solid var(--line)}
-.bento-2 .cell:first-child{border-left:none}
+/* ── Bento grids — separate hairline cards with a 16px gutter. ─────────── */
+.bento-2{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.bento-2 .cell{padding:32px;border:1px solid var(--line);border-radius:var(--r-sm)}
 .bento-2 .cell h3{font-size:15px;font-weight:400}
 .bento-2 .cell .ph{margin-top:16px;aspect-ratio:4/3}
-.bento-2 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+.bento-2 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:var(--body);max-width:none}
 
-.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
-.bento-3 .cell:first-child{border-left:none}
+.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bento-3 .cell{padding:28px;border:1px solid var(--line);border-radius:var(--r-sm)}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
-.bento-3 .cell h3.highlight{font-size:clamp(16px,1.6vw,18px)}
-.bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+.bento-3 .cell h3.highlight{font-size:clamp(18px,1.8vw,20px)}
+.bento-3 .cell p{margin-top:12px;font-size:15px;line-height:1.5;color:var(--body);max-width:none}
 
 /* ── Toggle + scrollable page frame (Final Design) ────────────────────── */
-.carousel-toggle{margin-top:24px;width:100%;display:flex;background:#f4f4f4;border-radius:999px;padding:4px;gap:4px}
-.carousel-toggle .toggle-btn{flex:1;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13px;color:var(--muted);padding:9px 12px;border-radius:999px;transition:background .2s,color .2s;white-space:nowrap;text-align:center}
+.carousel-toggle{margin-top:32px;width:100%;display:flex;background:#f4f4f4;border-radius:999px;padding:4px;gap:4px}
+.carousel-toggle .toggle-btn{flex:1;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13px;color:var(--body);padding:9px 12px;border-radius:999px;transition:background .2s,color .2s;white-space:nowrap;text-align:center}
 .carousel-toggle .toggle-btn:hover:not(.active){color:var(--ink)}
 .carousel-toggle .toggle-btn.active{background:#fff;color:var(--ink)}
 
@@ -208,30 +212,34 @@ ul.insights em{font-style:italic;color:var(--ink)}
 }
 
 /* ── Insight / user cells ─────────────────────────────────────────────── */
-.insight-cells{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.insight-cells{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .insight-cells.cols-3{grid-template-columns:repeat(3,1fr)}
-.insight-cells .cell{padding:28px;border-left:1px solid var(--line)}
-.insight-cells .cell:first-child{border-left:none}
+.insight-cells .cell{padding:28px;border:1px solid var(--line);border-radius:var(--r-sm)}
 .insight-cells .cell .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.insight-cells .cell h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
-.insight-cells .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+.insight-cells .cell h2{font-size:clamp(18px,1.8vw,20px);line-height:1.3}
+.insight-cells .cell p{margin-top:12px;font-size:15px;line-height:1.5;color:var(--body);max-width:54ch}
 
-.metrics-row{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-.metrics-row .stat h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em;color:var(--ink)}
+.metrics-row{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.metrics-row .stat h2{font-size:clamp(18px,1.8vw,20px);line-height:1.3}
 
-.highlight{font-family:'Source Serif 4',serif;font-style:normal;font-weight:400}
-.metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
-.metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
+/* ── Highlight — card titles and stat lines. Same face as the body
+   (regular), set apart only by size (L3) and ink, so the serif stays
+   reserved for the italic H2 voice and the page title. ─────────────────── */
+.highlight{font-family:inherit;font-style:normal;font-weight:400;color:var(--ink)}
+section.block p strong{font-weight:600;color:var(--ink)}
+.metrics-row .stat p{margin-top:12px;font-size:15px;line-height:1.5;color:var(--body)}
 
-.metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
-.metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
-.metrics-row .quote cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:var(--faint)}
+/* Quote as a chat bubble: rounded grey frame, bottom-left tail pointing
+   down at the attribution under it (same component as lumino.html). */
+.metrics-row .quote p{position:relative;margin:0;max-width:56ch;padding:20px 24px;background:#f4f4f4;border-radius:18px;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
+.metrics-row .quote p::after{content:"";position:absolute;left:24px;top:100%;border-top:12px solid #f4f4f4;border-right:14px solid transparent}
+.metrics-row .quote cite{display:block;margin-top:22px;padding-left:24px;font-style:normal;font-size:12.5px;color:var(--faint)}
 
 .pullquote{margin:32px 0;padding-left:20px;border-left:1px solid var(--line)}
 .pullquote p{margin:0;max-width:56ch;color:var(--ink);font-size:clamp(19px,2.1vw,24px);line-height:1.4;font-style:italic}
 
 .next-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:54ch}
-.next-list li{font-size:15px;line-height:1.5;color:#2b2b2b;padding-left:18px;position:relative}
+.next-list li{font-size:15px;line-height:1.5;color:var(--body);padding-left:18px;position:relative}
 .next-list li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--line)}
 
 /* Back to top: floating pill-grey button, fixed to the viewport so it works
@@ -239,7 +247,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
    desktop it sits 24px inside the content frame's bottom-right corner.
    Hidden with visibility until the reader has scrolled, so it's out of the
    tab order and the accessibility tree while unused. */
-.to-top{position:fixed;z-index:20;right:calc(var(--sidegap) + 24px);bottom:calc(var(--sidegap) + 24px);width:44px;height:44px;border:none;border-radius:999px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:#e4e4e4;color:var(--ink);box-shadow:0 1px 3px rgba(17,17,17,.10);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease,visibility .2s,background .2s}
+.to-top{position:fixed;z-index:20;right:calc(var(--sidegap) + 24px);bottom:calc(var(--sidegap) + 24px);width:44px;height:44px;border:none;border-radius:999px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:#e4e4e4;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.10);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease,visibility .2s,background .2s}
 .to-top.show{opacity:1;visibility:visible;transform:none}
 .to-top:hover{background:#dadada}
 .to-top:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
@@ -250,10 +258,6 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}
 .reveal.in{opacity:1;transform:translateY(0)}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
-
-@media (max-width:900px){
-  .sec-grid{grid-template-columns:1fr;row-gap:12px}
-}
 
 @media (max-width:960px){
   html,body{height:auto;overflow:visible}
@@ -268,10 +272,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
   #pageScroll{height:auto;overflow:visible}
   .to-top{right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px))}
   .inner,main{padding-left:24px;padding-right:24px}
-  section.block{padding-top:64px}
   .bento-2,.bento-3,.insight-cells,.insight-cells.cols-3{grid-template-columns:1fr}
-  .bento-2 .cell,.bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
-  .bento-2 .cell:first-child,.bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
   .metrics-row{grid-template-columns:1fr;gap:20px}
 }
 </style>
@@ -383,35 +384,35 @@ ul.insights em{font-style:italic;color:var(--ink)}
             </div>
           </div>
 
-          <div style="margin-top:48px">
+          <div style="margin-top:32px">
             <svg viewBox="0 0 1600 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Positioning map. Vertical axis: Solo to Collaborative. Horizontal axis: Raw storage to Synthesized into a person. Shared docs and Social memorials sit in the collaborative, raw-storage quadrant. Photo libraries and Physical scrapbook sit in the solo quadrant. Remember sits alone in the collaborative, synthesized quadrant.">
-              <line x1="800" y1="58" x2="800" y2="472" stroke="var(--muted)" stroke-width="1.5"/>
-              <path d="M 791 70 L 800 58 L 809 70" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M 791 460 L 800 472 L 809 460" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="800" y1="58" x2="800" y2="472" stroke="var(--body)" stroke-width="1.5"/>
+              <path d="M 791 70 L 800 58 L 809 70" fill="none" stroke="var(--body)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 791 460 L 800 472 L 809 460" fill="none" stroke="var(--body)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-              <line x1="95" y1="267" x2="1505" y2="267" stroke="var(--muted)" stroke-width="1.5"/>
-              <path d="M 107 258 L 95 267 L 107 276" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M 1493 258 L 1505 267 L 1493 276" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="95" y1="267" x2="1505" y2="267" stroke="var(--body)" stroke-width="1.5"/>
+              <path d="M 107 258 L 95 267 L 107 276" fill="none" stroke="var(--body)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 1493 258 L 1505 267 L 1493 276" fill="none" stroke="var(--body)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-              <text x="800" y="32" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Collaborative</text>
-              <text x="800" y="502" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Solo</text>
-              <text x="24" y="240" text-anchor="start" font-size="30" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Raw storage</text>
-              <text x="1576" y="240" text-anchor="end" font-size="30" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Synthesized into a person</text>
+              <text x="800" y="32" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Collaborative</text>
+              <text x="800" y="502" text-anchor="middle" font-size="30" fill="var(--faint)" font-family="'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Solo</text>
+              <text x="24" y="240" text-anchor="start" font-size="30" fill="var(--faint)" font-family="'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Raw storage</text>
+              <text x="1576" y="240" text-anchor="end" font-size="30" fill="var(--faint)" font-family="'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Synthesized into a person</text>
 
               <circle cx="508" cy="186" r="9" fill="var(--ink)" fill-opacity="0.78"/>
-              <text x="508" y="158" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Shared docs</text>
+              <text x="508" y="158" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Shared docs</text>
 
               <circle cx="649" cy="229" r="9" fill="var(--ink)" fill-opacity="0.78"/>
-              <text x="649" y="201" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Social memorials</text>
+              <text x="649" y="201" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Social memorials</text>
 
               <circle cx="479" cy="349" r="9" fill="var(--ink)" fill-opacity="0.78"/>
-              <text x="479" y="321" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Photo libraries</text>
+              <text x="479" y="321" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Photo libraries</text>
 
               <circle cx="845" cy="365" r="9" fill="var(--ink)" fill-opacity="0.78"/>
-              <text x="845" y="337" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Physical scrapbook</text>
+              <text x="845" y="337" text-anchor="middle" font-size="20" fill="var(--faint)" font-family="'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Physical scrapbook</text>
 
               <circle cx="1106" cy="178" r="13" fill="#C16341"/>
-              <text x="1106" y="150" text-anchor="middle" font-size="22" fill="var(--faint)" font-family="'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Remember</text>
+              <text x="1106" y="150" text-anchor="middle" font-size="22" fill="var(--faint)" font-family="'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif">Remember</text>
             </svg>
           </div>
         </div>
@@ -432,17 +433,17 @@ ul.insights em{font-style:italic;color:var(--ink)}
           <div class="insight-cells cols-3">
             <div class="cell">
               <div class="tag">Organizer</div>
-              <h2>Closest to the loss</h2>
+              <h2 class="highlight">Closest to the loss</h2>
               <p>A family member or close friend, often still standing closest to it. What they fear is an output that comes back hollow or generic, technology reducing someone real to something soulless.</p>
             </div>
             <div class="cell">
               <div class="tag">Contributor</div>
-              <h2>Anyone who is connected</h2>
+              <h2 class="highlight">Anyone who is connected</h2>
               <p>Family, friends, colleagues, community. They could be any age, any background, brought in by a link. They want to feel like what they share actually matters and feel connected with the other contributors.</p>
             </div>
             <div class="cell">
               <div class="tag">Viewer</div>
-              <h2>Arrives to feel something</h2>
+              <h2 class="highlight">Arrives to feel something</h2>
               <p>Anyone the organizer chooses to share the finished memorial with. They came to feel connected to who the person was. The bar is an experience that feels worthy of the person being honored.</p>
             </div>
           </div>
@@ -663,7 +664,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 
       <section class="block reveal" id="reflection">
         <div class="sec-measure">
-          <div class="sec-grid heading-only">
+          <div class="sec-grid">
             <div class="sec-head">
               <div class="tag">Reflection + Next Steps</div>
               <h2>What does it mean to give up on one right structure?</h2>

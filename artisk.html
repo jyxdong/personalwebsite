@@ -6,35 +6,35 @@
 <title>Artisk — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;1,300&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;1,350&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="case-transition.css"/>
 <script>
 if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classList.add('case-from-sign');
 </script>
 <script src="case-transition.js" defer></script>
-<link rel="preload" href="fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/Switzer-VariableItalic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/GeneralSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* ── Switzer (Fontshare, free for commercial use) — self-hosted variable
-   font carrying body copy and every label/tag. Serif headings are
-   unchanged and still come from Source Serif 4. ──────────────────────── */
-@font-face{font-family:'Switzer';src:url('fonts/Switzer-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
-@font-face{font-family:'Switzer';src:url('fonts/Switzer-VariableItalic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+/* ── General Sans (Fontshare, ITF Free Font License, free for commercial
+   use) — self-hosted variable font, any weight 200–700, carrying body copy
+   and every label/tag. Serif headings still come from Source Serif 4. Only
+   the upright is preloaded; the italic loads when a page first uses it. ── */
+@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-Variable.woff2') format('woff2');font-weight:200 700;font-style:normal;font-display:swap}
+@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-VariableItalic.woff2') format('woff2');font-weight:200 700;font-style:italic;font-display:swap}
 
 /* ── Reset ─────────────────────────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
 
 /* ── Tokens ────────────────────────────────────────────────────────────
-   Flat, single-weight system: hierarchy comes from size, color and
-   spacing only — nothing here goes past regular (400).
+   Near-flat weights: body copy and highlights 400, <strong> 600, serif
+   H2s 350 — hierarchy comes mostly from size, color and spacing.
 --------------------------------------------------------------------------- */
 :root{
   --canvas:#D7D7D7;
   --paper:#ffffff;
-  --ink:#111111;
-  --muted:#63625f;
+  --ink:#000000;    /* every heading, highlight and <strong> */
+  --body:#4d4d4d;   /* running text, the dek and meta values: one dark gray */
   --faint:#9a9a97;
-  --line:rgba(17,17,17,.10);
+  --line:rgba(0,0,0,.10);
 
   --sidegap:24px;
   --midgap:8px;
@@ -45,7 +45,7 @@ if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classL
 }
 html,body{height:100%}
 body{
-  font-family:'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family:'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight:400;
   color:var(--ink);
   background:var(--canvas);
@@ -120,35 +120,39 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
   scroll-behavior:smooth;
 }
 @media (prefers-reduced-motion:reduce){#pageScroll{scroll-behavior:auto}}
-.inner{padding:56px 64px 40px}
+.inner{padding:56px 64px 0}
 
 /* ── Reading-progress ruler ──────────────────────────────────────────── */
 .progress-track{position:absolute;top:50%;right:24px;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:4px;z-index:5;pointer-events:none}
 .progress-track .tick{width:9px;height:2px;background:var(--line);transform-origin:right center;transition:transform .1s linear}
 .progress-track .tick.major{width:20px;background:var(--faint)}
 .progress-track .tick.end{width:20px;background:var(--faint);transition:transform .2s ease,background .2s ease}
-.progress-track .tick.end.active{background:var(--muted)}
+.progress-track .tick.end.active{background:var(--body)}
 .progress-track .tick.on{background:var(--ink)}
 @media (max-width:960px){.progress-track{display:none}}
 
-/* ── Type scale — one heading tier for the whole page ─────────────────── */
+/* ── Type scale
+   Title clamp(32px,4vw,44px) serif upright    — the page title only
+   H2   clamp(22px,2.3vw,26px) / 1.25 / -.01em — serif italic 350
+   L3   clamp(18px,1.8vw,20px) / 400           — every .highlight
+   L4   Body 15px / 1.5 · L5 Small 12.5px, tracked .04em as a label ─────── */
 
 /* ── Breadcrumb (L5) ──────────────────────────────────────────────────── */
 .crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--faint)}
 .crumb a{color:var(--faint);text-decoration:none}
 .crumb a:hover{color:var(--ink)}
 .crumb span.sep{color:var(--line)}
-.crumb span.cur{color:var(--muted)}
+.crumb span.cur{color:var(--body)}
 
 /* ── Header ────────────────────────────────────────────────────────────── */
 header.hero{margin-top:20px;max-width:900px}
 header.hero h2{font-family:'Source Serif 4',serif;font-style:normal;font-size:clamp(32px,4vw,44px);line-height:1.1;letter-spacing:-.015em;font-weight:400}
-header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--muted)}
+header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--body)}
 
 .meta{margin-top:34px;display:flex;flex-wrap:nowrap;justify-content:space-between;gap:36px}
 .meta-item{display:flex;flex-direction:column;gap:5px}
 .meta-item .k{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.meta-item .v{font-size:12.5px;color:var(--muted)}
+.meta-item .v{font-size:12.5px;color:var(--body)}
 
 /* ── Placeholder image blocks ──────────────────────────────────────────── */
 .ph{
@@ -158,73 +162,78 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
   overflow:hidden;
 }
 .ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
-.ph-inline{margin-top:24px;width:100%;aspect-ratio:16/9}
+.ph-inline{margin-top:32px;width:100%;aspect-ratio:16/9}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .ph .cap{
   position:absolute;left:0;right:0;bottom:0;
   padding:34px 18px 14px;
-  background:linear-gradient(to top, rgba(17,17,17,.55), transparent);
+  background:linear-gradient(to top, rgba(0,0,0,.55), transparent);
   color:#fff;font-size:12.5px;
 }
 
 /* ── Sections ──────────────────────────────────────────────────────────── */
 /* Bottom padding keeps the last lines clear of the floating Back to top. */
-main{padding:8px 64px 56px}
-section.block{padding-top:clamp(64px,8vh,104px);scroll-margin-top:24px}
-section.block:first-of-type{padding-top:56px;margin-top:48px}
-
+/* ── Vertical rhythm — three steps, each gap measured to the top of a tag
+   (or of the H2 when a block has no tag):
+   64  anything → the next heading block, section breaks included
+   32  a heading block → its own image / cards / interactive, and one
+       visual → the next visual under the same heading
+   12  a heading → its body copy, inside cards too ────────────────────── */
+main{padding:0 64px 56px}
+section.block{padding-top:64px;scroll-margin-top:24px}
 .sec-measure{max-width:900px}
-
-.sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
-.sec-grid + .sec-grid{margin-top:44px}
+/* Every block: a small tag (optional) over an H2, with its body copy
+   stacked directly under it in one column. */
+.sec-grid{display:grid;grid-template-columns:1fr;row-gap:12px;align-items:start}
+.sec-measure > * + .sec-grid{margin-top:64px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
-.ph-inline + .sec-grid{margin-top:32px}
-/* A media block followed by another heading row needs the same breathing
-   room the .sec-grid + .sec-grid pairing gets. */
-.page-frame + .sec-grid,
-.carousel + .sec-grid,
-.bento-1 + .sec-grid{margin-top:44px}
+/* Body copy runs the full 900px measure, sharing one right edge with the
+   images; below 900px the 54ch cap keeps line length readable. */
+@media (min-width:901px){
+  section.block .sec-body p,
+  section.block .sec-body ul{max-width:none}
+}
+/* The tag sits in flow above the H2, so the gap above a block lands on
+   the tag itself, never on the H2 underneath it. */
+.sec-head .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
+.sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:350;font-size:clamp(22px,2.3vw,26px);line-height:1.25;letter-spacing:-.01em}
 
-.sec-head{position:relative}
-.sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
-.sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
-
-section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:var(--body);max-width:54ch}
 
 .methods{margin-top:16px;font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:16px}
 
 /* ── Bento grids (key decisions) ──────────────────────────────────────── */
-.bento-1{margin-top:24px;display:grid;grid-template-columns:1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.bento-1{margin-top:32px;display:grid;grid-template-columns:1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .bento-1 .cell{padding:32px;border-top:1px solid var(--line)}
 .bento-1 .cell:first-child{border-top:none}
 .bento-1 .cell h3{font-size:15px;font-weight:400}
 .bento-1 .cell .ph{margin-top:16px;aspect-ratio:16/9}
-.bento-1 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+.bento-1 .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:var(--body);max-width:none}
 .bento-1 .cell .placeholder-note{margin-top:10px;font-size:12.5px;color:var(--faint);font-style:italic}
 
-/* ── Bento grid (selection criteria) — hairline only, headings are L3
-   (h3, subordinate to the section's own H2), body copy is L4. Matches the
+/* ── Bento grid (selection criteria) — separate hairline cards with a
+   16px gutter, headings are L3 (.highlight), body copy is L4. Matches the
    same component in lumino.html and remember.html. ──────────────────── */
-.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
-.bento-3 .cell:first-child{border-left:none}
+.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bento-3 .cell{padding:28px;border:1px solid var(--line);border-radius:var(--r-sm)}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
 .bento-3 .cell h3.highlight{font-size:clamp(18px,1.8vw,20px)}
-.bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+.bento-3 .cell p{margin-top:12px;font-size:15px;line-height:1.5;color:var(--body);max-width:none}
 @media (max-width:860px){
   .bento-3{grid-template-columns:1fr}
-  .bento-3 .cell{border-left:none;border-top:1px solid var(--line)}
-  .bento-3 .cell:first-child{border-top:none}
 }
 
-/* Serif lead line inside a cell — the site's shared highlight treatment. */
-.highlight{font-family:'Source Serif 4',serif;font-style:normal;font-weight:400}
+/* ── Highlight — card titles and stat lines. Same face as the body
+   (regular), set apart only by size (L3) and ink, so the serif stays
+   reserved for the italic H2 voice and the page title. ─────────────────── */
+.highlight{font-family:inherit;font-style:normal;font-weight:400;color:var(--ink)}
+section.block p strong{font-weight:600;color:var(--ink)}
 
 /* ── Toggle: flat segmented control, matching the site's flat aesthetic —
    no shadows or gradients, just a gray track with a white active pill. ── */
-.carousel-toggle{margin-top:24px;display:inline-flex;background:#f4f4f4;border-radius:999px;padding:4px;gap:4px}
-.carousel-toggle .toggle-btn{border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13px;color:var(--muted);padding:6px 16px;border-radius:999px;transition:background .2s,color .2s}
+.carousel-toggle{margin-top:32px;display:inline-flex;background:#f4f4f4;border-radius:999px;padding:4px;gap:4px}
+.carousel-toggle .toggle-btn{border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13px;color:var(--body);padding:6px 16px;border-radius:999px;transition:background .2s,color .2s}
 .carousel-toggle .toggle-btn:hover:not(.active){color:var(--ink)}
 .carousel-toggle .toggle-btn.active{background:#fff;color:var(--ink)}
 
@@ -235,8 +244,8 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
 .carousel{position:relative;margin-top:12px;width:100%;aspect-ratio:1493/741;border-radius:var(--r-sm);overflow:hidden;background:#ececec}
 .carousel-track{display:flex;width:100%;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
 .carousel-slide{flex:0 0 100%;width:100%;height:100%;object-fit:cover;display:block}
-.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:999px;border:none;cursor:pointer;background:rgba(17,17,17,.55);color:#fff;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2}
-.carousel-btn:hover{background:rgba(17,17,17,.8)}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2}
+.carousel-btn:hover{background:rgba(0,0,0,.8)}
 .carousel-btn svg{width:18px;height:18px}
 .carousel-btn.prev{left:16px}
 .carousel-btn.next{right:16px}
@@ -244,7 +253,7 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
 /* ── Full-length page frame: a fixed 3:2 landscape window onto a full-height
    page shot. The page scrolls inside the frame instead of being cropped to
    a hero crop, so the whole layout stays readable in place. ───────────── */
-.page-frame{position:relative;margin-top:12px;width:100%;aspect-ratio:3/2;border-radius:var(--r-sm);overflow:hidden;background:#ececec;border:1px solid var(--line)}
+.page-frame{position:relative;margin-top:32px;width:100%;aspect-ratio:3/2;border-radius:var(--r-sm);overflow:hidden;background:#ececec;border:1px solid var(--line)}
 .page-frame-track{display:flex;width:100%;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
 /* overscroll-behavior:none kills both halves of the problem at the ends of
    the page shot: the elastic rubber-band bounce, and the scroll chaining
@@ -309,7 +318,7 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
   right:calc(var(--sidegap) + 24px);bottom:calc(var(--sidegap) + 24px);
   width:44px;height:44px;border:none;border-radius:999px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  background:#e4e4e4;color:var(--ink);box-shadow:0 1px 3px rgba(17,17,17,.10);
+  background:#e4e4e4;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.10);
   opacity:0;visibility:hidden;transform:translateY(8px);
   transition:opacity .2s ease,transform .2s ease,visibility .2s,background .2s;
 }
@@ -322,17 +331,13 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
 #pageTitle:focus{outline:none}
 
 .next-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:54ch}
-.next-list li{font-size:15px;line-height:1.5;color:#2b2b2b;padding-left:18px;position:relative}
+.next-list li{font-size:15px;line-height:1.5;color:var(--body);padding-left:18px;position:relative}
 .next-list li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--line)}
 
 /* ── Scroll reveal ─────────────────────────────────────────────────────── */
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}
 .reveal.in{opacity:1;transform:translateY(0)}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
-
-@media (max-width:900px){
-  .sec-grid{grid-template-columns:1fr;row-gap:12px}
-}
 
 /* ── Mobile: drop the fixed app-shell, let the page scroll normally ─────── */
 @media (max-width:960px){
@@ -415,7 +420,7 @@ section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max
 
     <main>
       <!-- Each block is the same repeatable unit: a small tag, an H2, and
-           its paired body content in a two-column row. -->
+           its body content stacked under it in one column. -->
       <section class="block reveal" id="audit">
         <div class="sec-measure">
           <div class="sec-grid">

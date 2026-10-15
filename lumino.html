@@ -6,35 +6,35 @@
 <title>Lumino — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;1,300&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;1,350&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="case-transition.css"/>
 <script>
 if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classList.add('case-from-sign');
 </script>
 <script src="case-transition.js" defer></script>
-<link rel="preload" href="fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/Switzer-VariableItalic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/GeneralSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* ── Switzer (Fontshare, free for commercial use) — self-hosted variable
-   font carrying body copy and every label/tag. Serif headings are
-   unchanged and still come from Source Serif 4. ──────────────────────── */
-@font-face{font-family:'Switzer';src:url('fonts/Switzer-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
-@font-face{font-family:'Switzer';src:url('fonts/Switzer-VariableItalic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+/* ── General Sans (Fontshare, ITF Free Font License, free for commercial
+   use) — self-hosted variable font, any weight 200–700, carrying body copy
+   and every label/tag. Serif headings still come from Source Serif 4. Only
+   the upright is preloaded; the italic loads when a page first uses it. ── */
+@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-Variable.woff2') format('woff2');font-weight:200 700;font-style:normal;font-display:swap}
+@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-VariableItalic.woff2') format('woff2');font-weight:200 700;font-style:italic;font-display:swap}
 
 /* ── Reset ─────────────────────────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
 
 /* ── Tokens ────────────────────────────────────────────────────────────
-   Flat, single-weight system: hierarchy comes from size, color and
-   spacing only — nothing here goes past regular (400).
+   Near-flat weights: body copy and highlights 400, <strong> 600, serif
+   H2s 350 — hierarchy comes mostly from size, color and spacing.
 --------------------------------------------------------------------------- */
 :root{
   --canvas:#D7D7D7;
   --paper:#ffffff;
-  --ink:#111111;
-  --muted:#63625f;
+  --ink:#000000;    /* every heading, highlight and <strong> */
+  --body:#4d4d4d;   /* running text, the dek and meta values: one dark gray */
   --faint:#9a9a97;
-  --line:rgba(17,17,17,.10);
+  --line:rgba(0,0,0,.10);
 
   --sidegap:24px;
   --midgap:8px;
@@ -45,7 +45,7 @@ if(sessionStorage.getItem('caseFromSign')==='1') document.documentElement.classL
 }
 html,body{height:100%}
 body{
-  font-family:'Switzer',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family:'General Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight:400;
   color:var(--ink);
   background:var(--canvas);
@@ -138,7 +138,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 /* Padding-only, matching main's model — the 900px cap lives on the actual
    content (header.hero) below, not here, so header and sections share
    the exact same measure instead of header losing 128px to double padding. */
-.inner{padding:56px 64px 40px}
+.inner{padding:56px 64px 0}
 
 /* ── Reading-progress ruler: a compact, vertically-centered column of tick
    marks fixed to the frame's own edge (not inside the scrolling div), so
@@ -154,14 +154,17 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
    reader hits the very bottom it stretches out further and shifts to the
    same muted gray as the meta values (never pure ink). */
 .progress-track .tick.end{width:20px;background:var(--faint);transition:transform .2s ease,background .2s ease}
-.progress-track .tick.end.active{background:var(--muted)}
+.progress-track .tick.end.active{background:var(--body)}
 .progress-track .tick.on{background:var(--ink)}
 @media (max-width:960px){.progress-track{display:none}}
 
-/* ── Type scale — one heading tier for the whole page (no separate hero
-   size; "Lumino" up top is styled exactly like every other H2).
-   H2   clamp(18px,2vw,22px) / 1.25 / -.005em — repeatable, left column
-   L3 Wayfinding 20px / 400                    — nav tabs, active TOC item
+/* ── Type scale
+   Title clamp(32px,4vw,44px) serif upright    — "Lumino" up top only
+   H2   clamp(22px,2.3vw,26px) / 1.25 / -.01em — serif italic 350, every
+        section heading and each Before/After block's heading (about 1.7×
+        the body, so headings clearly outrank the copy under them)
+   L3 Wayfinding 20px / 400                    — nav tabs, active TOC item,
+                                                 and every .highlight
    L4 Body      15px / 1.5                      — running text everywhere
    L5 Small     12.5px, tracked .04em where it reads as a label/tag
 --------------------------------------------------------------------------- */
@@ -171,7 +174,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 .crumb a{color:var(--faint);text-decoration:none}
 .crumb a:hover{color:var(--ink)}
 .crumb span.sep{color:var(--line)}
-.crumb span.cur{color:var(--muted)}
+.crumb span.cur{color:var(--body)}
 
 /* ── Header: full-width, not split into the two-column grid — the title,
    dek, meta row and hero image all run the same 900px measure as the
@@ -181,14 +184,14 @@ header.hero{margin-top:20px;max-width:900px}
    repeatable section H2s, even though it's marked up as an h2 too. */
 header.hero h2{font-family:'Source Serif 4',serif;font-style:normal;font-size:clamp(32px,4vw,44px);line-height:1.1;letter-spacing:-.015em;font-weight:400}
 /* Dek: L4 Body size, muted, so it reads quieter than the paragraphs. */
-header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--muted)}
+header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--body)}
 
 /* Meta row: label + value, both L5. One row, spread edge to edge so the
    last item's right edge lands flush with the hero image below it. */
 .meta{margin-top:34px;display:flex;flex-wrap:nowrap;justify-content:space-between;gap:36px}
 .meta-item{display:flex;flex-direction:column;gap:5px}
 .meta-item .k{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.meta-item .v{font-size:12.5px;color:var(--muted);line-height:1.6}
+.meta-item .v{font-size:12.5px;color:var(--body);line-height:1.6}
 
 /* ── Placeholder image blocks (unchanged structurally; caption is L5) ──── */
 .ph{
@@ -198,126 +201,119 @@ header.hero p.dek{margin-top:20px;font-size:15px;line-height:1.5;color:var(--mut
   overflow:hidden;
 }
 .ph-hero{margin-top:40px;width:100%;aspect-ratio:16/9}
-.ph-inline{margin-top:48px;width:100%;aspect-ratio:16/9}
-.ph-row{margin-top:48px;display:flex;gap:16px}
+.ph-inline{margin-top:32px;width:100%;aspect-ratio:16/9}
+/* Bedtime scenario sketch (System and User): 70% of the measure, centered,
+   so it reads as a supporting illustration under the full-width flowchart.
+   On phones that would be too small to read, so it goes back to full. */
+.ph-inline.scenario-img{width:70%;margin-left:auto;margin-right:auto}
+@media (max-width:600px){.ph-inline.scenario-img{width:100%}}
+.ph-row{margin-top:32px;display:flex;gap:16px}
 .ph-row .ph{margin-top:0;flex:1 1 0;aspect-ratio:16/9}
 .ph img,.ph video{width:100%;height:100%;object-fit:cover;display:block}
 .ph .cap{
   position:absolute;left:0;right:0;bottom:0;
   padding:34px 18px 14px;
-  background:linear-gradient(to top, rgba(17,17,17,.55), transparent);
+  background:linear-gradient(to top, rgba(0,0,0,.55), transparent);
   color:#fff;font-size:12.5px;
 }
 
 /* ── Sections ──────────────────────────────────────────────────────────── */
+/* ── Vertical rhythm — three steps, each gap measured to the top of a tag
+   (or of the H2 when a block has no tag):
+   64  anything → the next heading block, section breaks included
+   32  a heading block → its own image / cards / interactive, and one
+       visual → the next visual under the same heading
+   12  a heading → its body copy, inside cards too ────────────────────── */
 /* Bottom padding keeps the last lines clear of the floating Back to top. */
-main{padding:8px 64px 56px}
-section.block{padding-top:96px;scroll-margin-top:24px}
+main{padding:0 64px 56px}
+section.block{padding-top:64px;scroll-margin-top:24px}
 
 /* Reading column: capped at the same 900px measure as the header above,
    so paragraphs, grids, images and tables never run wider than the
    two-column area they sit above — never edge-to-edge with the frame. */
 .sec-measure{max-width:900px}
 
-/* Every block: a small tag (L5, optional) sits above an H2 in the left
-   column; the paired body content sits in the right column. The gap is
-   15px wider than the left column's own gap would need, so the right
-   column reads narrower than the left column's raw width suggests. */
-.sec-grid{display:grid;grid-template-columns:minmax(200px,300px) 1fr;column-gap:71px;align-items:start}
-.sec-grid.heading-only{grid-template-columns:1fr}
-.sec-grid + .sec-grid{margin-top:56px}
+/* Every block: a small tag (L5, optional) sits above an H2, and the paired
+   body content stacks directly under it in one column — the same 12px
+   heading-to-body gap the old two-column grid used once it collapsed. */
+.sec-grid{display:grid;grid-template-columns:1fr;row-gap:12px;align-items:start}
+.sec-measure > * + .sec-grid{margin-top:64px}
 .sec-body > p:first-child,
 .sec-body > ul:first-child{margin-top:0}
-/* The right column IS the reading measure — the grid already caps it at
-   529px out of the 900px sec-measure. Capping the text a second time at
-   54ch inside that column left every paragraph 62px short of the images
-   below it, which run the full sec-measure width. Let the column do the
-   capping so text and images share one right edge.
-   Only while the two-column grid is live: below 900px the grid collapses
-   to a single full-width column, and there the 54ch cap is the only thing
-   keeping the line length readable. */
+/* Body copy runs the full 900px sec-measure, so text and the images below
+   it share one right edge. Below 900px the 54ch cap comes back to keep the
+   line length readable on narrow screens. */
 @media (min-width:901px){
   section.block .sec-body p,
   section.block .sec-body ul{max-width:none}
 }
-.ph-inline + .sec-grid,
-.ph-row + .sec-grid,
-.persona-pair + .sec-grid,
-.bento-3 + .sec-grid,
-.metrics-row + .sec-grid,
-.direction-row + .sec-grid{margin-top:48px}
-.scenario-img + .sec-grid{margin-top:96px}
 
-/* The tag floats above sec-head instead of taking up flow space, so
-   sec-head's own top edge is the H2's top edge — that's what the grid's
-   align-items:start actually lines up against, so the right column's
-   first line top-aligns with the H2 itself, not the tag above it. */
-.sec-head{position:relative}
-.sec-head .tag{position:absolute;left:0;bottom:100%;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
-.sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
+/* The tag sits in flow above the H2, so the gap above a block lands on
+   the tag itself, never on the H2 underneath it. */
+.sec-head .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint);white-space:nowrap}
+.sec-head h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:350;font-size:clamp(22px,2.3vw,26px);line-height:1.25;letter-spacing:-.01em}
 
 /* Running text (L4) — every paragraph and list in the content area. */
-section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+section.block p{margin-top:16px;font-size:15px;line-height:1.5;color:var(--body);max-width:54ch}
 
 ul.insights{margin-top:16px;display:flex;flex-direction:column;gap:14px;max-width:54ch}
-ul.insights li{display:flex;gap:14px;align-items:flex-start;font-size:15px;line-height:1.5;color:#2b2b2b}
+ul.insights li{display:flex;gap:14px;align-items:flex-start;font-size:15px;line-height:1.5;color:var(--body)}
 ul.insights .dot{flex-shrink:0;width:6px;height:6px;border-radius:1px;margin-top:8px;background:var(--faint)}
 ul.insights em{font-style:italic;color:var(--ink)}
 /* Methods footnote: L5 */
 .methods{margin-top:16px;font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:16px}
 
-/* ── Bento grid (testing) — hairline only, headings are L3
-   (h3, subordinate to the section's own H2), body copy is L4. ─────────── */
-.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.bento-3 .cell{padding:28px;border-left:1px solid var(--line)}
-.bento-3 .cell:first-child{border-left:none}
+/* ── Bento grid (testing) — separate hairline cards with a 16px gutter
+   (same as .ph-row), headings are L3 (h3, subordinate to the section's own
+   H2), body copy is L4. ──────────────────────────────────────────────── */
+.bento-3{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bento-3 .cell{padding:28px;border:1px solid var(--line);border-radius:var(--r-sm)}
 .bento-3 .cell h3{font-size:15px;font-weight:400}
 .bento-3 .cell h3.highlight{font-size:clamp(18px,1.8vw,20px)}
-.bento-3 .cell p{margin-top:10px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+.bento-3 .cell p{margin-top:12px;font-size:15px;line-height:1.5;color:var(--body);max-width:none}
 /* Diagram at the top of a cell, with the keyword and explanation below it. */
 .cell-figure{display:block;width:100%;height:auto;margin-bottom:20px}
 
-/* ── Insight cells — same tag/H2/body type as a normal sec-grid, just
-   boxed and run side by side instead of the full two-column width. ────── */
-.insight-cells{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.insight-cells .cell{padding:28px;border-left:1px solid var(--line)}
-.insight-cells .cell:first-child{border-left:none}
+/* ── Insight cells — a tag over a highlight title and body, carded like
+   the bento cells and run side by side. ─────────────────────────────── */
+.insight-cells{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.insight-cells .cell{padding:28px;border:1px solid var(--line);border-radius:var(--r-sm)}
 .insight-cells .cell .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.insight-cells .cell h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em}
-.insight-cells .cell p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
-.insight-cells + .sec-grid{margin-top:96px}
+.insight-cells .cell h2{font-size:clamp(18px,1.8vw,20px);line-height:1.3}
+.insight-cells .cell p{margin-top:12px;font-size:15px;line-height:1.5;color:var(--body);max-width:54ch}
 
-/* ── Persona pair (Target Users) — child and parent side by side, boxed
-   the same way as the bento cells in System and User (hairline frame,
-   28px cells, highlight name). Each column is a subgrid over the same row
+/* ── Persona pair (Target Users) — child and parent side by side, carded
+   the same way as the bento cells in System and User (hairline card,
+   28px padding, highlight name). Each column is a subgrid over the same row
    tracks, so Moment / At night / Needs line up across both users however
    the copy wraps. ──────────────────────────────────────────────────────── */
-.persona-pair{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;row-gap:6px;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.persona{display:grid;grid-row:span 4;grid-template-rows:subgrid;padding:28px}
-.persona + .persona{border-left:1px solid var(--line)}
+.persona-pair{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;column-gap:16px;row-gap:6px}
+.persona{display:grid;grid-row:span 4;grid-template-rows:subgrid;padding:28px;border:1px solid var(--line);border-radius:var(--r-sm)}
 .persona-head{padding-bottom:10px}
 .persona .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
 .persona h3.highlight{font-size:clamp(18px,1.8vw,20px);line-height:1.3}
 .persona-row{display:grid;grid-template-columns:72px 1fr;column-gap:16px;align-items:baseline}
 .persona-row dt{font-size:12.5px;color:var(--faint)}
-.persona-row dd{font-size:15px;line-height:1.4;color:#2b2b2b}
+.persona-row dd{font-size:15px;line-height:1.4;color:var(--body)}
 
 /* ── Metrics row (Final Design) — a stat on the left, same H2-style figure
-   as the research stats, and a bordered pull-quote on the right. ───────── */
-.metrics-row{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-.metrics-row .stat h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em;color:var(--ink)}
+   as the research stats, and the professor's quote as a chat bubble on
+   the right: a rounded grey frame (the same #f4f4f4 as the toggle tracks)
+   whose bottom-left tail points down at the attribution under it. ───────── */
+.metrics-row{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.metrics-row .stat h2{font-size:clamp(18px,1.8vw,20px);line-height:1.3}
 
-/* ── Highlight — a non-heading use of the serif face: upright, regular
-   weight, same size as whatever context it sits in. ────────────────────── */
-.highlight{font-family:'Source Serif 4',serif;font-style:normal;font-weight:400}
-#system .sec-body p.highlight{font-size:18px}
-.metrics-row .stat h2.highlight{font-style:normal;font-weight:400}
-.metrics-row .stat p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b}
+/* ── Highlight — card titles, stat lines and diagram labels. Same face as
+   the body (regular), set apart only by size (L3) and ink, so the
+   serif stays reserved for the italic H2 voice and the page title. ─────── */
+.highlight{font-family:inherit;font-style:normal;font-weight:400;color:var(--ink)}
+section.block p strong{font-weight:600;color:var(--ink)}
+.metrics-row .stat p{margin-top:12px;font-size:15px;line-height:1.5;color:var(--body)}
 
 /* ── Highlight item — a highlight line over a normal paragraph (Directions,
    Final 3D Design labels). ───────────────────────────────────────────── */
-.highlight-item .highlight{display:block;text-align:left;font-size:clamp(18px,1.8vw,20px);line-height:1.3}
-.highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:none}
+.highlight-item .highlight{display:block;text-align:left;font-size:clamp(18px,1.8vw,20px);line-height:1.3;color:var(--ink)}
+.highlight-item .highlight-body{margin-top:12px;font-size:15px;line-height:1.5;color:var(--body);max-width:none}
 
 /* ── Directions (Physical Design) — each direction's copy sits beside its
    own sketch, and the two pairs share one row: four components across.
@@ -327,42 +323,39 @@ ul.insights em{font-style:italic;color:var(--ink)}
    full height): the mushroom at x 0–592, the house at x 750–1342
    (750 / (1404−592) = 92.4%). Both windows share one width so the two
    frames stay the same size.
-   Framed like the bento cells: hairline box, 28px cells, a divider
-   between the two directions. Inside each cell the copy takes the wider
+   Carded like the bento cells: a hairline card per direction, 28px
+   padding, 16px apart. Inside each card the copy takes the wider
    share (7:5), so its lines run longer and the sketch sits further right.
    Four columns only fit the copy once the
    content reaches ~870px (a 1336px viewport); narrower than that the pairs
    stack, and below 600px each pair stacks too. ────────────────────────── */
-.direction-row{margin-top:32px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.direction{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:20px;align-items:center;padding:28px}
-.direction + .direction{border-left:1px solid var(--line)}
+.direction-row{margin-top:32px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.direction{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:20px;align-items:center;padding:28px;border:1px solid var(--line);border-radius:var(--r-sm)}
 .direction .highlight-item .highlight{margin-top:0}
 .direction-sketch{aspect-ratio:592/738}
 .direction-sketch img{display:block;width:100%;height:100%;object-fit:cover;object-position:0 50%}
 .direction-sketch.is-house img{object-position:92.4% 50%}
 @media (max-width:1335px){
   .direction-row{grid-template-columns:1fr}
-  .direction + .direction{border-left:none;border-top:1px solid var(--line)}
 }
 @media (max-width:600px){
   .direction{grid-template-columns:1fr;gap:16px}
   .direction-sketch{width:100%;max-width:320px;justify-self:center}
 }
-.metrics-row .quote{padding-left:20px;border-left:1px solid var(--line)}
-.metrics-row .quote p{margin:0;max-width:56ch;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
-.metrics-row .quote cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:var(--faint)}
+.metrics-row .quote p{position:relative;margin:0;max-width:56ch;padding:20px 24px;background:#f4f4f4;border-radius:18px;color:var(--ink);font-size:15px;line-height:1.5;font-style:italic}
+.metrics-row .quote p::after{content:"";position:absolute;left:24px;top:100%;border-top:12px solid #f4f4f4;border-right:14px solid transparent}
+.metrics-row .quote cite{display:block;margin-top:22px;padding-left:24px;font-style:normal;font-size:12.5px;color:var(--faint)}
 
 /* ── Before/after compare sliders (Iterations) — each block pairs an
    image row with its own tag/H2/body stacked to the right of it (not the
    page's usual two-column sec-grid); the second block's pair shares a
    single dragged divider so both frames flip together, not one at a
    time. ─────────────────────────────────────────────────────────────── */
-.iteration-block{margin-top:40px;display:flex;gap:40px;align-items:center;flex-wrap:wrap;--cmp-unit-w:220px}
-.iteration-block:first-child{margin-top:32px}
+.iteration-block{margin-top:64px;display:flex;gap:40px;align-items:center;flex-wrap:wrap;--cmp-unit-w:220px}
 .iteration-text{flex:1 1 260px;min-width:220px}
 .iteration-text .tag{display:block;margin-bottom:8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.iteration-text h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35;letter-spacing:-.005em;padding-bottom:12px}
-.iteration-text p{margin-top:16px;font-size:15px;line-height:1.5;color:#2b2b2b;max-width:54ch}
+.iteration-text h2{font-family:'Source Serif 4',serif;font-style:italic;font-weight:350;font-size:clamp(22px,2.3vw,26px);line-height:1.25;letter-spacing:-.01em;padding-bottom:12px}
+.iteration-text p{margin-top:16px;font-size:15px;line-height:1.5;color:var(--body);max-width:54ch}
 .iteration-text p:first-of-type{margin-top:0}
 .compare-row{display:flex;gap:16px;justify-content:flex-start;flex:0 0 auto}
 .compare-unit{display:flex;flex-direction:column;gap:8px;width:var(--cmp-unit-w,220px)}
@@ -381,8 +374,8 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .cmp-after-video{object-position:50% 50%;transform:scale(1.02)}
 .cmp-before-wrap{position:absolute;inset:0;overflow:hidden}
 .cmp-handle{position:absolute;top:0;bottom:0;left:50%;width:0;z-index:3;pointer-events:none}
-.cmp-handle::before{content:"";position:absolute;top:0;bottom:0;left:-1px;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(17,17,17,.15)}
-.cmp-handle::after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:999px;background:#fff;text-align:center;line-height:30px;font-size:13px;color:var(--ink);box-shadow:0 2px 6px rgba(17,17,17,.22)}
+.cmp-handle::before{content:"";position:absolute;top:0;bottom:0;left:-1px;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.cmp-handle::after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:999px;background:#fff;text-align:center;line-height:30px;font-size:13px;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.22)}
 .cmp-caption{font-size:12.5px;color:var(--faint);text-align:center}
 
 @media (max-width:900px){
@@ -396,77 +389,84 @@ ul.insights em{font-style:italic;color:var(--ink)}
    share (largest = darkest), so color reinforces the arc instead of adding a
    second thing to decode; every slice is also named and numbered in the
    legend, so identity is never carried by color alone. ─────────────────── */
-/* Toggle on the left, unframed chart panel on the right; the two share one
-   horizontal center line. */
-.survey{margin-top:32px;display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:center}
+/* Toggle on the left, unframed chart panel on the right, top-aligned. The
+   block is only as tall as its content, so the 32px above and below it land
+   on the toggle and pie themselves. */
+.survey{margin-top:32px;display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start}
 /* Vertical version of the site's pill nav: one grey track, the active
    question lifted out of it as a white pill. */
 .survey-toggle{display:flex;flex-direction:column;gap:2px;background:#f4f4f4;border-radius:22px;padding:6px}
-.survey-tab{appearance:none;border:none;background:none;cursor:pointer;padding:11px 16px;border-radius:999px;font:inherit;font-size:15px;line-height:1.3;color:var(--muted);text-align:center;transition:background .2s,color .2s,box-shadow .2s}
+.survey-tab{appearance:none;border:none;background:none;cursor:pointer;padding:11px 16px;border-radius:999px;font:inherit;font-size:15px;line-height:1.3;color:var(--body);text-align:center;transition:background .2s,color .2s,box-shadow .2s}
 .survey-tab:hover:not([aria-selected="true"]){color:var(--ink)}
-.survey-tab[aria-selected="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(17,17,17,.10)}
+.survey-tab[aria-selected="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.10)}
 /* With JS, a single white knob slides to the selected tab instead of each
    tab painting its own background. */
 .survey-toggle{position:relative}
 .survey-tab{position:relative;z-index:1}
-.survey-knob{display:none;position:absolute;top:0;left:0;border-radius:999px;background:var(--paper);box-shadow:0 1px 3px rgba(17,17,17,.10);transition:transform .45s cubic-bezier(.65,0,.35,1),width .45s cubic-bezier(.65,0,.35,1),height .45s cubic-bezier(.65,0,.35,1)}
+.survey-knob{display:none;position:absolute;top:0;left:0;border-radius:999px;background:var(--paper);box-shadow:0 1px 3px rgba(0,0,0,.10);transition:transform .45s cubic-bezier(.65,0,.35,1),width .45s cubic-bezier(.65,0,.35,1),height .45s cubic-bezier(.65,0,.35,1)}
 .survey-toggle.has-knob .survey-knob{display:block}
 .survey-toggle.has-knob .survey-tab[aria-selected="true"]{background:none;box-shadow:none}
 @media (prefers-reduced-motion:reduce){.survey-knob{transition:none}}
 /* Chart left, question + legend right. */
-.survey-panel{position:relative;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;min-width:0;height:276px;padding:24px 0 24px 24px}
+.survey-panel{position:relative;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;min-width:0;padding-left:24px}
 .survey-pie{width:190px;height:190px;flex-shrink:0}
 .survey-pie path{stroke-width:1;transition:opacity .15s}
 .survey-pie.dimmed path:not(.is-hovered){opacity:.45}
 .survey-readout{min-width:0}
-.survey-question{font-family:'Source Serif 4',serif;font-weight:400;font-size:clamp(18px,1.8vw,20px);line-height:1.3}
+.survey-question{font-size:clamp(18px,1.8vw,20px);line-height:1.3;color:var(--ink)}
 .survey-legend{margin-top:22px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.survey-legend li{display:flex;align-items:baseline;gap:10px;font-size:15px;line-height:1.4;color:#2b2b2b}
-.survey-legend .sw{flex-shrink:0;width:10px;height:10px;border-radius:2px;transform:translateY(1px);box-shadow:inset 0 0 0 1px rgba(17,17,17,.16)}
+.survey-legend li{display:flex;align-items:baseline;gap:10px;font-size:15px;line-height:1.4;color:var(--body)}
+.survey-legend .sw{flex-shrink:0;width:10px;height:10px;border-radius:2px;transform:translateY(1px);box-shadow:inset 0 0 0 1px rgba(0,0,0,.16)}
 .survey-legend .pct{margin-left:auto;padding-left:14px;color:var(--ink);font-variant-numeric:tabular-nums}
 .survey-legend li.zero{color:var(--faint)}
 .survey-legend li.zero .sw{background:none;border:1px solid var(--line)}
 .survey-legend li.zero .pct{color:var(--faint)}
 .survey-tip{position:absolute;pointer-events:none;z-index:2;background:var(--ink);color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:6px;white-space:nowrap;transform:translate(-50%,-115%)}
 /* Stacks earlier than the page's 900px breakpoint: side by side, the readout
-   column gets too narrow to hold a question in the panel's fixed height. */
+   column gets too narrow for the question and legend to read well. */
 @media (max-width:1140px){
   .survey{grid-template-columns:1fr;gap:16px}
   .survey-toggle{flex-direction:row;overflow-x:auto;border-radius:999px}
   .survey-tab{flex:1 0 auto;white-space:nowrap}
-  .survey-panel{grid-template-columns:1fr;justify-items:center;gap:24px;height:auto;padding:24px 0}
+  .survey-panel{grid-template-columns:1fr;justify-items:center;gap:24px;padding:0}
   .survey-readout{text-align:left;width:100%}
 }
 
 /* ── Device annotation diagram — a centered product render with labels
    floating around it, connected by thin leader lines. Everything (image,
-   labels, lines) is positioned in % against a compact fixed-aspect-ratio box
-   so it scales together; below 900px it collapses to a plain stacked column. ── */
-.device-annotate{position:relative;margin-top:40px;width:100%;aspect-ratio:900/500}
+   labels, lines) is positioned in % against a fixed-aspect-ratio box so it
+   scales together. The box is cropped to the render's own top and bottom
+   edges (900 × 441.67 in the lines' viewBox units), so the 32px / 64px gaps
+   above and below land on the device, not on empty box. Under 800px of
+   width the labels no longer fit beside the render, so it collapses to a
+   stacked column — keyed to the wrap's own width (a container query), since
+   that runs narrow both on phones and beside the rail on small laptops. ── */
+.device-wrap{margin-top:32px;container-type:inline-size}
+.device-annotate{position:relative;width:100%;aspect-ratio:900/441.67}
 /* Stacking: render at the bottom, leader lines over it (their ends land on
    the device itself), labels on top. */
 .device-annotate .device-lines{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
-.device-annotate .device-lines line{stroke:var(--muted);stroke-width:1}
+.device-annotate .device-lines line{stroke:var(--body);stroke-width:1}
 .device-annotate .device-img{position:absolute;z-index:1}
 .device-annotate .device-label{position:absolute;z-index:3}
-@media (max-width:900px){
+@container (max-width:799px){
   .device-annotate{aspect-ratio:auto;max-width:100%}
   .device-annotate .device-lines{display:none}
   .device-annotate .device-img,.device-annotate .device-label{position:static;left:auto!important;right:auto!important;top:auto!important;width:100%!important;margin-top:24px}
-  .device-annotate .device-img{margin-top:0}
+  .device-annotate .device-img{margin:0 auto;width:min(100%,360px)!important}
 }
 
 /* ── Interface evolution: stage toggle | morphing screens | stage notes.
    Card positions per stage are set in JS (see the evolve script); CSS only
    animates between them. Narrow containers stack the three parts and turn
    the toggle horizontal. ── */
-.evolve-wrap{margin-top:48px;container-type:inline-size}
+.evolve-wrap{margin-top:32px;container-type:inline-size}
 .evolve{display:grid;grid-template-columns:max-content minmax(0,1fr) 210px;column-gap:32px;align-items:center}
 /* Same look as the survey toggle (.survey-toggle / .survey-tab), plus a
    white knob that slides to the selected stage (positioned in JS). */
 .evolve-steps{position:relative;display:flex;flex-direction:column;gap:2px;padding:6px;border-radius:22px;background:#f4f4f4;touch-action:none;user-select:none}
-.evolve-knob{position:absolute;top:0;left:0;border-radius:999px;background:var(--paper);box-shadow:0 1px 3px rgba(17,17,17,.10);transition:transform .45s cubic-bezier(.65,0,.35,1),width .45s cubic-bezier(.65,0,.35,1),height .45s cubic-bezier(.65,0,.35,1)}
-.evolve-steps button{position:relative;z-index:1;padding:11px 16px;border:0;border-radius:999px;background:none;font:inherit;font-size:15px;line-height:1.3;color:var(--muted);text-align:center;white-space:nowrap;cursor:pointer;transition:color .2s}
+.evolve-knob{position:absolute;top:0;left:0;border-radius:999px;background:var(--paper);box-shadow:0 1px 3px rgba(0,0,0,.10);transition:transform .45s cubic-bezier(.65,0,.35,1),width .45s cubic-bezier(.65,0,.35,1),height .45s cubic-bezier(.65,0,.35,1)}
+.evolve-steps button{position:relative;z-index:1;padding:11px 16px;border:0;border-radius:999px;background:none;font:inherit;font-size:15px;line-height:1.3;color:var(--body);text-align:center;white-space:nowrap;cursor:pointer;transition:color .2s}
 .evolve-steps button:hover:not([aria-checked="true"]),.evolve-steps button[aria-checked="true"]{color:var(--ink)}
 .evolve-steps button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .evolve-stage{position:relative}
@@ -479,7 +479,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .evolve-notes article{grid-area:1/1;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease,visibility .35s}
 .evolve-notes article.on{opacity:1;visibility:visible;transform:none}
 .evolve-notes .tag{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--faint)}
-.evolve-notes h3{margin-top:8px;font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2vw,22px);line-height:1.35}
+.evolve-notes h3{margin-top:8px;font-family:'Source Serif 4',serif;font-style:italic;font-weight:350;font-size:clamp(18px,2vw,22px);line-height:1.35}
 .evolve-notes article p{margin-top:12px}
 @container (max-width:720px){
   .evolve{grid-template-columns:minmax(0,1fr);row-gap:24px}
@@ -495,7 +495,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .pullquote p{margin:0;max-width:56ch;color:var(--ink);font-size:clamp(19px,2.1vw,24px);line-height:1.4;font-style:italic}
 
 .next-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:54ch}
-.next-list li{font-size:15px;line-height:1.5;color:#2b2b2b;padding-left:18px;position:relative}
+.next-list li{font-size:15px;line-height:1.5;color:var(--body);padding-left:18px;position:relative}
 .next-list li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--line)}
 
 /* ── Back to top: a floating pill-grey button, same fill as the rail's
@@ -509,7 +509,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
   right:calc(var(--sidegap) + 24px);bottom:calc(var(--sidegap) + 24px);
   width:44px;height:44px;border:none;border-radius:999px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  background:#e4e4e4;color:var(--ink);box-shadow:0 1px 3px rgba(17,17,17,.10);
+  background:#e4e4e4;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.10);
   opacity:0;visibility:hidden;transform:translateY(8px);
   transition:opacity .2s ease,transform .2s ease,visibility .2s,background .2s;
 }
@@ -526,12 +526,6 @@ ul.insights em{font-style:italic;color:var(--ink)}
 .reveal.in{opacity:1;transform:translateY(0)}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
-/* Two-column grid collapses to one column below 900px: left group stacks
-   above the right paragraphs. */
-@media (max-width:900px){
-  .sec-grid{grid-template-columns:1fr;row-gap:12px}
-}
-
 /* ── Mobile: drop the fixed app-shell, let the page scroll normally ─────── */
 @media (max-width:960px){
   html,body{height:auto;overflow:visible}
@@ -545,13 +539,12 @@ ul.insights em{font-style:italic;color:var(--ink)}
   .content-frame{overflow:visible;border-radius:24px}
   #pageScroll{height:auto;overflow:visible}
   .inner,main{padding-left:24px;padding-right:24px}
-  section.block{padding-top:64px}
   .bento-3,.insight-cells{grid-template-columns:1fr}
-  .bento-3 .cell,.insight-cells .cell{border-left:none;border-top:1px solid var(--line)}
-  .bento-3 .cell:first-child,.insight-cells .cell:first-child{border-top:none}
   .to-top{right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px))}
   .persona-pair{grid-template-columns:1fr}
-  .persona + .persona{border-left:none;border-top:1px solid var(--line)}
+  /* Stacked, the 6px subgrid row-gap is all that would separate the two
+     cards; top it up to the 16px gutter the other cards use. */
+  .persona + .persona{margin-top:10px}
   .metrics-row{grid-template-columns:1fr;gap:20px}
 }
 </style>
@@ -656,7 +649,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 
       <section class="block reveal" id="research">
         <div class="sec-measure">
-          <div class="sec-grid heading-only">
+          <div class="sec-grid">
             <div class="sec-head">
               <div class="tag">Research to insight</div>
               <h2>Key Related Data</h2>
@@ -678,7 +671,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
             </div>
           </div>
 
-          <div class="sec-grid heading-only">
+          <div class="sec-grid">
             <div class="sec-head">
               <h2>Target Users</h2>
             </div>
@@ -735,12 +728,12 @@ ul.insights em{font-style:italic;color:var(--ink)}
           <div class="insight-cells">
             <div class="cell">
               <div class="tag">Insight 1</div>
-              <h2>Replacement of parent needed</h2>
+              <h2 class="highlight">Replacement of parent needed</h2>
               <p>Children are afraid of the dark and of being alone — what they need most is their parent's presence. But parents reported re-entering the room one to two times a night, describing bedtime as moderately stressful. A replacement for parent presence is needed.</p>
             </div>
             <div class="cell">
               <div class="tag">Insight 2</div>
-              <h2>Operation with simplicity</h2>
+              <h2 class="highlight">Operation with simplicity</h2>
               <p>Targeting 5-year-olds, every interaction had to be tactile and single step. Anything harder to operate in the dark risks becoming its own source of frustration, undermining the sense of security the device is meant to give.</p>
             </div>
           </div>
@@ -770,7 +763,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
           <div class="ph ph-inline" style="aspect-ratio:1940/689;background:none;border-radius:0;overflow:visible"><img src="images/LuminoFlowchart.svg" alt="Lumino device and app flowchart" style="object-fit:contain"></div>
           <div class="ph ph-inline scenario-img" style="aspect-ratio:1672/941;background:none"><img src="images/LuminoScenario.png" alt="Lumino bedtime scenario showing a parent using the app while a child sleeps beside the device"></div>
 
-          <div class="sec-grid heading-only">
+          <div class="sec-grid">
             <div class="sec-head">
               <div class="tag">System and User</div>
               <h2>A digital and physical combined experience</h2>
@@ -846,30 +839,33 @@ ul.insights em{font-style:italic;color:var(--ink)}
             </div>
           </div>
 
-          <div class="sec-grid heading-only">
+          <div class="sec-grid">
             <div class="sec-head">
               <div class="tag">Final 3D Design</div>
+              <h2>Built for small hands in the dark</h2>
             </div>
           </div>
-          <div class="device-annotate">
-            <svg class="device-lines" viewBox="0 0 900 500" preserveAspectRatio="none" aria-hidden="true">
-              <line x1="261" y1="145" x2="414" y2="286"></line>
-              <line x1="261" y1="315" x2="480" y2="300"></line>
-            </svg>
-            <div class="ph device-img" style="left:31%;top:3.57%;width:38%;aspect-ratio:875/1130;background:none">
-              <img src="images/Lumino3DDesign.png" alt="Lumino final 3D design — mushroom nightlight with intercom button, play button, and silicone top">
-            </div>
-            <div class="highlight-item device-label" style="left:0;top:16%;width:29%">
-              <p class="highlight">Intercom Button</p>
-              <p class="highlight-body">Keep pressing to activate intercom feature: hold to talk. The button is sized with a length of 1.8 inch for toddlers' small hands.</p>
-            </div>
-            <div class="highlight-item device-label" style="left:0;top:52%;width:29%">
-              <p class="highlight">Play Button</p>
-              <p class="highlight-body">Press to start playing the preset story/audio playlist. Size is differentiated from the intercom button so that it can be distinguished by touch in the dark.</p>
-            </div>
-            <div class="highlight-item device-label" style="right:0;top:24%;width:29%">
-              <p class="highlight">Silicone Top</p>
-              <p class="highlight-body">The tap-to-activate silicone top is designed to suit toddlers' limited fine motor control. An open-palm pat is instinctive, and its soft and smooth texture prevents potential harm in darkness.</p>
+          <div class="device-wrap">
+            <div class="device-annotate">
+              <svg class="device-lines" viewBox="0 17.85 900 441.67" preserveAspectRatio="none" aria-hidden="true">
+                <line x1="261" y1="145" x2="414" y2="286"></line>
+                <line x1="261" y1="315" x2="480" y2="300"></line>
+              </svg>
+              <div class="ph device-img" style="left:31%;top:0;width:38%;aspect-ratio:875/1130;background:none">
+                <img src="images/Lumino3DDesign.png" alt="Lumino final 3D design — mushroom nightlight with intercom button, play button, and silicone top">
+              </div>
+              <div class="highlight-item device-label" style="left:0;top:14.07%;width:29%">
+                <p class="highlight">Intercom Button</p>
+                <p class="highlight-body">Keep pressing to activate intercom feature: hold to talk. The button is sized with a length of 1.8 inch for toddlers' small hands.</p>
+              </div>
+              <div class="highlight-item device-label" style="left:0;top:54.83%;width:29%">
+                <p class="highlight">Play Button</p>
+                <p class="highlight-body">Press to start playing the preset story/audio playlist. Size is differentiated from the intercom button so that it can be distinguished by touch in the dark.</p>
+              </div>
+              <div class="highlight-item device-label" style="right:0;top:23.13%;width:29%">
+                <p class="highlight">Silicone Top</p>
+                <p class="highlight-body">The tap-to-activate silicone top is designed to suit toddlers' limited fine motor control. An open-palm pat is instinctive, and its soft and smooth texture prevents potential harm in darkness.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -1053,7 +1049,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 
       <section class="block reveal" id="final-design">
         <div class="sec-measure">
-          <div class="sec-grid heading-only">
+          <div class="sec-grid">
             <div class="sec-head">
               <div class="tag">Final Design</div>
               <h2>Meet Lumino, a sleep companion</h2>
@@ -1072,7 +1068,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
             </div>
           </div>
 
-          <div class="sec-grid heading-only">
+          <div class="sec-grid">
             <div class="sec-head">
               <h2>The design system</h2>
             </div>
@@ -1083,7 +1079,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
 
       <section class="block reveal" id="reflection">
         <div class="sec-measure">
-          <div class="sec-grid heading-only">
+          <div class="sec-grid">
             <div class="sec-head">
               <div class="tag">Reflection + Next Steps</div>
               <h2>How can Lumino be more comforting?</h2>
@@ -1282,7 +1278,7 @@ ul.insights em{font-style:italic;color:var(--ink)}
             ? `M ${CX} ${CY - R} A ${R} ${R} 0 1 1 ${CX - 0.01} ${CY - R} Z`
             : `M ${CX} ${CY} L ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} Z`);
           path.setAttribute('fill', color);
-          path.setAttribute('stroke', 'rgba(17,17,17,.16)');
+          path.setAttribute('stroke', 'rgba(0,0,0,.16)');
           path.dataset.label = label;
           path.dataset.value = fmt(value);
           pie.appendChild(path);
