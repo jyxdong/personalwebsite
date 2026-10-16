@@ -40,7 +40,7 @@ body{
 #navWrap{flex-shrink:0;margin:calc(var(--sidegap) - 8px) var(--sidegap) 0 var(--sidegap)}
 nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px;padding:8px 10px}
 .nav-tabs{flex:1;display:flex;justify-content:center;gap:10px}
-.nav-tabs a{flex:1;max-width:260px;height:40px;border-radius:999px;border:none;cursor:pointer;font-size:20px;font-weight:400;background:#f4f4f4;color:#000;transition:background .2s;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.nav-tabs a{flex:1;max-width:260px;height:40px;border-radius:999px;border:none;cursor:pointer;font-size:20px;font-weight:450;background:#f4f4f4;color:#000;transition:background .2s;display:flex;align-items:center;justify-content:center;text-decoration:none}
 .nav-tabs a:hover:not(.active){background:#e9e9e9}
 .nav-tabs a.tab-work.active{background:#CBFF71;color:#000}
 .nav-tabs a.tab-about.active{background:#FF8418;color:#000}
@@ -54,7 +54,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 #contentWrap.cards-view #signInfo{visibility:hidden}
 #wrap:active{cursor:grabbing}
 canvas{display:block;width:100%;height:100%;background:#fff}
-.cards-button{position:absolute;right:var(--view-inset);bottom:var(--view-inset);z-index:3;box-sizing:border-box;min-height:46px;padding:9px 34px;border:2px solid #000;border-radius:999px;background:#fff;color:#000;font-family:inherit;font-size:20px;line-height:24px;font-weight:400;text-decoration:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:background .2s,bottom .7s cubic-bezier(.65,0,.35,1)}
+.cards-button{position:absolute;right:var(--view-inset);bottom:var(--view-inset);z-index:3;box-sizing:border-box;min-height:46px;padding:9px 34px;border:2px solid #000;border-radius:999px;background:#fff;color:#000;font-family:inherit;font-size:20px;line-height:24px;font-weight:450;text-decoration:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:background .2s,bottom .7s cubic-bezier(.65,0,.35,1)}
 #contentWrap.cards-view .cards-button{bottom:calc(100% - var(--view-inset) - 46px)}
 .cards-button:hover{background:#e9e9e9}
 .cards-button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
@@ -104,7 +104,7 @@ canvas{display:block;width:100%;height:100%;background:#fff}
    centred in the column and kept close together. */
 #signInfo.no-card{align-items:center;text-align:center}
 #signInfo.no-card #lbl{margin-top:24px}
-#lbl{margin-top:64px;background:#fff;color:#000;border:2px solid #000;border-radius:999px;padding:9px 34px;font-size:20px;font-weight:400;transition:background .2s;white-space:nowrap;display:flex;align-items:center;gap:12px}
+#lbl{margin-top:64px;background:#fff;color:#000;border:2px solid #000;border-radius:999px;padding:9px 34px;font-size:20px;font-weight:450;transition:background .2s;white-space:nowrap;display:flex;align-items:center;gap:12px}
 #lbl.clickable{pointer-events:auto;cursor:pointer}
 #lbl.clickable:hover{background:#f4f4f4}
 #wrap.focus-stacked #signInfo{top:auto;right:var(--view-inset);bottom:calc(var(--view-inset) + 58px);left:var(--view-inset);width:auto;transform:translateY(16px)}
@@ -258,6 +258,8 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 }
 </style>
 <link rel="stylesheet" href="nav-logo.css?v=3">
+<link rel="stylesheet" href="page-transition.css">
+<script src="page-transition.js" data-tab="work"></script>
 <link rel="icon" type="image/svg+xml" href="images/favicon-work.svg">
 </head>
 <body data-rail="pro">

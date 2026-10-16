@@ -1,0 +1,38 @@
+/* Cross-document transition between the Work / About / Play tabs. The nav
+   and intro rail are the same on all three pages, so they ride the default
+   root crossfade. The big content frame stays put as a solid white panel
+   while its contents slide toward the tab you picked (--pt-dir is set by
+   page-transition.js). Browsers without cross-document view transitions
+   simply navigate as before. */
+@media (prefers-reduced-motion:no-preference){
+  @view-transition{navigation:auto}
+}
+
+/* Desktop only: on phones the frame is a tall, scrolling block below the
+   rail, so the root crossfade alone reads better there. */
+@media (min-width:961px){
+  #contentWrap,#contentFrame{view-transition-name:main-frame}
+}
+
+::view-transition-group(main-frame){
+  background:#fff;
+  border-radius:40px;
+  overflow:clip;
+}
+::view-transition-old(main-frame),
+::view-transition-new(main-frame){
+  mix-blend-mode:normal;
+}
+::view-transition-old(main-frame){
+  animation:pt-frame-out .22s ease both;
+}
+::view-transition-new(main-frame){
+  animation:pt-frame-in .6s cubic-bezier(.16,1,.3,1) .06s both;
+}
+
+@keyframes pt-frame-out{
+  to{opacity:0;transform:translateX(calc(var(--pt-dir,0) * -32px))}
+}
+@keyframes pt-frame-in{
+  from{opacity:0;transform:translateX(calc(var(--pt-dir,0) * 56px))}
+}
