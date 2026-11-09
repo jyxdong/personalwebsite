@@ -28,6 +28,11 @@ html.case-from-sign .rail-frame{
   opacity:0;
   transform:translateX(-60px);
 }
+/* Case pages draw the white on .case-body, not the frame; keep the frame
+   white while the contents fade in so the hand-off never flashes gray. */
+html.case-from-sign .content-frame{
+  background:#fff;
+}
 html.case-from-sign .content-frame > *{
   opacity:0;
 }

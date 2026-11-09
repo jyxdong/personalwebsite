@@ -356,16 +356,42 @@ section.block .faq-version p{margin-top:12px;max-width:none}
   body{display:block}
   #navWrap{margin:16px 16px 0}
   .shell{display:block;height:auto;padding:8px 16px 16px}
-  .rail-frame{width:auto;overflow:visible;border-radius:24px;margin-bottom:8px}
+  /* The table of contents is desktop-only; the nav already links back to Work. */
+  .rail-frame{display:none}
   .rail{height:auto;overflow:visible;padding:22px 20px}
   .rail-toc ul{flex-direction:row;flex-wrap:wrap;gap:4px 16px}
   .rail-toc li a{padding:6px 0}
-  .content-frame{overflow:visible;border-radius:24px}
+  /* clip (not hidden) rounds the corners without making the frame a scroll box. */
+  .content-frame{overflow:clip;border-radius:24px}
   #pageScroll{height:auto;overflow:visible}
   .to-top{right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px))}
   .inner,main{padding-left:24px;padding-right:24px}
   .bento-1 .cell{border-top:1px solid var(--line)}
   .bento-1 .cell:first-child{border-top:none}
+}
+/* ── Previous / next work: a card of its own under the case study. The
+   content frame goes transparent so the gray gap shows between the case
+   body and this card; the case body now carries the white. ── */
+.content-frame{background:transparent}
+#pageScroll{background:transparent;overscroll-behavior-y:none}
+.case-body{background:var(--paper);border-radius:var(--r-lg)}
+.work-pager{margin-top:var(--midgap);background:var(--paper);border-radius:var(--r-lg);padding:12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;justify-content:stretch;gap:12px}
+.work-pager a{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:22px 28px;border-radius:calc(var(--r-lg) - 12px);color:var(--ink);text-decoration:none}
+.work-pager a:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+.work-pager .next{align-items:flex-end;text-align:right}
+.work-pager .cap{font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
+/* Only the name pill lights up on hover, not the whole half. */
+.work-pager .name{display:flex;align-items:center;gap:10px;margin:0 -14px;padding:6px 14px;border-radius:999px;font-size:clamp(18px,1.8vw,20px);line-height:1.3;transition:background .2s}
+.work-pager a:hover .name{background:#f4f4f4}
+/* Back to works matches the pager type: arrow first, highlight size, no
+   filled button. Centred, and on hover a full-width strip lights up. */
+.rail-home{align-self:stretch;justify-content:center;gap:10px;padding:12px 40px 12px 20px;background:none;font-size:clamp(18px,1.8vw,20px);font-weight:400;line-height:1.3}
+.rail-home:hover{background:#f4f4f4}
+.rail-home svg{order:-1;width:20px;height:20px}
+@media (max-width:960px){
+  .case-body,.work-pager{border-radius:24px}
+  .work-pager{padding:8px;gap:8px}
+  .work-pager a{padding:14px 16px}
 }
 </style>
 <link rel="stylesheet" href="nav-logo.css?v=3">
@@ -407,6 +433,7 @@ section.block .faq-version p{margin-top:12px;max-width:none}
   <div class="content-frame">
    <div class="progress-track" id="progressTrack" aria-hidden="true"></div>
    <div id="pageScroll">
+    <div class="case-body">
     <div class="inner">
       <p class="crumb">
         <a href="index.html">Work</a>
@@ -609,6 +636,11 @@ section.block .faq-version p{margin-top:12px;max-width:none}
       </section>
 
     </main>
+    </div>
+    <nav class="work-pager" aria-label="More work">
+      <a class="prev" href="remember.html"><span class="cap">Previous work</span><span class="name"><span aria-hidden="true">←</span>Remember</span></a>
+      <a class="next" href="lumino.html"><span class="cap">Next work</span><span class="name">Lumino<span aria-hidden="true">→</span></span></a>
+    </nav>
    </div>
   </div>
 </div>
