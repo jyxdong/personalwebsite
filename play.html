@@ -204,23 +204,26 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 .play-item.scroll-item.expanded .ph-card img{height:auto;object-fit:unset}
 
 /* ── Mobile: drop the fixed app-shell, let the page scroll normally ─────── */
+/* Same one-screen layout as the home page: portrait + bio on top, the
+   gallery frame fills the middle and scrolls inside itself, and the contact
+   card is a full-width strip at the bottom. The page itself never scrolls. */
 @media (max-width:960px){
   :root{--sidegap:12px}
-  html,body{height:auto;overflow:visible}
-  body{display:flex;min-height:100dvh;overflow-y:auto}
+  body{height:100dvh}
   #navWrap{margin:12px var(--sidegap) 0}
-  .shell{flex-direction:column;height:auto;min-height:0;margin:var(--midgap) var(--sidegap) var(--sidegap)}
-  #introRail{
-    width:100%;
+  .shell{
     display:grid;
     grid-template-columns:minmax(0,1fr) minmax(0,2fr);
-    grid-template-rows:auto auto;
-    gap:var(--midgap)
+    grid-template-rows:auto minmax(0,1fr) auto;
+    gap:var(--midgap);
+    min-height:0;
+    margin:var(--midgap) var(--sidegap) var(--sidegap)
   }
+  #introRail{display:contents}
   .intro-frame{border-radius:22px}
   .intro-frame.id{
     grid-column:1;
-    grid-row:1 / 3;
+    grid-row:1;
     padding:12px 10px;
     align-self:stretch;
     display:flex;
@@ -270,26 +273,30 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     transform:none!important;
     opacity:1!important;
     transition:none;
-    font-size:clamp(13px,3.6vw,16px);
-    line-height:1.25;
-    text-wrap:pretty
+    font-size:clamp(12.5px,min(3.6vw,2.1dvh),16px);
+    line-height:1.28;
+    text-wrap:wrap
   }
   .intro-bio-stack .bio-personal{display:none}
   .intro-frame.contact{
-    grid-column:2;
-    grid-row:2;
-    padding:12px 14px
+    grid-column:1 / -1;
+    grid-row:3;
+    padding:8px 10px 8px 20px
   }
-  .intro-contact{align-items:center;gap:10px}
-  .intro-email{font-size:clamp(13px,3.6vw,16px)}
+  .intro-contact{align-items:center;justify-content:space-between;gap:10px}
+  .intro-email{font-size:clamp(14px,3.8vw,16px);min-width:0;overflow-wrap:anywhere}
   .intro-icons{gap:8px}
   .intro-icon{width:36px;height:36px}
   .intro-icon svg{width:18px;height:18px}
-  .content-frame{overflow:visible;border-radius:24px}
-  #pageScroll{height:auto;overflow:visible}
-  .grid-wrap{padding:20px}
-  .waterfall{flex-direction:column}
-  .waterfall-col.narrow,.waterfall-col.wide{flex:1}
+  /* Rounded and clipped again; the gallery scrolls inside the frame. */
+  .content-frame{grid-column:1 / -1;grid-row:2;min-height:0;overflow:hidden;border-radius:24px}
+  /* Phones: a plain two-column waterfall. The three desktop columns melt
+     into CSS columns, and tapping a card does nothing (no expand). */
+  .grid-wrap{padding:12px}
+  .waterfall{display:block;columns:2;column-gap:10px}
+  .waterfall-col{display:contents}
+  .play-item{break-inside:avoid;margin-bottom:10px;cursor:default}
+  .ph-card{border-radius:14px}
 }
 </style>
 <link rel="stylesheet" href="nav-logo.css?v=3">
@@ -462,7 +469,10 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   var cx = frameRect.left + frameRect.width/2;
   var cy = frameRect.top + frameRect.height/2;
 
-  if(!window.matchMedia('(max-width:960px)').matches){
+  // Phones get a static two-column waterfall: no deck to disperse and no
+  // tap-to-expand (every expand handler below checks this first).
+  var phone = window.matchMedia('(max-width:960px)');
+  if(!phone.matches){
     cards.forEach(function(card,i){
       var r = PageScale.cssRect(card);
       var dx = cx - (r.left + r.width/2);
@@ -569,7 +579,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     }
 
     item.addEventListener('click', function(e){
-      if(waterfall.classList.contains('stacked')) return; // let it disperse first
+      if(phone.matches||waterfall.classList.contains('stacked')) return; // phones: no expand; desktop: let it disperse first
       e.stopPropagation();
       if(expanded) collapse(); else expand();
     });
@@ -650,7 +660,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   }
 
   wattItem.addEventListener('click', function(e){
-    if(waterfall.classList.contains('stacked')) return; // let it disperse first
+    if(phone.matches||waterfall.classList.contains('stacked')) return; // phones: no expand; desktop: let it disperse first
     e.stopPropagation();
     if(!wattExpanded){ wattExpand(); }
     else{ window.open('https://www.27wattmedia.com/', '_blank', 'noopener'); }
@@ -778,7 +788,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     });
 
     item.addEventListener('click', function(e){
-      if(waterfall.classList.contains('stacked')) return; // let it disperse first
+      if(phone.matches||waterfall.classList.contains('stacked')) return; // phones: no expand; desktop: let it disperse first
       e.stopPropagation();
       if(expanded) collapse(); else expand();
     });

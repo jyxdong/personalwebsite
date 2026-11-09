@@ -97,17 +97,22 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 
 /* ── Dial nav: the five About sections laid out along a circle whose centre
    sits off the left edge of the content frame, so only the right arc shows.
-   Selecting an item spins the wheel until that item points at 3 o'clock. ── */
+   The selected item always sits at 3 o'clock; the others take the slots
+   above and below it (--k, set in JS), and the list wraps around, so
+   moving down shifts every item up and the top one comes back in at the
+   bottom. ── */
 .about-body{position:absolute;inset:0}
-.dial{--r:360px;--step:8deg;--sel:0;
-  position:absolute;left:-250px;top:50%;width:0;height:0;z-index:2;
-  transform:rotate(calc(var(--sel) * var(--step) * -1));
-  transition:transform .6s cubic-bezier(.35,.02,.2,1)}
-.dial-item{position:absolute;left:0;top:0;transform-origin:0 50%;
-  transform:rotate(calc(var(--i) * var(--step))) translateX(var(--r));
+.dial{--r:360px;--step:8deg;
+  position:absolute;left:-250px;top:50%;width:0;height:0;z-index:2}
+.dial-item{--k:var(--i);position:absolute;left:0;top:0;transform-origin:0 50%;
+  transform:rotate(calc(var(--k) * var(--step))) translateX(var(--r));
   white-space:nowrap;font-family:inherit;font-size:20px;font-weight:450;
   color:#c9c9c9;background:none;border:0;padding:3px 10px;cursor:pointer;
-  transition:color .35s ease}
+  transition:color .35s ease,transform .6s cubic-bezier(.35,.02,.2,1),opacity .25s ease}
+/* Wrapping items fade out past one edge, jump (no-anim) to just past the
+   other edge, then slide in. */
+.dial-item.leaving{opacity:0}
+.dial-item.no-anim{transition:none}
 .dial-item:hover{color:#9a9a9a}
 .dial-item.active{color:var(--ink)}
 .dial-item:focus-visible{outline:2px solid #FF8418;outline-offset:2px;border-radius:6px}
@@ -139,7 +144,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 .dial-strip img{flex:none;height:100%;width:auto;border-radius:16px;
   object-fit:cover;background:#f2f2f2;scroll-snap-align:start;
   -webkit-user-drag:none;user-select:none}
-@media (prefers-reduced-motion:reduce){.dial,.dial-page{transition:none}}
+@media (prefers-reduced-motion:reduce){.dial-item,.dial-page{transition:none}}
 
 /* Shorter viewports: pull the wheel in so the top and bottom items stay inside
    the frame. */
@@ -151,26 +156,25 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   .dial-text,.dial-strip{padding-right:36px}
 }
 
-/* ── Small screens: stack the sign frame below the intro rail instead of
-   side-by-side, and let the page scroll since content no longer fits one
-   fixed-height row. ── */
+/* ── Small screens: same one-screen layout as the home page. Portrait + bio
+   share the top row, the content frame fills the middle, and the contact
+   card is a full-width strip at the bottom; the page itself never scrolls. ── */
 @media (max-width:860px){
   :root{--sidegap:12px}
-  html,body{height:auto;overflow:visible}
-  body{min-height:100dvh;overflow-y:auto}
+  body{height:100dvh}
   #navWrap{margin:12px var(--sidegap) 0}
-  .shell{flex-direction:column;height:auto;min-height:0}
-  #introRail{
-    width:100%;
+  .shell{
     display:grid;
     grid-template-columns:minmax(0,1fr) minmax(0,2fr);
-    grid-template-rows:auto auto;
-    gap:var(--midgap)
+    grid-template-rows:auto minmax(0,1fr) auto;
+    gap:var(--midgap);
+    min-height:0
   }
+  #introRail{display:contents}
   .intro-frame{border-radius:22px}
   .intro-frame.id{
     grid-column:1;
-    grid-row:1 / 3;
+    grid-row:1;
     padding:12px 10px;
     align-self:stretch;
     display:flex;
@@ -220,34 +224,38 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     transform:none!important;
     opacity:1!important;
     transition:none;
-    font-size:clamp(13px,3.6vw,16px);
-    line-height:1.25;
-    text-wrap:pretty
+    font-size:clamp(12.5px,min(3.6vw,2.1dvh),16px);
+    line-height:1.28;
+    text-wrap:wrap
   }
   .intro-bio-stack .bio-pro{display:none}
   .intro-frame.contact{
-    grid-column:2;
-    grid-row:2;
-    padding:12px 14px
+    grid-column:1 / -1;
+    grid-row:3;
+    padding:8px 10px 8px 20px
   }
-  .intro-contact{align-items:center;gap:10px}
-  .intro-email{font-size:clamp(13px,3.6vw,16px)}
+  .intro-contact{align-items:center;justify-content:space-between;gap:10px}
+  .intro-email{font-size:clamp(14px,3.8vw,16px);min-width:0;overflow-wrap:anywhere}
   .intro-icons{gap:8px}
   .intro-icon{width:36px;height:36px}
   .intro-icon svg{width:18px;height:18px}
-  #contentWrap{min-height:auto;overflow:visible}
-  /* No room for the wheel: fall back to a plain row of section links. */
-  .about-body{position:static}
-  .dial{position:static;transform:none;width:auto;height:auto;
-    display:flex;flex-wrap:wrap;gap:10px;padding:24px 24px 0}
-  .dial-item{position:static;transform:none;padding:4px 2px}
-  .dial-panel{position:static;padding:0;container-type:normal}
-  .dial-page{position:static;padding:20px 0 32px 24px;height:auto;
+  #contentWrap{grid-column:1 / -1;grid-row:2;min-height:0;border-radius:24px}
+  /* No room for the wheel: fall back to one row of section links, sized to
+     fit on a single line. Below it the active section fills the frame: copy
+     at its natural height, the photo strip takes the rest. */
+  .about-body{display:flex;flex-direction:column}
+  .dial{position:static;transform:none;width:auto;height:auto;flex:none;
+    display:flex;flex-wrap:nowrap;justify-content:space-between;gap:4px;padding:14px 16px 0}
+  .dial-item{position:static;transform:none;padding:4px 2px;opacity:1;
+    font-size:clamp(13px,3.9vw,16px)}
+  .dial-panel{position:relative;left:auto;flex:1;min-height:0;padding:0;container-type:normal}
+  .dial-page{position:absolute;inset:0;padding:10px 0 16px 16px;justify-content:flex-start;
     display:none;opacity:1;visibility:visible;transform:none}
-  .dial-page.active{display:block}
-  .dial-inner{height:auto}
-  .dial-text{overflow:visible;padding-right:24px}
-  .dial-strip{flex:none;height:180px;padding-right:24px}
+  .dial-page.active{display:flex}
+  .dial-inner{flex:1;height:100%;min-height:0;max-height:none}
+  .dial-text{flex:0 1 auto;min-height:0;overflow-y:auto;padding-right:16px;padding-bottom:12px}
+  .dial-lede{font-size:14px}
+  .dial-strip{flex:1 1 0;min-height:110px;height:auto;padding-right:16px}
 }
 </style>
 <link rel="stylesheet" href="nav-logo.css?v=3">
@@ -407,12 +415,42 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   if(!dial) return;
   const items=Array.prototype.slice.call(dial.querySelectorAll('.dial-item'));
   const pages=Array.prototype.slice.call(document.querySelectorAll('.dial-page'));
+  const n=items.length, half=Math.floor(n/2);
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   let sel=0;
+  // Signed distance a→b around the loop, in [-half, half].
+  const loopDiff=(a,b)=>((b-a)%n+n+half)%n-half;
+  const slot=new Array(n).fill(0), timers=new Array(n).fill(0);
+  const place=(el,k)=>el.style.setProperty('--k',k);
+
+  // Item i sits loopDiff(sel,i) slots below the centre. Moving by delta
+  // shifts everything by -delta; an item pushed past an edge leaves that
+  // way and re-enters from the opposite edge instead of sweeping across.
+  function layout(delta){
+    items.forEach((el,i)=>{
+      clearTimeout(timers[i]);
+      el.classList.remove('leaving','no-anim');
+      const k=loopDiff(sel,i), passing=slot[i]-delta;
+      slot[i]=k;
+      if(!delta||passing===k){place(el,k);return;}
+      place(el,passing);
+      el.classList.add('leaving');
+      timers[i]=setTimeout(()=>{
+        el.classList.add('no-anim');
+        place(el,k+delta);
+        void el.offsetWidth;
+        el.classList.remove('no-anim','leaving');
+        place(el,k);
+      },reduce.matches?0:250);
+    });
+  }
 
   function select(i){
-    sel=Math.max(0,Math.min(items.length-1,i));
-    dial.style.setProperty('--sel',sel);
-    items.forEach((el,n)=>el.classList.toggle('active',n===sel));
+    const next=((i%n)+n)%n;
+    const delta=loopDiff(sel,next);
+    sel=next;
+    layout(delta);
+    items.forEach((el,m)=>el.classList.toggle('active',m===sel));
     const key=items[sel].dataset.key;
     pages.forEach(p=>p.classList.toggle('active',p.dataset.key===key));
     document.dispatchEvent(new CustomEvent('dialchange'));
