@@ -493,10 +493,17 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 
 const scene  = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(42,1,0.1,200);
+// Long-lens look: a narrow field of view from further back, like stepping
+// away and zooming in, so close-ups keep the signs flat instead of stretched.
+// Every distance below is scaled by LENS_PULLBACK so the framing matches the
+// original 42° lens.
+const BASE_FOV=24;
+const LENS_PULLBACK=Math.tan(THREE.MathUtils.degToRad(21))/
+  Math.tan(THREE.MathUtils.degToRad(BASE_FOV/2));
+const camera = new THREE.PerspectiveCamera(BASE_FOV,1,0.1,400);
 // Default view: front-facing the Lumino sign (deg 200), matching the
 // intended opening composition (290° orbit at the original camera distance).
-camera.position.set(-11.17, 0.5, 4.06);
+camera.position.set(-11.17*LENS_PULLBACK, 0.5, 4.06*LENS_PULLBACK);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enablePan  = false;
@@ -694,12 +701,14 @@ scene.add(pole);
 // The five signs split the circle into even 72° slots, but each one sits
 // 144° on from the sign above it, so neighbours alternate sides of the pole
 // instead of climbing a tidy spiral.
+// Heights sit 15% closer to the middle of the stack than the first layout,
+// and boards are 15% larger. armLen (default .5) is the rod from pole to board.
 const DEFS=[
-  {label:'PLAYGROUND',      key:'playground',shape:'square',  w:2.2, h:2.2,  y:-1.9,  deg:272, title:'Playground'},
-  {label:'Artisk Redesign', key:'artisk',   shape:'hrect',    w:3.3, h:1.65, y:-0.9,  deg:128, textureAspect:1395/384},
-  {label:'Lumino',          key:'lumino',   shape:'square',   w:2.1, h:2.1,  y:2.55,  deg:200},
-  {label:'Remember',        key:'remember', shape:'circle',   w:2.1, h:2.1,  y:0.8,   deg:344},
-  {label:'ABOUT ME',        key:'proj5',    shape:'hrect',    w:2.85,h:1.45, y:4.4,   deg:56, textureAspect:495/215, title:'About Me'},
+  {label:'PLAYGROUND',      key:'playground',shape:'square',  w:2.53,h:2.53, y:-1.43, deg:272, title:'Playground'},
+  {label:'Artisk Redesign', key:'artisk',   shape:'hrect',    w:3.8, h:1.9,  y:-0.58, deg:128, textureAspect:1395/384},
+  {label:'Lumino',          key:'lumino',   shape:'square',   w:2.42,h:2.42, y:2.36,  deg:200},
+  {label:'Remember',        key:'remember', shape:'circle',   w:2.42,h:2.42, y:0.87,  deg:344, armLen:.95},
+  {label:'ABOUT ME',        key:'proj5',    shape:'hrect',    w:3.28,h:1.67, y:3.93,  deg:56, textureAspect:495/215, title:'About Me'},
 ];
 
 const PROJECT_PAGES={
@@ -714,36 +723,29 @@ const clickables=[];
 function buildSign(def){
   const shape=def.shape,w=def.w,h=def.h,y=def.y,key=def.key;
   const angle = def.deg * Math.PI/180;
-  const D=.026, FRONT_BW=.13, REAR_BW=.12;
-  const BODY_BEV_T=.005, REAR_RIM_DEPTH=.04, REAR_RIM_BEV_T=.014;
-  const ARM_RADIUS=.024, REAR_CLEARANCE=.006;
+  const D=.026, FRONT_BW=.13;
+  const BODY_BEV_T=.005;
+  const ARM_RADIUS=.024;
   const fmat=new THREE.MeshBasicMaterial({map:TEX[key],toneMapped:false});
 
   const grp=new THREE.Group();
   grp.rotation.y=angle; grp.position.y=y; scene.add(grp);
 
-  // Silver ball joint and slim black rod, as in the reference hardware.
-  // The rod continues across the rear face to a central mounting point, so it
-  // remains visible when the viewer rotates around to the back of the sign.
+  // Silver ball joint and slim black rod, as in the reference hardware. The
+  // sign is printed on both faces, so the rod runs in the plate's own plane
+  // and meets the board at its inner edge instead of crossing either face.
   const jointZ=.12;
-  const armLen=.5;
+  const armLen=def.armLen||.5;
   const signCenterZ=jointZ+armLen+w/2;
-  // Keep the complete rod behind the outermost rear-rim bevel. This explicit
-  // radius + clearance prevents the small edge intersection visible on the
-  // Remember sign while preserving the same bracket layout for every sign.
-  const rearMountX=-(D/2+BODY_BEV_T+REAR_RIM_DEPTH+
-    REAR_RIM_BEV_T+ARM_RADIUS+REAR_CLEARANCE);
   const bolt=new THREE.Mesh(new THREE.SphereGeometry(.034,12,12),M.hoop);
-  bolt.position.set(rearMountX,0,jointZ); grp.add(bolt);
+  bolt.position.set(0,0,jointZ); grp.add(bolt);
 
-  const rodLen=signCenterZ-jointZ;
+  // Ends just inside the board's edge so the join is hidden in the frame.
+  const rodEnd=signCenterZ-w/2+.012;
   const arm=new THREE.Mesh(new THREE.CylinderGeometry(
-    ARM_RADIUS,ARM_RADIUS,rodLen,10),M.arm);
+    ARM_RADIUS,ARM_RADIUS,rodEnd-jointZ,10),M.arm);
   arm.rotation.x=Math.PI/2;
-  arm.position.set(rearMountX,0,(jointZ+signCenterZ)/2); grp.add(arm);
-
-  const backMount=new THREE.Mesh(new THREE.SphereGeometry(.038,12,12),M.hoop);
-  backMount.position.set(rearMountX,0,signCenterZ); grp.add(backMount);
+  arm.position.set(0,0,(jointZ+rodEnd)/2); grp.add(arm);
 
   // sign board: rotated 90° so its length runs radially (like a fingerpost)
   // and its flat face reads tangentially instead of pointing straight out
@@ -753,10 +755,9 @@ function buildSign(def){
 
   const hit=[];
 
-  // Pressed aluminium with a rolled perimeter and shallow reinforcing ribs.
+  // Pressed aluminium plate with a rolled frame around the print on each face.
   const bodyBevT=BODY_BEV_T, bodyBevS=.009;
   const ringDepth=.028, ringBevT=.011, ringBevS=.017;
-  const rearRimBevT=REAR_RIM_BEV_T, rearRimBevS=.028;
   function mkRing(outerShape, holeShape, curveSegs, depth, bevelT, bevelS,material){
     const rs=outerShape.clone(); rs.holes.push(holeShape.clone());
     const geo=new THREE.ExtrudeGeometry(rs,{depth:depth,bevelEnabled:true,
@@ -773,42 +774,27 @@ function buildSign(def){
       rrShape(w-amount*2,h-amount*2,.11);
   }
   const ish=insetShape(FRONT_BW);
-  const rearInner=insetShape(REAR_BW);
 
-  // The base is one solid thin plate, so its rear cap is completely flat.
+  // The base is one solid thin plate.
   const bodyGeo=new THREE.ExtrudeGeometry(sh,{depth:D,bevelEnabled:true,
     bevelThickness:bodyBevT,bevelSize:bodyBevS,bevelSegments:5,curveSegments:curveSegs});
   const body=new THREE.Mesh(bodyGeo,M.back);
   body.position.z=-D/2; sg.add(body); hit.push(body);
 
-  const frontZ=D/2+bodyBevT+.002;
-  const frontGeo=fitGeometryUVs(new THREE.ShapeGeometry(ish),def.textureAspect);
-  const front=new THREE.Mesh(frontGeo,fmat);
-  front.position.z=frontZ+.002; sg.add(front); hit.push(front);
-  const frontRing=mkRing(sh,ish,curveSegs,ringDepth,ringBevT,ringBevS,M.frame);
-  frontRing.position.z=frontZ; sg.add(frontRing); hit.push(frontRing);
-
-  // Add one raised rim directly on top of the flat rear face. There is no
-  // second groove ring or inset panel underneath it.
-  const rearSurface=-D/2-bodyBevT;
-  const rearRaisedRim=mkRing(sh,rearInner,curveSegs,
-    REAR_RIM_DEPTH,rearRimBevT,rearRimBevS,M.frame);
-  rearRaisedRim.rotation.y=Math.PI;
-  rearRaisedRim.position.z=rearSurface;
-  sg.add(rearRaisedRim); hit.push(rearRaisedRim);
-
-  if(shape==='hrect'||shape==='square'){
-    const ribGeo=new THREE.ExtrudeGeometry(rrShape(w*.56,.035,.017),{
-      depth:.006,bevelEnabled:true,bevelThickness:.004,
-      bevelSize:.014,bevelSegments:6,curveSegments:16
-    });
-    [-1,1].forEach(side=>{
-      const rib=new THREE.Mesh(ribGeo,M.back);
-      rib.rotation.y=Math.PI;
-      rib.position.set(0,side*h*.24,rearSurface);
-      sg.add(rib); hit.push(rib);
-    });
-  }
+  // Double-sided print: the back is the front turned 180° about the vertical
+  // axis, which keeps the artwork reading the right way round (not mirrored)
+  // when seen from behind.
+  const faceZ=D/2+bodyBevT+.002;
+  const printGeo=fitGeometryUVs(new THREE.ShapeGeometry(ish),def.textureAspect);
+  const ringGeo=mkRing(sh,ish,curveSegs,ringDepth,ringBevT,ringBevS,M.frame).geometry;
+  [0,Math.PI].forEach(turn=>{
+    const side=new THREE.Group();
+    side.rotation.y=turn; sg.add(side);
+    const print=new THREE.Mesh(printGeo,fmat);
+    print.position.z=faceZ+.002; side.add(print); hit.push(print);
+    const ring=new THREE.Mesh(ringGeo,M.frame);
+    ring.position.z=faceZ; side.add(ring); hit.push(ring);
+  });
 
   hit.forEach(m=>{ m.userData.sign={def:def,grp:grp,sg:sg,angle:angle}; clickables.push(m); });
   return {def:def,grp:grp,sg:sg,angle:angle};
@@ -848,7 +834,7 @@ function fillSignInfo(def){
 }
 
 // Stacked (narrow) frames use a fixed focus distance; larger = less zoomed.
-const FOCUS_DIST=5.8;
+const FOCUS_DIST=5.8*LENS_PULLBACK;
 // Wide frames size the sign to the free area right of the info column:
 // the share of that area it may fill, and the gap (px) kept from the column.
 const FOCUS_FILL=.85, FOCUS_GAP=48;
@@ -864,6 +850,8 @@ function focusSign(entry){
   const q=new THREE.Quaternion();
   entry.sg.getWorldQuaternion(q);
   const frontDir=new THREE.Vector3(0,0,1).applyQuaternion(q);
+  // Signs are double-sided: fly to whichever face the viewer clicked.
+  if(frontDir.dot(camera.position.clone().sub(sgp))<0) frontDir.negate();
   // Slide camera and target together so the face stays square-on while the
   // sign lands right of the project info. Narrow frames push the sign up and
   // put the info underneath instead.
@@ -886,13 +874,13 @@ function focusSign(entry){
     // Largest scale (px per world unit) that fits the sign in that area, and
     // the camera distance that produces it.
     const scale=FOCUS_FILL*Math.min((x1-x0)/entry.def.w,2*halfAvail/entry.def.h);
-    dist=THREE.MathUtils.clamp(H/(2*scale*tanHalf),3,10);
+    dist=THREE.MathUtils.clamp(H/(2*scale*tanHalf),3*LENS_PULLBACK,10*LENS_PULLBACK);
     const halfH=dist*tanHalf;
     shift=new THREE.Vector3().crossVectors(frontDir,camera.up).normalize()
       .multiplyScalar(halfH*camera.aspect*((x0+x1)/W-1));
-    // The extra 100/H cancels the constant 50px downward view offset in
+    // The extra term cancels the constant SIGNPOST_DROP view offset in
     // applyCardsOffset.
-    lift=halfH*(1-2*cy/H+100/H);
+    lift=halfH*(1-2*cy/H+2*SIGNPOST_DROP/H);
   }
   const focusTarget=sgp.clone().add(shift);
   focusTarget.y-=lift;
@@ -1091,10 +1079,12 @@ reducedMotion.addEventListener('change',dismissDragHint);
 
 // Shift the projection within a full-size canvas, rather than moving the
 // canvas itself and exposing its clipped lower/right edges inside the panel.
+// A negative vertical view offset moves the signpost down by this many CSS
+// pixels (was 50; raised 15px).
+const SIGNPOST_DROP=35;
 function applyCardsOffset(){
-  // A negative vertical view offset moves the signpost down by 50 CSS pixels.
   camera.setViewOffset(viewportWidth,viewportHeight,
-    viewportWidth*.36*cardsShift,(viewportHeight*.38+180)*cardsShift-50,
+    viewportWidth*.36*cardsShift,(viewportHeight*.38+180)*cardsShift-SIGNPOST_DROP,
     viewportWidth,viewportHeight);
 }
 
@@ -1122,7 +1112,7 @@ function resize(){
   viewportWidth=w; viewportHeight=h;
   const frameAspect=w/h;
   const fitAspect=.86;
-  const baseFov=42;
+  const baseFov=BASE_FOV;
   camera.aspect=frameAspect;
   camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(
     Math.tan(THREE.MathUtils.degToRad(baseFov/2))*Math.max(1,fitAspect/frameAspect)
