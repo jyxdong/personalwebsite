@@ -49,7 +49,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 #contentWrap{--view-inset:24px;flex:1;min-width:0;background:#fff;border-radius:40px;overflow:hidden;position:relative}
 #wrap{position:absolute;inset:0;z-index:0;overflow:hidden;cursor:grab;background:#fff}
 #contentWrap::before{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;background:rgba(255,255,255,0);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);transition:backdrop-filter .9s cubic-bezier(.7,0,1,.35),-webkit-backdrop-filter .9s cubic-bezier(.7,0,1,.35),background .9s cubic-bezier(.7,0,1,.35)}
-#contentWrap.cards-view::before{background:rgba(255,255,255,.16);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition-duration:1.5s;transition-delay:.42s;transition-timing-function:ease}
+#contentWrap.cards-view::before{background:rgba(255,255,255,.5);backdrop-filter:blur(36px);-webkit-backdrop-filter:blur(36px);transition-duration:1.5s;transition-delay:.42s;transition-timing-function:ease}
 #contentWrap.cards-view #wrap{pointer-events:none}
 #contentWrap.cards-view #signInfo{visibility:hidden}
 #wrap:active{cursor:grabbing}
@@ -58,28 +58,39 @@ canvas{display:block;width:100%;height:100%;background:#fff}
 #contentWrap.cards-view .cards-button{bottom:calc(100% - var(--view-inset) - 46px)}
 .cards-button:hover{background:#e9e9e9}
 .cards-button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
-#projectCards{position:absolute;z-index:2;top:calc(var(--view-inset) + 56px);right:var(--view-inset);bottom:var(--view-inset);left:var(--view-inset);box-sizing:border-box;padding:4px;overflow-y:auto;overscroll-behavior:contain;visibility:hidden;pointer-events:none;transition:visibility 0s .65s}
+/* Fills the whole frame so cards scroll up underneath the back button; the top
+   padding keeps the first row clear of the button until the user scrolls. */
+#projectCards{position:absolute;z-index:2;inset:0;box-sizing:border-box;padding:calc(var(--view-inset) + 46px + 32px) var(--view-inset) 40px;overflow-y:auto;overscroll-behavior:contain;container:projects / size;--thumb-ratio:.8;visibility:hidden;pointer-events:none;transition:visibility 0s .65s}
 #contentWrap.cards-view #projectCards{visibility:visible;pointer-events:auto;transition-delay:0s}
-.project-grid{min-height:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:24px}
-.project-card{display:flex;flex-direction:column;height:100%;background:#f4f4f4;border-radius:30px;overflow:hidden;text-decoration:none;color:var(--ink);opacity:0;transform:translateY(100vh);transition:transform .65s cubic-bezier(.65,0,.35,1),opacity .4s ease}
+/* Cards are as large as possible while the top ~60px of the next row still
+   peeks in at the bottom, signalling there is more to scroll.
+   212px ≈ card text block (~140px) + row gap (48px) + peek − bottom padding. */
+.project-grid{--col:clamp(320px,calc((100cqh - 212px) / var(--thumb-ratio)),600px);display:grid;grid-template-columns:repeat(2,minmax(0,var(--col)));justify-content:center;align-items:start;gap:48px 40px}
+.project-card{display:flex;flex-direction:column;min-width:0;border-radius:30px;text-decoration:none;color:var(--ink);opacity:0;transform:translateY(100vh);transition:transform .65s cubic-bezier(.65,0,.35,1),opacity .4s ease}
 #contentWrap.cards-view .project-card{transform:translateY(0);opacity:1;transition-delay:.7s}
 #contentWrap.cards-view .project-card:nth-child(2){transition-delay:.84s}
 #contentWrap.cards-view .project-card:nth-child(3){transition-delay:.98s}
+#contentWrap.cards-view .project-card:nth-child(4){transition-delay:1.12s}
 .project-card:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-.project-thumb{position:relative;flex:none;width:100%;height:auto;aspect-ratio:1/1;overflow:hidden}
+.project-thumb{position:relative;flex:none;width:100%;height:auto;aspect-ratio:1/var(--thumb-ratio);border-radius:30px;overflow:hidden}
 .project-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:30px;transition:inset .35s cubic-bezier(.4,0,.2,1),width .35s cubic-bezier(.4,0,.2,1),height .35s cubic-bezier(.4,0,.2,1),border-radius .35s cubic-bezier(.4,0,.2,1)}
 .project-card:hover .project-thumb img{inset:8px;width:calc(100% - 16px);height:calc(100% - 16px);border-radius:22px}
-.project-body{flex-shrink:0;margin-top:auto;padding:24px 24px 30px;display:flex;flex-direction:column;align-items:flex-start}
+.project-body{flex-shrink:0;padding:20px 4px 0;display:flex;flex-direction:column;align-items:flex-start}
 .project-body h2{font-size:24px;line-height:1.15;letter-spacing:-.01em;font-weight:400}
-.project-body p{margin-top:12px;height:63px;overflow:hidden;font-size:15px;line-height:1.4;color:#2b2b2b}
+.project-body p{margin-top:12px;font-size:15px;line-height:1.4;color:#2b2b2b}
+.project-preview{display:grid;place-items:center;padding:24px;border-radius:30px;background:#e9e9e9;text-align:center}
+.project-preview-name{font-size:clamp(24px,4cqi,40px);line-height:1.15;font-weight:400;letter-spacing:-.01em}
+.project-preview-status{position:absolute;inset:0;display:grid;place-items:center;background:#e9e9e9;font-size:24px;line-height:1.15;opacity:0;transition:opacity .2s}
+.project-card[data-coming-soon]:hover .project-preview-status,.project-card[data-coming-soon]:focus-visible .project-preview-status{opacity:1}
+@container projects (max-width:720px){.project-grid{grid-template-columns:minmax(0,600px)}}
 .project-tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
 .project-tag{font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:#2b2b2b;border:1px solid #2b2b2b;border-radius:999px;padding:2px 12px}
 @media (prefers-reduced-motion:reduce){
-  #wrap,#contentWrap::before,#contentWrap.cards-view::before,#projectCards,#contentWrap.cards-view #projectCards,.cards-button,.project-card,#contentWrap.cards-view .project-card,.project-thumb img{transition:none}
+  #wrap,#contentWrap::before,#contentWrap.cards-view::before,#projectCards,#contentWrap.cards-view #projectCards,.cards-button,.project-card,#contentWrap.cards-view .project-card,.project-thumb img,.project-preview-status{transition:none}
 }
 #signCursor{position:fixed;top:0;left:0;z-index:1000;pointer-events:none;visibility:hidden;padding:2px 12px;border:1px solid #000;border-radius:999px;background:#f4f4f4;color:#000;font-family:inherit;font-size:15px;font-weight:400;line-height:1.4;letter-spacing:.04em;text-transform:uppercase;text-align:center;white-space:nowrap}
 @media (hover:hover) and (pointer:fine){
-  #c.custom-cursor{cursor:none}
+  #c.custom-cursor,#projectCards.custom-cursor .project-card{cursor:none}
   #signCursor.on{visibility:visible}
 }
 /* Over empty canvas the badge becomes a large open hand (grab) that closes
@@ -263,10 +274,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   .intro-icon svg{width:18px;height:18px}
   #contentWrap{--view-inset:16px;min-height:0}
   .cards-button{right:16px;bottom:16px;max-width:calc(100% - 32px);font-size:16px;padding:8px 20px}
-  #projectCards{right:16px;left:16px}
-  .project-grid{height:auto;min-height:100%;grid-template-columns:1fr;gap:24px}
-  .project-card{height:auto}
-  .project-thumb{flex:none;aspect-ratio:1/1}
+  .project-grid{gap:24px}
 }
 </style>
 <link rel="stylesheet" href="nav-logo.css?v=3">
@@ -354,7 +362,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
           <div class="project-body">
             <h2>Lumino</h2>
             <p>A product designed to provide companion that guides young children to sleep on their own.</p>
-            <div class="project-tags"><span class="project-tag">UX Research</span><span class="project-tag">Interface</span><span class="project-tag">Product Design</span></div>
+            <div class="project-tags"><span class="project-tag">UX Research</span><span class="project-tag">Interface</span><span class="project-tag">Product</span></div>
           </div>
         </a>
         <a class="project-card" href="remember.html">
@@ -373,6 +381,17 @@ html.rail-about .bio-personal{transform:none;opacity:1}
             <div class="project-tags"><span class="project-tag">Web Design</span><span class="project-tag">Internship</span><span class="project-tag">System</span></div>
           </div>
         </a>
+        <article class="project-card" data-coming-soon tabindex="0" aria-labelledby="massRiverTitle" aria-describedby="massRiverStatus">
+          <div class="project-thumb project-preview" aria-hidden="true">
+            <span class="project-preview-name">Mass River<br>Alliance</span>
+            <span class="project-preview-status">Coming soon</span>
+          </div>
+          <div class="project-body">
+            <h2 id="massRiverTitle">Mass River Alliance</h2>
+            <p id="massRiverStatus">Redesigning the ArcGIS-integrated website for Massachusetts River Alliance.</p>
+            <div class="project-tags"><span class="project-tag">Web Design</span><span class="project-tag">Design System</span><span class="project-tag">User Flow</span></div>
+          </div>
+        </article>
       </div>
     </section>
     <button class="cards-button" type="button" aria-controls="projectCards" aria-expanded="false"><span>View projects as cards</span><span aria-hidden="true">↓</span></button>
@@ -389,26 +408,6 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   const button=content.querySelector('.cards-button');
   const label=button.querySelector('span');
   const arrow=button.querySelector('[aria-hidden]');
-  const projectCards=[...cards.querySelectorAll('.project-card')];
-
-  function sizeProjectCards(){
-    const availableHeight=cards.clientHeight-8;
-    projectCards.forEach(card=>{
-      card.style.height='auto';
-      const width=card.getBoundingClientRect().width;
-      const body=card.querySelector('.project-body');
-      const contentHeight=width+body.scrollHeight;
-      const frameIsTallerThanCardRatio=availableHeight>width*1.7;
-      const height=frameIsTallerThanCardRatio
-        ? Math.max(width*1.7,contentHeight)
-        : Math.max(availableHeight,contentHeight);
-      card.style.height=Math.ceil(height)+'px';
-    });
-  }
-
-  new ResizeObserver(sizeProjectCards).observe(cards);
-  window.addEventListener('load',sizeProjectCards);
-  sizeProjectCards();
 
   button.addEventListener('click',function(){
     const showCards=content.classList.toggle('cards-view');
@@ -911,6 +910,7 @@ function unfocus(){
 // ── Pointer feedback and click ───────────────────────────────────────────
 const ray=new THREE.Raycaster(), mp=new THREE.Vector2();
 const signCursor=document.getElementById('signCursor');
+const projectCards=document.getElementById('projectCards');
 const cursorLabel=signCursor.querySelector('.cursor-label');
 const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)');
 let drag=false, pressedPointer=null, downX=0, downY=0;
@@ -974,29 +974,41 @@ function signAt(x,y){
 function hideCursor(){
   signCursor.classList.remove('on');
   canvas.classList.remove('custom-cursor');
+  projectCards.classList.remove('custom-cursor');
 }
 
 function updateCursor(){
-  if(dragHintMotion||cardsView||!cursorInside||!finePointer.matches||busy||document.elementFromPoint(cursorX,cursorY)!==canvas){hideCursor();return;}
-  const onSign=!focused&&!drag&&signAt(cursorX,cursorY);
-  const text=focused ? 'BACK ↩' : onSign ? 'EXPLORE ↗' : '';
-  const mode=text ? 'label' : drag||pressedPointer!==null ? 'grabbing' : 'grab';
+  if(dragHintMotion||!cursorInside||!finePointer.matches){hideCursor();return;}
+  const target=document.elementFromPoint(cursorX,cursorY);
+  let text='',mode='label';
+  if(cardsView){
+    const card=target&&target.closest('#projectCards .project-card');
+    if(!card){hideCursor();return;}
+    text=card.hasAttribute('data-coming-soon') ? 'COMING SOON' : 'EXPLORE ↗';
+  }else{
+    if(busy||target!==canvas){hideCursor();return;}
+    const onSign=!focused&&!drag&&signAt(cursorX,cursorY);
+    text=focused ? 'BACK ↩' : onSign ? 'EXPLORE ↗' : '';
+    mode=text ? 'label' : drag||pressedPointer!==null ? 'grabbing' : 'grab';
+  }
   if(signCursor.dataset.mode!==mode) signCursor.dataset.mode=mode;
   if(cursorLabel.textContent!==text) cursorLabel.textContent=text;
   // Keep the badge centered on the actual hit point, including near edges.
   signCursor.style.transform=`translate(${cursorX}px,${cursorY}px) translate(-50%,-50%)`;
   signCursor.classList.add('on');
-  canvas.classList.add('custom-cursor');
+  canvas.classList.toggle('custom-cursor',!cardsView);
+  projectCards.classList.toggle('custom-cursor',cardsView);
 }
 
 function trackCursor(e){
   cursorX=e.clientX; cursorY=e.clientY;
-  cursorInside=e.pointerType==='mouse' && document.elementFromPoint(cursorX,cursorY)===canvas;
+  cursorInside=e.pointerType==='mouse';
   if(!cursorInside) hideCursor();
 }
 
 // Track movement outside the canvas too, so buttons use the native pointer.
 document.addEventListener('pointermove',trackCursor,{passive:true});
+document.addEventListener('pointerout',function(e){if(!e.relatedTarget) resetPointer();});
 document.querySelector('.cards-button').addEventListener('pointerenter',function(){
   cursorInside=false;
   hideCursor();
@@ -1036,7 +1048,10 @@ window.addEventListener('pointerup',function(e){
 canvas.addEventListener('pointercancel',resetPointer);
 canvas.addEventListener('lostpointercapture',function(){pressedPointer=null;drag=false;});
 window.addEventListener('blur',resetPointer);
-window.addEventListener('scroll',function(){cursorInside=false;hideCursor();},true);
+window.addEventListener('scroll',function(){
+  if(cardsView) updateCursor();
+  else{cursorInside=false;hideCursor();}
+},true);
 finePointer.addEventListener('change',resetPointer);
 // Capture runs before OrbitControls, letting the very first real drag work.
 document.addEventListener('pointerdown',dismissDragHint,{capture:true,passive:true});
