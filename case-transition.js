@@ -38,8 +38,10 @@
       return;
     }
 
-    const shellRect=shell.getBoundingClientRect();
-    const contentRect=content.getBoundingClientRect();
+    // CSS px, since the frame is positioned inside the (possibly zoomed) body.
+    const rectOf=window.PageScale ? PageScale.cssRect : function(el){return el.getBoundingClientRect();};
+    const shellRect=rectOf(shell);
+    const contentRect=rectOf(content);
     // Case pages reserve 280px + the 8px inter-frame gap for their directory.
     // The 3D frame expands only to the remaining right-hand content area.
     const directoryWidth=280;

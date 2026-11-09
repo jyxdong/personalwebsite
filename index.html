@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script src="page-scale.js"></script>
 <title>Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -458,7 +459,9 @@ const infoDesc  = document.getElementById('infoDesc');
 const infoTags  = document.getElementById('infoTags');
 
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+// Render at the zoomed on-screen size so a scaled-up page stays sharp.
+const basePixelRatio=()=>Math.min(devicePixelRatio,2)*PageScale.zoom();
+renderer.setPixelRatio(basePixelRatio());
 renderer.setClearColor(0xffffff);
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.shadowMap.enabled = true;
@@ -481,7 +484,10 @@ controls.enableZoom = false;
 // Keep the pole parallel to the screen; dragging only orbits its vertical axis.
 controls.minPolarAngle = Math.PI/2;
 controls.maxPolarAngle = Math.PI/2;
-controls.rotateSpeed   = 0.48;
+// Pointer deltas are viewport px but OrbitControls divides by the canvas's CSS
+// height, so a zoomed page would spin faster; resize() compensates.
+const ROTATE_SPEED = 0.48;
+controls.rotateSpeed   = ROTATE_SPEED/PageScale.zoom();
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.target.set(0, 0.5, 0);
@@ -934,12 +940,13 @@ function dismissDragHint(){
 
 function updateDragHint(now){
   if(dragHintPending&&signTexturesReady&&!document.hidden){
-    const rect=wrap.getBoundingClientRect();
+    const rect=PageScale.visualRect(wrap);
     // Wait until the scene has a visible, usable frame (including on mobile).
     const centerY=rect.top+rect.height/2;
     if(rect.width<1||rect.height<1||centerY<0||centerY>window.innerHeight) return;
     dragHintPending=false;
-    dragHintMotion={start:now,travel:Math.min(180,rect.width*.32,rect.height*.32),angle:0};
+    const z=PageScale.zoom();
+    dragHintMotion={start:now,travel:Math.min(180,rect.width*.32/z,rect.height*.32/z),angle:0};
     dragHint.hidden=false;
     wrap.parentElement.classList.add('drag-hint-active');
     try{localStorage.setItem(DRAG_HINT_KEY,'seen');}catch(e){}
@@ -955,7 +962,7 @@ function updateDragHint(now){
   dragHintCursor.style.transform=`translate(-50%,-50%) translate(${x}px,${y}px)`;
   // A rightward drag decreases azimuth, matching the idle orbit direction.
   // Apply only this frame's delta so taking over never jumps the camera back.
-  const angle=-2*Math.PI*dragHintMotion.travel*progress/viewportHeight*controls.rotateSpeed;
+  const angle=-2*Math.PI*dragHintMotion.travel*progress/viewportHeight*ROTATE_SPEED;
   cardsOrbitOffset.copy(camera.position).sub(controls.target);
   cardsOrbitOffset.applyAxisAngle(cardsOrbitAxis,angle-dragHintMotion.angle);
   camera.position.copy(controls.target).add(cardsOrbitOffset);
@@ -963,7 +970,7 @@ function updateDragHint(now){
 }
 
 function signAt(x,y){
-  const r=canvas.getBoundingClientRect();
+  const r=PageScale.visualRect(canvas);
   mp.x=((x-r.left)/r.width)*2-1;
   mp.y=-((y-r.top)/r.height)*2+1;
   ray.setFromCamera(mp,camera);
@@ -994,7 +1001,7 @@ function updateCursor(){
   if(signCursor.dataset.mode!==mode) signCursor.dataset.mode=mode;
   if(cursorLabel.textContent!==text) cursorLabel.textContent=text;
   // Keep the badge centered on the actual hit point, including near edges.
-  signCursor.style.transform=`translate(${cursorX}px,${cursorY}px) translate(-50%,-50%)`;
+  signCursor.style.transform=`translate(${PageScale.toCss(cursorX)}px,${PageScale.toCss(cursorY)}px) translate(-50%,-50%)`;
   signCursor.classList.add('on');
   canvas.classList.toggle('custom-cursor',!cardsView);
   projectCards.classList.toggle('custom-cursor',cardsView);
@@ -1085,6 +1092,11 @@ let renderedWidth=0,renderedHeight=0;
 function resize(){
   const w=wrap.clientWidth,h=wrap.clientHeight;
   if(!w||!h) return;
+  if(renderer.getPixelRatio()!==basePixelRatio()){
+    renderer.setPixelRatio(basePixelRatio());
+    controls.rotateSpeed=ROTATE_SPEED/PageScale.zoom();
+    renderedWidth=0;
+  }
   if(w===renderedWidth&&h===renderedHeight) return;
   renderedWidth=w; renderedHeight=h;
   viewportWidth=w; viewportHeight=h;
@@ -1105,6 +1117,7 @@ function scheduleResize(){
   resizeFrame=requestAnimationFrame(resize);
 }
 resize(); new ResizeObserver(scheduleResize).observe(wrap);
+window.addEventListener('pagezoomchange',scheduleResize);
 
 // ── Loop ─────────────────────────────────────────────────────────────────
 const clock=new THREE.Clock();

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script src="page-scale.js"></script>
 <title>Play — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -457,13 +458,13 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   var cards = Array.prototype.slice.call(waterfall.querySelectorAll('.ph-card'));
   var rotations = [-7,5,-4,8,-6,3,6,-3,4,-8,7,-5];
 
-  var frameRect = frame.getBoundingClientRect();
+  var frameRect = PageScale.cssRect(frame);
   var cx = frameRect.left + frameRect.width/2;
   var cy = frameRect.top + frameRect.height/2;
 
   if(!window.matchMedia('(max-width:960px)').matches){
     cards.forEach(function(card,i){
-      var r = card.getBoundingClientRect();
+      var r = PageScale.cssRect(card);
       var dx = cx - (r.left + r.width/2);
       var dy = cy - (r.top + r.height/2);
       var scale = 170 / r.width;
@@ -513,15 +514,15 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     var expanded = false;
 
     function flip(applyChanges){
-      var first = item.getBoundingClientRect();
+      var first = PageScale.cssRect(item);
       applyChanges();
-      var last = item.getBoundingClientRect();
+      var last = PageScale.cssRect(item);
       var dx = (first.left+first.width/2) - (last.left+last.width/2);
       var dy = (first.top+first.height/2) - (last.top+last.height/2);
       var scale = last.width ? first.width/last.width : 1;
       item.style.transition = 'none';
       item.style.transform = 'translate('+dx+'px,'+dy+'px) scale('+scale+')';
-      item.getBoundingClientRect(); // force reflow
+      item.offsetWidth; // force reflow
       requestAnimationFrame(function(){
         item.style.transition = 'transform .6s cubic-bezier(.16,1,.3,1)';
         item.style.transform = 'translate(0,0) scale(1)';
@@ -530,14 +531,14 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 
     function expand(){
       expanded = true;
-      var frameRect = frame.getBoundingClientRect();
+      var frameRect = PageScale.cssRect(frame);
       flip(function(){
         item.classList.add('expanded');
         var size = sizeToFrame(getRatio(card), frameRect);
         item.style.width = size.w+'px';
         item.style.left = '0px';
         item.style.top = '0px';
-        var r = item.getBoundingClientRect();
+        var r = PageScale.cssRect(item);
         item.style.left = (frameRect.width/2 - r.width/2)+'px';
         item.style.top = (frameRect.height/2 - r.height/2)+'px';
       });
@@ -589,15 +590,15 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   var wattExpanded = false;
 
   function wattFlip(applyChanges){
-    var first = wattItem.getBoundingClientRect();
+    var first = PageScale.cssRect(wattItem);
     applyChanges();
-    var last = wattItem.getBoundingClientRect();
+    var last = PageScale.cssRect(wattItem);
     var dx = (first.left+first.width/2) - (last.left+last.width/2);
     var dy = (first.top+first.height/2) - (last.top+last.height/2);
     var scale = last.width ? first.width/last.width : 1;
     wattItem.style.transition = 'none';
     wattItem.style.transform = 'translate('+dx+'px,'+dy+'px) scale('+scale+')';
-    wattItem.getBoundingClientRect(); // force reflow
+    wattItem.offsetWidth; // force reflow
     requestAnimationFrame(function(){
       wattItem.style.transition = 'transform .6s cubic-bezier(.16,1,.3,1)';
       wattItem.style.transform = 'translate(0,0) scale(1)';
@@ -606,7 +607,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 
   function wattExpand(){
     wattExpanded = true;
-    var frameRect = frame.getBoundingClientRect();
+    var frameRect = PageScale.cssRect(frame);
     wattFlip(function(){
       wattItem.classList.add('expanded');
       var size = sizeToFrame(getRatio(wattCard), frameRect);
@@ -615,7 +616,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
       wattItem.style.width = size.w+'px';
       wattItem.style.left = '0px';
       wattItem.style.top = '0px';
-      var r = wattItem.getBoundingClientRect();
+      var r = PageScale.cssRect(wattItem);
       wattItem.style.left = (frameRect.width/2 - r.width/2)+'px';
       wattItem.style.top = (frameRect.height/2 - r.height/2)+'px';
     });
@@ -694,15 +695,15 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     }
 
     function flip(applyChanges){
-      var first = item.getBoundingClientRect();
+      var first = PageScale.cssRect(item);
       applyChanges();
-      var last = item.getBoundingClientRect();
+      var last = PageScale.cssRect(item);
       var dx = (first.left+first.width/2) - (last.left+last.width/2);
       var dy = (first.top+first.height/2) - (last.top+last.height/2);
       var scale = last.width ? first.width/last.width : 1;
       item.style.transition = 'none';
       item.style.transform = 'translate('+dx+'px,'+dy+'px) scale('+scale+')';
-      item.getBoundingClientRect(); // force reflow
+      item.offsetWidth; // force reflow
       requestAnimationFrame(function(){
         item.style.transition = 'transform .6s cubic-bezier(.16,1,.3,1)';
         item.style.transform = 'translate(0,0) scale(1)';
@@ -712,7 +713,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     function expand(){
       expanded = true;
       preload();
-      var frameRect = frame.getBoundingClientRect();
+      var frameRect = PageScale.cssRect(frame);
       flip(function(){
         item.classList.add('expanded');
         var w = frameRect.width*0.68;
@@ -728,7 +729,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
         item.style.width = w+'px';
         item.style.left = '0px';
         item.style.top = '0px';
-        var r = item.getBoundingClientRect();
+        var r = PageScale.cssRect(item);
         item.style.left = (frameRect.width/2 - r.width/2)+'px';
         item.style.top = (frameRect.height/2 - r.height/2)+'px';
       });

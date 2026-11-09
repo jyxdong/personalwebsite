@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script src="page-scale.js"></script>
 <title>Lumino — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -1321,10 +1322,10 @@ section.block p strong{font-weight:600;color:var(--ink)}
       pie.querySelectorAll('path').forEach(p => p.classList.toggle('is-hovered', p === path));
       pie.classList.toggle('dimmed', !!path);
       if (!path) { tip.hidden = true; return; }
-      const rect = panel.getBoundingClientRect();
+      const rect = PageScale.visualRect(panel);
       tip.textContent = `${path.dataset.label} · ${path.dataset.value}`;
-      tip.style.left = (e.clientX - rect.left) + 'px';
-      tip.style.top = (e.clientY - rect.top) + 'px';
+      tip.style.left = PageScale.toCss(e.clientX - rect.left) + 'px';
+      tip.style.top = PageScale.toCss(e.clientY - rect.top) + 'px';
       tip.hidden = false;
     });
     pie.addEventListener('mouseleave', () => {
@@ -1484,7 +1485,7 @@ section.block p strong{font-weight:600;color:var(--ink)}
     }
 
     function fracFromEvent(e){
-      const rect = frame.getBoundingClientRect();
+      const rect = PageScale.visualRect(frame);
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       return (clientX - rect.left) / rect.width;
     }
@@ -1613,7 +1614,7 @@ section.block p strong{font-weight:600;color:var(--ink)}
     const row=getComputedStyle(steps).flexDirection==='row';
     let best=step, bestD=Infinity;
     buttons.forEach(function(b,i){
-      const r=b.getBoundingClientRect();
+      const r=PageScale.visualRect(b);
       const d=row ? Math.abs(e.clientX-(r.left+r.width/2)) : Math.abs(e.clientY-(r.top+r.height/2));
       if(d<bestD){bestD=d;best=i;}
     });

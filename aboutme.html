@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script src="page-scale.js"></script>
 <title>About Me</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -466,7 +467,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     });
     strip.addEventListener('pointermove',e=>{
       if(!down) return;
-      const dx=e.clientX-startX;
+      const dx=PageScale.toCss(e.clientX-startX);
       if(Math.abs(dx)>3){moved=1;strip.classList.add('dragging');}
       strip.scrollLeft=startLeft-dx;
     });
@@ -503,10 +504,10 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     if(max<=1) return null;
     const cur=strip.scrollLeft;
     if(cur>=max-2) return 0;
-    const origin=strip.getBoundingClientRect().left-cur;
+    const origin=PageScale.cssRect(strip).left-cur;
     const imgs=strip.querySelectorAll('img');
     for(let i=0;i<imgs.length;i++){
-      const x=imgs[i].getBoundingClientRect().left-origin;
+      const x=PageScale.cssRect(imgs[i]).left-origin;
       if(x>cur+2) return Math.min(x,max);
     }
     return max;
