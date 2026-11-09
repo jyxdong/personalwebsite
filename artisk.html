@@ -262,6 +262,16 @@ section.block p strong{font-weight:600;color:var(--ink)}
    page hits its top or bottom. */
 .page-frame-scroll{flex:0 0 100%;width:100%;height:100%;overflow-y:auto;overscroll-behavior:none}
 .page-frame-scroll img{display:block;width:100%;height:auto}
+.faq-comparison{margin-top:32px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.faq-version{min-width:0}
+.faq-version-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.faq-version-head h3{font-size:clamp(18px,1.8vw,20px)}
+.faq-version-head span{font-size:12.5px;color:var(--body);white-space:nowrap}
+.faq-comparison-frame{width:100%;aspect-ratio:1384/750;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper)}
+.faq-comparison-frame > img{display:block;width:100%;height:100%;object-fit:contain}
+.faq-comparison-frame .page-frame-scroll:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
+section.block .faq-version p{margin-top:12px;max-width:none}
+@media (max-width:700px){.faq-comparison{grid-template-columns:1fr;gap:32px}}
 
 /* ── MacBook frame around the page window. Drawn entirely in CSS — lid,
    bezel, notch, tapered base — so it stays sharp at any width and costs
@@ -380,8 +390,8 @@ section.block p strong{font-weight:600;color:var(--ink)}
     <div class="rail-toc">
      <ul id="tocList">
                 <li data-target="audit"><a href="#audit">Page audit</a></li>
-                <li data-target="imagery"><a href="#imagery">Image generation</a></li>
                 <li data-target="layout"><a href="#layout">Content &amp; layout</a></li>
+                <li data-target="imagery"><a href="#imagery">Image generation</a></li>
                 <li data-target="responsive"><a href="#responsive">Responsive</a></li>
                 <li data-target="final-design"><a href="#final-design">Final design</a></li>
                 <li data-target="reflection"><a href="#reflection">Reflection</a></li>
@@ -431,8 +441,8 @@ section.block p strong{font-weight:600;color:var(--ink)}
             </div>
             <div class="sec-body">
               <p>Artisk builds AI-powered design tools for brands: logo and brand-kit generation for founders and small teams who can't hire an agency. The component framework and site IA were already settled when I joined. The FAQ and About pages were not.</p>
-              <p>Both are task pages with different tasks. One is where a user solves a specific question without contacting support. The other is where a user reads to decide whether to trust the product. Each was failing its own job in a different way.</p>
-              <p>The FAQ held 25 questions in one ungrouped stack, so anyone arriving with a single question had to scan all of them. The About page ran as continuous narrative with no hierarchy, nothing pacing the read or separating one idea from the next.</p>
+              <p>The FAQ needed to help visitors find answers without contacting support. About needed to explain what Artisk does, who it serves, and the thinking behind it.</p>
+              <p>The FAQ already grouped questions by topic, but had no category navigation and its content could not be collapsed. Finding a relevant section depended on scrolling through the page. About had headings, but dense text and limited spacing made its sections difficult to distinguish.</p>
             </div>
           </div>
           <div class="carousel-toggle" id="processCarouselToggle" role="tablist" aria-label="Original page toggle">
@@ -450,6 +460,56 @@ section.block p strong{font-weight:600;color:var(--ink)}
             <button class="carousel-btn next" aria-label="Next image">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
             </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="layout">
+        <div class="sec-measure">
+          <div class="sec-grid">
+            <div class="sec-head">
+              <div class="tag">Content &amp; layout</div>
+              <h2>FAQ: find a question, then open its answer</h2>
+            </div>
+            <div class="sec-body">
+              <p>I kept the existing topic groups and focused on how visitors find a question and open its answer.</p>
+            </div>
+          </div>
+          <div class="faq-comparison">
+            <div class="faq-version">
+              <div class="faq-version-head">
+                <h3 class="highlight" id="faq-initial-title">Initial wireframe</h3>
+                <span aria-hidden="true">Scroll ↓</span>
+              </div>
+              <div class="faq-comparison-frame">
+                <div class="page-frame-scroll" tabindex="0" role="region" aria-labelledby="faq-initial-title"><img src="images/ArtiskWireframeFAQ.webp" width="1992" height="6430" loading="lazy" decoding="async" alt="Initial FAQ wireframe: search in the page header, a single column of grouped questions, and no category navigation"></div>
+              </div>
+              <p>This early wireframe places search in the page header, followed by a single column of questions grouped by topic. A category index had not yet been added.</p>
+            </div>
+            <div class="faq-version">
+              <div class="faq-version-head">
+                <h3 class="highlight">Final layout</h3>
+              </div>
+              <div class="faq-comparison-frame">
+                <img src="images/ArtiskFAQNavigation.webp" width="1384" height="750" loading="lazy" decoding="async" alt="Final FAQ detail: search above the questions, a numbered category index on the left, and one expanded answer alongside closed questions">
+              </div>
+              <p>In the final layout, I moved search directly above the questions and added a numbered category index beside them. Search supports finding a specific term; the index provides direct links for browsing by topic. Expandable answers let visitors open the detail they need and collapse it again.</p>
+            </div>
+          </div>
+
+          <div class="sec-grid">
+            <div class="sec-head">
+              <h2>About: five named sections</h2>
+            </div>
+            <div class="sec-body">
+              <p>Same information, rebuilt around a reading rhythm. The page breaks into five named sections: Our story, Mission and Vision, What we stand for, Who we serve, and an FAQ block to close. Two-column rows alternate image and text so the eye has a reason to keep moving, and hierarchy comes from position and white space rather than type size.</p>
+              <p>Two structural passes, shown side by side below.</p>
+            </div>
+          </div>
+          <div class="page-frame">
+            <div class="page-frame-track">
+              <div class="page-frame-scroll"><img src="images/ArtiskWireframeAbout.webp" width="2200" height="4037" loading="lazy" decoding="async" alt="Two About page wireframe variants side by side"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -482,41 +542,6 @@ section.block p strong{font-weight:600;color:var(--ink)}
             </div>
           </div>
           <div class="ph ph-inline" style="aspect-ratio:2818/980;background:none"><img src="images/ArtiskBannerFinal.webp" width="2818" height="980" loading="lazy" decoding="async" alt="The two selected banners: green for About, lavender for FAQ"></div>
-        </div>
-      </section>
-
-      <section class="block reveal" id="layout">
-        <div class="sec-measure">
-          <div class="sec-grid">
-            <div class="sec-head">
-              <div class="tag">Content &amp; layout</div>
-              <h2>FAQ: 25 questions into 8 categories</h2>
-            </div>
-            <div class="sec-body">
-              <p>Grouped by topic, the first screen shows category headings instead of twenty-five separate questions. Every answer stays collapsed until it is asked for.</p>
-              <p>Wireframed before any visual was applied, because the grouping had to hold on its own. The numbered rail that mirrors the categories came later, at the visual stage.</p>
-            </div>
-          </div>
-          <div class="page-frame">
-            <div class="page-frame-track">
-              <div class="page-frame-scroll"><img src="images/ArtiskWireframeFAQ.webp" width="1992" height="6430" loading="lazy" decoding="async" alt="FAQ wireframe showing questions grouped into categories"></div>
-            </div>
-          </div>
-
-          <div class="sec-grid">
-            <div class="sec-head">
-              <h2>About: five named sections</h2>
-            </div>
-            <div class="sec-body">
-              <p>Same information, rebuilt around a reading rhythm. The page breaks into five named sections: Our story, Mission and Vision, What we stand for, Who we serve, and an FAQ block to close. Two-column rows alternate image and text so the eye has a reason to keep moving, and hierarchy comes from position and white space rather than type size.</p>
-              <p>Two structural passes, shown side by side below.</p>
-            </div>
-          </div>
-          <div class="page-frame">
-            <div class="page-frame-track">
-              <div class="page-frame-scroll"><img src="images/ArtiskWireframeAbout.webp" width="2200" height="4037" loading="lazy" decoding="async" alt="Two About page wireframe variants side by side"></div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -558,7 +583,7 @@ section.block p strong{font-weight:600;color:var(--ink)}
               <div class="laptop-notch" aria-hidden="true"></div>
               <div class="page-frame" id="finalDesignFrame">
                 <div class="page-frame-track" id="finalDesignTrack">
-                  <div class="page-frame-scroll" data-index="0"><img src="images/ArtiskFinalFAQ.webp" width="1512" height="4475" loading="lazy" decoding="async" alt="Final design — Artisk FAQ page, full length"></div>
+                  <div class="page-frame-scroll" data-index="0"><img src="images/ArtiskFinalFAQ.webp?v=2" width="1512" height="4475" loading="lazy" decoding="async" alt="Final Artisk FAQ design with search, category navigation and expandable answers, full length"></div>
                   <div class="page-frame-scroll" data-index="1"><img src="images/ArtiskFinalAbout.webp" width="1512" height="4509" loading="lazy" decoding="async" alt="Final design — Artisk About page, full length"></div>
                 </div>
               </div>
