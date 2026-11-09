@@ -93,6 +93,18 @@ canvas{display:block;width:100%;height:100%;background:#fff}
 #signCursor[data-mode="grab"],#signCursor[data-mode="grabbing"]{padding:0;border:0;background:none}
 #signCursor[data-mode="grab"] .cursor-label,#signCursor[data-mode="grabbing"] .cursor-label{display:none}
 #signCursor[data-mode="grab"] .hand-open,#signCursor[data-mode="grabbing"] .hand-closed{display:block}
+/* First-visit drag demonstration, contained within the signpost frame. */
+#dragHint{position:absolute;inset:0;z-index:4;border-radius:inherit;background:rgba(255,255,255,.6);pointer-events:none;user-select:none;opacity:0}
+#dragHint[hidden]{display:none}
+.drag-hint-cursor{position:absolute;top:50%;left:50%;width:42.5px;height:47.5px;display:flex;align-items:center;justify-content:center;will-change:transform}
+.drag-hint-cursor .cursor-hand{display:none;width:42.5px;flex-shrink:0;overflow:visible}
+.drag-hint-cursor .hand-open{height:47.5px}
+.drag-hint-cursor .hand-closed{height:30px}
+.drag-hint-cursor[data-mode="grab"] .hand-open,.drag-hint-cursor[data-mode="grabbing"] .hand-closed{display:block}
+.drag-hint-label{position:absolute;top:calc(50% + 52px);left:0;right:0;text-align:center;color:var(--ink);font-size:20px;line-height:1.4;font-weight:450}
+#contentWrap.drag-hint-active #c{cursor:none}
+@media (max-width:860px){.drag-hint-label{font-size:18px}}
+@media (prefers-reduced-motion:reduce){.drag-hint-cursor{will-change:auto}}
 /* ── Focused sign: the sign slides right (see focusSign) and its project info
    fills the left. Narrow frames stack the info at the bottom instead. ── */
 #signInfo{position:absolute;z-index:1;top:50%;left:clamp(24px,6%,72px);width:min(36%,400px);display:flex;flex-direction:column;align-items:flex-start;pointer-events:none;opacity:0;transform:translate(-16px,-50%);transition:opacity .35s ease,transform .35s ease}
@@ -331,6 +343,10 @@ html.rail-about .bio-personal{transform:none;opacity:1}
       </div>
       <div id="err"></div>
     </div>
+    <div id="dragHint" aria-hidden="true" hidden>
+      <div class="drag-hint-cursor" data-mode="grab"></div>
+      <p class="drag-hint-label">Drag to rotate</p>
+    </div>
     <section id="projectCards" aria-label="Projects as cards" aria-hidden="true" inert>
       <div class="project-grid">
         <a class="project-card" href="lumino.html">
@@ -547,12 +563,16 @@ function label(ctx,s,txt,col){
   lines.forEach((l,i)=>ctx.fillText(l,s/2,startY+i*lh));
 }
 
+let signTexturesReady=false;
+const signTextureManager=new THREE.LoadingManager();
+signTextureManager.onLoad=function(){signTexturesReady=true;};
+const signTextureLoader=new THREE.TextureLoader(signTextureManager);
 const TEX = {
-  playground: new THREE.TextureLoader().load('images/PlaySign.svg'),
-  artisk: new THREE.TextureLoader().load('images/ArtiskSign.svg'),
-  lumino: new THREE.TextureLoader().load('images/LuminoSign.png'),
-  remember: new THREE.TextureLoader().load('images/RememberSign.svg'),
-  proj5: new THREE.TextureLoader().load('images/AboutMeSign.svg'),
+  playground: signTextureLoader.load('images/PlaySign.svg'),
+  artisk: signTextureLoader.load('images/ArtiskSign.svg'),
+  lumino: signTextureLoader.load('images/LuminoSign.png'),
+  remember: signTextureLoader.load('images/RememberSign.svg'),
+  proj5: signTextureLoader.load('images/AboutMeSign.svg'),
 };
 
 // Treat the artwork as printed colour rather than a reflective surface.
@@ -896,6 +916,52 @@ const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)');
 let drag=false, pressedPointer=null, downX=0, downY=0;
 let cursorInside=false, cursorX=0, cursorY=0;
 
+// Reuse the real pointer artwork, including its open/closed hand states.
+const dragHint=document.getElementById('dragHint');
+const dragHintCursor=dragHint.querySelector('.drag-hint-cursor');
+signCursor.querySelectorAll('.cursor-hand').forEach(hand=>dragHintCursor.appendChild(hand.cloneNode(true)));
+const DRAG_HINT_KEY='portfolio:drag-hint:v1';
+const DRAG_HINT_DURATION=1850;
+let dragHintPending=true, dragHintMotion=null;
+try{dragHintPending=localStorage.getItem(DRAG_HINT_KEY)!=='seen';}catch(e){}
+
+function dismissDragHint(){
+  dragHintPending=false;
+  dragHintMotion=null;
+  dragHint.hidden=true;
+  wrap.parentElement.classList.remove('drag-hint-active');
+}
+
+function updateDragHint(now){
+  if(dragHintPending&&signTexturesReady&&!document.hidden){
+    const rect=wrap.getBoundingClientRect();
+    // Wait until the scene has a visible, usable frame (including on mobile).
+    const centerY=rect.top+rect.height/2;
+    if(rect.width<1||rect.height<1||centerY<0||centerY>window.innerHeight) return;
+    dragHintPending=false;
+    dragHintMotion={start:now,travel:Math.min(180,rect.width*.32,rect.height*.32),angle:0};
+    dragHint.hidden=false;
+    wrap.parentElement.classList.add('drag-hint-active');
+    try{localStorage.setItem(DRAG_HINT_KEY,'seen');}catch(e){}
+  }
+  if(!dragHintMotion) return;
+  const elapsed=now-dragHintMotion.start;
+  if(elapsed>=DRAG_HINT_DURATION){dismissDragHint();return;}
+  const progress=reducedMotion.matches ? 0 : eio(THREE.MathUtils.clamp((elapsed-400)/950,0,1));
+  const x=reducedMotion.matches ? 0 : dragHintMotion.travel*(progress-.5);
+  const y=reducedMotion.matches ? 0 : -8*Math.sin(Math.PI*progress);
+  dragHint.style.opacity=reducedMotion.matches ? '1' : String(Math.min(elapsed/160,1,(DRAG_HINT_DURATION-elapsed)/250));
+  dragHintCursor.dataset.mode=!reducedMotion.matches&&elapsed>=300&&elapsed<1450 ? 'grabbing' : 'grab';
+  dragHintCursor.style.transform=`translate(-50%,-50%) translate(${x}px,${y}px)`;
+  // A rightward drag decreases azimuth, matching the idle orbit direction.
+  // Apply only this frame's delta so taking over never jumps the camera back.
+  const angle=-2*Math.PI*dragHintMotion.travel*progress/viewportHeight*controls.rotateSpeed;
+  cardsOrbitOffset.copy(camera.position).sub(controls.target);
+  cardsOrbitOffset.applyAxisAngle(cardsOrbitAxis,angle-dragHintMotion.angle);
+  camera.position.copy(controls.target).add(cardsOrbitOffset);
+  dragHintMotion.angle=angle;
+}
+
 function signAt(x,y){
   const r=canvas.getBoundingClientRect();
   mp.x=((x-r.left)/r.width)*2-1;
@@ -911,7 +977,7 @@ function hideCursor(){
 }
 
 function updateCursor(){
-  if(cardsView||!cursorInside||!finePointer.matches||busy||document.elementFromPoint(cursorX,cursorY)!==canvas){hideCursor();return;}
+  if(dragHintMotion||cardsView||!cursorInside||!finePointer.matches||busy||document.elementFromPoint(cursorX,cursorY)!==canvas){hideCursor();return;}
   const onSign=!focused&&!drag&&signAt(cursorX,cursorY);
   const text=focused ? 'BACK ↩' : onSign ? 'EXPLORE ↗' : '';
   const mode=text ? 'label' : drag||pressedPointer!==null ? 'grabbing' : 'grab';
@@ -972,6 +1038,14 @@ canvas.addEventListener('lostpointercapture',function(){pressedPointer=null;drag
 window.addEventListener('blur',resetPointer);
 window.addEventListener('scroll',function(){cursorInside=false;hideCursor();},true);
 finePointer.addEventListener('change',resetPointer);
+// Capture runs before OrbitControls, letting the very first real drag work.
+document.addEventListener('pointerdown',dismissDragHint,{capture:true,passive:true});
+document.addEventListener('keydown',dismissDragHint,{capture:true});
+document.addEventListener('wheel',dismissDragHint,{capture:true,passive:true});
+window.addEventListener('pagehide',dismissDragHint);
+window.addEventListener('resize',function(){if(dragHintMotion) dismissDragHint();});
+document.addEventListener('visibilitychange',function(){if(document.hidden&&dragHintMotion) dismissDragHint();});
+reducedMotion.addEventListener('change',dismissDragHint);
 
 // Shift the projection within a full-size canvas, rather than moving the
 // canvas itself and exposing its clipped lower/right edges inside the panel.
@@ -983,6 +1057,7 @@ function applyCardsOffset(){
 }
 
 document.getElementById('contentWrap').addEventListener('projectsviewchange',function(e){
+  dismissDragHint();
   cardsView=e.detail.showCards;
   cardsMotion={from:cardsShift,to:cardsView?1:0,t:0};
   controls.enabled=!cardsView&&!focused&&!busy;
@@ -1021,6 +1096,7 @@ const clock=new THREE.Clock();
 (function loop(){
   requestAnimationFrame(loop);
   const dt=clock.getDelta();
+  updateDragHint(performance.now());
   for(let i=tweens.length-1;i>=0;i--){
     const tw=tweens[i];
     tw.t=Math.min(tw.t+dt/tw.dur,1);
@@ -1031,7 +1107,7 @@ const clock=new THREE.Clock();
     if(tw.t>=1){tweens.splice(i,1); if(tw.onDone) tw.onDone();}
   }
   // Idle orbit (one turn in about 20 seconds), independent of frame rate.
-  controls.autoRotate=!reducedMotion.matches&&!focused&&!busy&&!cardsView&&!cardsMotion&&pressedPointer===null;
+  controls.autoRotate=!dragHintMotion&&!reducedMotion.matches&&!focused&&!busy&&!cardsView&&!cardsMotion&&pressedPointer===null;
   controls.autoRotateSpeed=3*60*Math.min(dt,.05);
   controls.update();
   if(cardsMotion){
