@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ginny Dong Photography</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap">
+<style>
+/* Layout: one project per row. Hairline on top, a two-photo slideshow flanked by small arrows at left, then a title column and a details column. Other shots sit in a masonry block at the bottom. */
+:root {
+  --bg: #FDFDFC;
+  --fg: #111111;
+  --nav: rgba(17, 17, 17, 0.75);
+  --muted: #6A6A6A;
+  --rule: #CFCFCF;
+  --lb-bg: #0D0D0D;
+  --lb-fg: #ECECEC;
+  --lb-muted: #A3A3A3;
+  --lb-line: #3A3A3A;
+  --sans: "Geist", -apple-system, "Helvetica Neue", Arial, "PingFang SC", sans-serif;
+  --gutter: clamp(16px, 2.2vw, 32px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101010; --fg: #ECECEC; --nav: rgba(236, 236, 236, 0.8); --muted: #9A9A9A; --rule: #2E2E2E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101010; --fg: #ECECEC; --nav: rgba(236, 236, 236, 0.8); --muted: #9A9A9A; --rule: #2E2E2E;
+  color-scheme: dark;
+}
+
+html { scroll-behavior: smooth; }
+html.lock { overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; }
+a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+
+.wrap {
+  padding-left: max(16px, var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(16px, var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+/* Top tabs: name and Design on the left half, Photography on the right half */
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px clamp(16px, 3vw, 48px);
+  padding-block: 20px 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--nav);
+}
+.top nav { display: flex; flex-wrap: wrap; gap: 4px clamp(20px, 4vw, 56px); }
+.top a { text-decoration: underline; text-underline-offset: 2px; min-height: 32px; display: inline-flex; align-items: flex-start; }
+.top a:hover { color: var(--fg); }
+.top .name { text-transform: none; }
+.top a[aria-current="page"] { color: var(--fg); }
+
+main { padding-top: clamp(72px, 10vw, 140px); }
+
+/* One row per project */
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(96px, 9%) minmax(84px, 7%);
+  gap: 16px clamp(12px, 1.6vw, 24px);
+  align-items: start;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  margin-bottom: clamp(88px, 11vw, 160px);
+}
+.row h2, .other-head h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.details { margin: 0; font-size: 15px; line-height: 1.3; display: flex; flex-direction: column; gap: 1px; }
+
+/* Slideshow: arrow, two photos, arrow */
+.show {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: clamp(2px, 0.5vw, 8px);
+  margin-left: -10px;
+}
+.arrow {
+  width: 36px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+.arrow:hover { color: var(--fg); }
+.arrow:active { transform: scale(0.92); }
+.stage {
+  position: relative;
+  aspect-ratio: 3.06;
+  max-width: 100%;
+  overflow: hidden;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 1.2%;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.slide.on { opacity: 1; }
+.ph {
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  flex: 0 0 auto;
+}
+.ph img {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
+}
+
+.count {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Other shots: title row, then a loose full-width flow of prints in mixed sizes */
+.other { margin-bottom: clamp(88px, 11vw, 160px); }
+.other-head {
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  margin-bottom: clamp(24px, 3vw, 40px);
+}
+/* Masonry: each photo goes into the shortest column, so order runs top to bottom */
+.flow {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(10px, 1.2vw, 18px);
+}
+.flow .col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.2vw, 18px);
+}
+.flow .ph { display: block; width: 100%; height: auto; }
+.flow .ph img { width: 100%; height: auto; max-width: 100%; }
+.flow .ph img { transition: opacity 0.3s ease; }
+.flow .ph:hover img { opacity: 0.85; }
+
+.corner {
+  position: fixed;
+  right: max(16px, var(--gutter), env(safe-area-inset-right, 0px));
+  bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  padding: 4px 6px;
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.corner:hover { text-decoration: none; }
+
+footer {
+  padding-block: 18px 72px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+@media (max-width: 760px) {
+  .row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .show { grid-column: 1 / -1; }
+  .top { grid-template-columns: minmax(0, 1fr); }
+  .show { grid-template-columns: 32px minmax(0, 1fr) 32px; gap: 2px; margin-inline: -8px; }
+  .arrow { width: 32px; }
+  .flow { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  #lb[open] #lb-img { animation: lbin 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+}
+@keyframes lbin { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: none; } }
+
+/* Viewer */
+#lb {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--lb-bg);
+  color: var(--lb-fg);
+}
+#lb[open] { display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+#lb::backdrop { background: var(--lb-bg); }
+.lb-stage {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: max(16px, env(safe-area-inset-top, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+#lb-img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100dvh - 104px);
+  object-fit: contain;
+}
+.lb-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 12px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  font-size: 13px;
+}
+.lb-cap { margin: 0; color: var(--lb-fg); min-width: 0; font-variant-numeric: tabular-nums; }
+.lb-ctrl { display: flex; gap: 8px; }
+.lb-ctrl button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--lb-line);
+  background: transparent;
+  color: var(--lb-fg);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.lb-ctrl button:hover { border-color: var(--lb-fg); }
+.lb-ctrl button:active { transform: translateY(1px); }
+</style>
+<style>body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div id="top">
+
+<header class="wrap top">
+  <nav aria-label="Site">
+    <a class="name" href="#top">Ginny Dong</a>
+    <a href="https://ginnydong.com">Design</a>
+  </nav>
+  <nav aria-label="Section">
+    <a href="#top" aria-current="page">Photography</a>
+  </nav>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<footer class="wrap">© 2026</footer>
+
+</div>
+
+<a class="corner" href="#top">Top ↑</a>
+
+<dialog id="lb" aria-label="Photo viewer">
+  <div class="lb-stage"><img id="lb-img" alt=""></div>
+  <div class="lb-bar">
+    <p class="lb-cap" id="lb-cap"></p>
+    <div class="lb-ctrl">
+      <button type="button" id="lb-prev" aria-label="Previous photo">←</button>
+      <button type="button" id="lb-next" aria-label="Next photo">→</button>
+      <button type="button" id="lb-close">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  /* [folder/file, width, height, alt]. Projects are listed in pairs; the slideshow shows two at a time. */
+  var PROJECTS = [
+    { id: 'ponyhenge', title: 'Ponyhenge', photos: [
+      ['ponyhenge/05', 2400, 1592, 'A person holding a book over their face among old rocking horses'],
+      ['ponyhenge/01', 2400, 1591, 'A rocking horse wearing glasses, a hand offering it an open book'],
+      ['ponyhenge/02', 2400, 1591, 'Two spring horses on the grass, trees and power lines behind'],
+      ['ponyhenge/03', 2400, 1591, 'A person in a long skirt resting a hand on a carousel horse'],
+      ['ponyhenge/07', 2400, 1591, 'Boots, a small round mirror and the frame of a rocking horse'],
+      ['ponyhenge/08', 2400, 1591, 'Rocking horses scattered across a field, houses in the distance']
+    ]},
+    { id: 'street', title: 'Street', photos: [
+      ['street/04', 2400, 1591, 'A bundle of American flags blowing in the wind'],
+      ['street/06', 2400, 1591, 'Marchers carrying a sign that reads Separate Church and State'],
+      ['street/01', 2400, 1591, 'People in dinosaur costumes beside a sign that reads Respect Existence'],
+      ['street/02', 2400, 1591, 'A line of protesters holding RESIST signs'],
+      ['street/03', 2400, 1591, 'A protester holding a handwritten sign high above the crowd'],
+      ['street/05', 2400, 1591, 'Protesters walking past an iron fence']
+    ]},
+    { id: 'one-pair-crowd', title: 'One, Pair, Crowd', photos: [
+      ['one-pair-crowd/03', 2400, 1591, 'Two trees at the far edge of a field'],
+      ['one-pair-crowd/02', 2400, 1592, 'Kites over the surf'],
+      ['one-pair-crowd/01', 1592, 2400, 'A tree against a pale sky with birds in its branches'],
+      ['one-pair-crowd/04', 1592, 2400, 'Waves seen from above and one person on the sand'],
+      ['one-pair-crowd/05', 1591, 2400, 'A wing on the runway and a plane taking off'],
+      ['one-pair-crowd/06', 2400, 1591, 'A treeline reflected on a frozen lake']
+    ]}
+  ];
+  var OTHER = { id: 'other-shots', title: 'Other shots', photos: [
+    ['cali-people/01', 1592, 2400, 'A bookshop window looking out at cyclists and a bridge'],
+    ['random-cali-landscape/04', 2400, 1651, 'Granite cliffs, a waterfall and pines in a valley'],
+    ['cali-people/03', 2400, 1591, 'Three people talking beside a globe sculpture outside a wooden building'],
+    ['random-cali-landscape/02', 1651, 2400, 'A waterfall with a rainbow in the spray'],
+    ['random-cali-landscape/06', 2400, 1650, 'A waterfall falling onto a beach in a cove'],
+    ['cali-people/02', 1591, 2400, 'A man on a sea wall looking at his phone while a child runs past'],
+    ['random-cali-landscape/05', 2400, 1651, 'Sea cliffs and a beach in fog'],
+    ['random-cali-landscape/01', 1651, 2400, 'A granite peak behind trees'],
+    ['random-cali-landscape/10', 2400, 1650, 'A person on a boardwalk holding a handwritten sign'],
+    ['cali-people/04', 1591, 2400, 'A chair in the light from a tall window'],
+    ['random-cali-landscape/08', 2400, 1651, 'Green fields and hills beyond a parking lot'],
+    ['random-cali-landscape/09', 1651, 2400, 'A stream running across the beach, birds on the sand'],
+    ['other/01', 2400, 1600, 'Curving train platforms seen from above'],
+    ['other/02', 2400, 1600, 'A harbour seen through the front windows of a ferry'],
+    ['other/03', 2400, 1600, 'The view from the back seat of a taxi at a city intersection'],
+    ['other/04', 2400, 1600, 'Fireworks over a city at night, seen from a hilltop'],
+    ['other/05', 2400, 1600, 'A lake with a mountain behind it and one small boat'],
+    ['other/06', 2400, 1600, 'A swan on the grass at the edge of a lake'],
+    ['other/07', 2400, 1600, 'Sunlight on young trees in a pine forest'],
+    ['other/08', 2400, 1600, 'Gulls flying over dark blue water']
+  ]};
+
+  var INTERVAL = 4500;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var main = document.getElementById('main');
+
+  function el(tag, cls, attrs) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function photoButton(p, project, idx, lazy) {
+    var b = el('button', 'ph', { type: 'button', 'aria-label': 'Open photo: ' + p[3] });
+    var img = el('img', '', { src: 'includes/' + p[0] + '.webp', alt: p[3], width: p[1], height: p[2] });
+    img.style.aspectRatio = p[1] + ' / ' + p[2];
+    if (lazy) img.loading = 'lazy';
+    b.appendChild(img);
+    b.addEventListener('click', function () { openViewer(project, idx, b); });
+    return b;
+  }
+
+  var shows = [];
+
+  PROJECTS.forEach(function (project, n) {
+    var row = el('article', 'row', { id: project.id });
+    var show = el('div', 'show', { role: 'region', 'aria-roledescription': 'slideshow', 'aria-label': project.title });
+    var prev = el('button', 'arrow', { type: 'button', 'aria-label': 'Previous photos' });
+    prev.textContent = '←';
+    var next = el('button', 'arrow', { type: 'button', 'aria-label': 'Next photos' });
+    next.textContent = '→';
+    var stage = el('div', 'stage');
+    var slides = [];
+    for (var i = 0; i < project.photos.length; i += 2) {
+      var s = el('div', 'slide');
+      s.appendChild(photoButton(project.photos[i], project, i, n > 0 || i > 0));
+      if (project.photos[i + 1]) s.appendChild(photoButton(project.photos[i + 1], project, i + 1, n > 0 || i > 0));
+      stage.appendChild(s);
+      slides.push(s);
+    }
+    show.appendChild(prev);
+    show.appendChild(stage);
+    show.appendChild(next);
+
+    var h = el('h2');
+    h.textContent = project.title;
+    var details = el('p', 'details');
+    ['2026', 'Ilford HP5'].forEach(function (t) {
+      var s = el('span');
+      s.textContent = t;
+      details.appendChild(s);
+    });
+
+    row.appendChild(show);
+    row.appendChild(h);
+    row.appendChild(details);
+    main.appendChild(row);
+
+    var st = { cur: 0, slides: slides, timer: null, hover: false, visible: false };
+    function go(k) {
+      st.cur = (k + slides.length) % slides.length;
+      slides.forEach(function (sl, j) {
+        var on = j === st.cur;
+        sl.classList.toggle('on', on);
+        if (on) sl.removeAttribute('inert'); else sl.setAttribute('inert', '');
+      });
+    }
+    st.go = go;
+    st.restart = function () {
+      clearInterval(st.timer);
+      st.timer = null;
+      if (reduce || st.hover || !st.visible || viewerOpen) return;
+      st.timer = setInterval(function () { go(st.cur + 1); }, INTERVAL);
+    };
+    prev.addEventListener('click', function () { go(st.cur - 1); st.restart(); });
+    next.addEventListener('click', function () { go(st.cur + 1); st.restart(); });
+    show.addEventListener('mouseenter', function () { st.hover = true; st.restart(); });
+    show.addEventListener('mouseleave', function () { st.hover = false; st.restart(); });
+    show.addEventListener('focusin', function () { st.hover = true; st.restart(); });
+    show.addEventListener('focusout', function () { st.hover = false; st.restart(); });
+    stage.addEventListener('touchstart', function (e) { st.x0 = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener('touchend', function (e) {
+      if (st.x0 == null) return;
+      var dx = e.changedTouches[0].clientX - st.x0;
+      if (Math.abs(dx) > 40) { go(st.cur + (dx < 0 ? 1 : -1)); st.restart(); }
+      st.x0 = null;
+    });
+    st.row = row;
+    go(0);
+    shows.push(st);
+  });
+
+  /* Other shots */
+  var other = el('section', 'other', { id: OTHER.id });
+  var ohead = el('div', 'other-head');
+  var oh = el('h2');
+  oh.textContent = OTHER.title;
+  ohead.appendChild(oh);
+  var flow = el('div', 'flow');
+  /* New order on every visit */
+  for (var r = OTHER.photos.length - 1; r > 0; r--) {
+    var j = Math.floor(Math.random() * (r + 1));
+    var tmp = OTHER.photos[r]; OTHER.photos[r] = OTHER.photos[j]; OTHER.photos[j] = tmp;
+  }
+  var tiles = OTHER.photos.map(function (p, i) { return { btn: photoButton(p, OTHER, i, true), h: p[2] / p[1] }; });
+  var lastCols = 0;
+  function layoutFlow() {
+    var w = window.innerWidth;
+    var n = w > 1100 ? 4 : w > 640 ? 3 : 2;
+    if (n === lastCols) return;
+    lastCols = n;
+    flow.textContent = '';
+    var cols = [], heights = [];
+    for (var c = 0; c < n; c++) { cols.push(flow.appendChild(el('div', 'col'))); heights.push(0); }
+    tiles.forEach(function (t) {
+      var k = heights.indexOf(Math.min.apply(null, heights));
+      cols[k].appendChild(t.btn);
+      heights[k] += t.h;
+    });
+  }
+  layoutFlow();
+  window.addEventListener('resize', layoutFlow);
+  other.appendChild(ohead);
+  other.appendChild(flow);
+  main.appendChild(other);
+
+  /* Only run a slideshow while it is on screen */
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        shows.forEach(function (st) {
+          if (st.row === en.target) { st.visible = en.isIntersecting; st.restart(); }
+        });
+      });
+    }, { threshold: 0.4 });
+    shows.forEach(function (st) { io.observe(st.row); });
+  } else {
+    shows.forEach(function (st) { st.visible = true; st.restart(); });
+  }
+  document.addEventListener('visibilitychange', function () {
+    shows.forEach(function (st) {
+      if (document.hidden) { clearInterval(st.timer); st.timer = null; } else st.restart();
+    });
+  });
+
+  /* Viewer */
+  var lb = document.getElementById('lb');
+  var big = document.getElementById('lb-img');
+  var cap = document.getElementById('lb-cap');
+  var cur = null, ci = 0, opener = null, viewerOpen = false;
+
+  function show() {
+    var p = cur.photos[ci];
+    big.src = 'includes/' + p[0] + '.webp';
+    big.alt = p[3];
+    cap.textContent = cur.title;
+    new Image().src = 'includes/' + cur.photos[(ci + 1) % cur.photos.length][0] + '.webp';
+  }
+  function openViewer(project, idx, from) {
+    cur = project; ci = idx; opener = from; viewerOpen = true;
+    shows.forEach(function (st) { st.restart(); });
+    show();
+    if (typeof lb.showModal === 'function') lb.showModal(); else lb.setAttribute('open', '');
+    document.documentElement.classList.add('lock');
+  }
+  function step(d) { var n = cur.photos.length; ci = (ci + d + n) % n; show(); }
+  function close() { if (lb.open) { if (lb.close) lb.close(); else lb.removeAttribute('open'); } }
+
+  document.getElementById('lb-prev').addEventListener('click', function () { step(-1); });
+  document.getElementById('lb-next').addEventListener('click', function () { step(1); });
+  document.getElementById('lb-close').addEventListener('click', close);
+  lb.addEventListener('close', function () {
+    viewerOpen = false;
+    document.documentElement.classList.remove('lock');
+    if (opener) opener.focus({ preventScroll: true });
+    shows.forEach(function (st) { st.restart(); });
+  });
+  lb.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+  });
+  lb.addEventListener('click', function (e) {
+    if (e.target === lb || e.target.classList.contains('lb-stage')) close();
+  });
+  var x0 = null;
+  lb.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+    x0 = null;
+  });
+})();
+</script>
+</body>
+</html>
