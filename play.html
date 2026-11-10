@@ -450,6 +450,12 @@ html.rail-about .bio-personal{transform:none;opacity:1}
               </div>
               <p class="img-card-caption"><span class="gallery-title">In Glitch</span><span class="gallery-meta">2025, Acrylic on Canvas</span></p>
             </div>
+            <div class="play-item" id="photographyItem">
+              <div class="ph-card img-card" style="aspect-ratio:1440/900">
+                <img src="images/PlayPhotography.webp" alt="Ginny Dong Photography page" style="object-position:top"/>
+              </div>
+              <p class="img-card-caption"><a href="photography/" onclick="event.stopPropagation()">Go to my photography portfolio &rarr;</a></p>
+            </div>
             <!-- <div class="ph-card h-sm"></div> -->
           </div>
         </div>
@@ -587,8 +593,12 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     return {isExpanded:function(){return expanded;}, collapse:collapse};
   }
 
-  ['playItem','selfieItem','glitchItem','gazeItem'].forEach(function(id){
+  ['playItem','selfieItem','glitchItem','gazeItem','photographyItem'].forEach(function(id){
     simpleItems.push(makeExpandItem(document.getElementById(id)));
+  });
+  // Phones don't expand cards, so tapping the photography card goes straight there.
+  document.getElementById('photographyItem').addEventListener('click', function(){
+    if(phone.matches) window.location.href = 'photography/';
   });
 
   // ── Watt item: click floats + expands it into a fixed, scrollable window
