@@ -309,7 +309,7 @@ footer {
 (function () {
   /* [folder/file, width, height, alt]. Projects are listed in pairs; the slideshow shows two at a time. */
   var PROJECTS = [
-    { id: 'ponyhenge', title: 'Ponyhenge', photos: [
+    { id: 'ponyhenge', title: 'before winter', photos: [
       ['ponyhenge/05', 2400, 1592, 'A person holding a book over their face among old rocking horses'],
       ['ponyhenge/01', 2400, 1591, 'A rocking horse wearing glasses, a hand offering it an open book'],
       ['ponyhenge/02', 2400, 1591, 'Two spring horses on the grass, trees and power lines behind'],
@@ -325,12 +325,11 @@ footer {
       ['street/03', 2400, 1591, 'A protester holding a handwritten sign high above the crowd'],
       ['street/05', 2400, 1591, 'Protesters walking past an iron fence']
     ]},
-    { id: 'one-pair-crowd', title: 'One, Pair, Crowd', photos: [
+    { id: 'one-pair-crowd', title: 'One, Pair, Crowd', groups: [2, 3], photos: [
       ['one-pair-crowd/03', 2400, 1591, 'Two trees at the far edge of a field'],
       ['one-pair-crowd/02', 2400, 1592, 'Kites over the surf'],
       ['one-pair-crowd/01', 1592, 2400, 'A tree against a pale sky with birds in its branches'],
       ['one-pair-crowd/04', 1592, 2400, 'Waves seen from above and one person on the sand'],
-      ['one-pair-crowd/05', 1591, 2400, 'A wing on the runway and a plane taking off'],
       ['one-pair-crowd/06', 2400, 1591, 'A treeline reflected on a frozen lake']
     ]}
   ];
@@ -388,10 +387,15 @@ footer {
     next.textContent = '→';
     var stage = el('div', 'stage');
     var slides = [];
-    for (var i = 0; i < project.photos.length; i += 2) {
+    /* Photos per slide: two by default, or as listed in project.groups */
+    var groups = project.groups || [];
+    for (var i = 0, g = 0; i < project.photos.length; g++) {
+      var size = groups[g] || 2;
       var s = el('div', 'slide');
-      s.appendChild(photoButton(project.photos[i], project, i, n > 0 || i > 0));
-      if (project.photos[i + 1]) s.appendChild(photoButton(project.photos[i + 1], project, i + 1, n > 0 || i > 0));
+      for (var j = i; j < i + size && j < project.photos.length; j++) {
+        s.appendChild(photoButton(project.photos[j], project, j, n > 0 || i > 0));
+      }
+      i += size;
       stage.appendChild(s);
       slides.push(s);
     }
