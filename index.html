@@ -26,6 +26,8 @@
   --ink:#111111;
   --sidegap:24px;
   --midgap:8px;
+  --body-copy-size:16px;
+  --view-label-size:20px;
 }
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{
@@ -55,7 +57,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
 #contentWrap.cards-view #signInfo{visibility:hidden}
 #wrap:active{cursor:grabbing}
 canvas{display:block;width:100%;height:100%;background:#fff}
-.cards-button{position:absolute;right:var(--view-inset);bottom:var(--view-inset);z-index:3;box-sizing:border-box;min-height:46px;padding:9px 34px;border:2px solid #000;border-radius:999px;background:#fff;color:#000;font-family:inherit;font-size:20px;line-height:24px;font-weight:450;text-decoration:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:background .2s,bottom .7s cubic-bezier(.65,0,.35,1)}
+.cards-button{position:absolute;right:var(--view-inset);bottom:var(--view-inset);z-index:3;box-sizing:border-box;min-height:46px;padding:9px 34px;border:2px solid #000;border-radius:999px;background:#fff;color:#000;font-family:inherit;font-size:var(--view-label-size);line-height:24px;font-weight:450;text-decoration:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:background .2s,bottom .7s cubic-bezier(.65,0,.35,1)}
 #contentWrap.cards-view .cards-button{bottom:calc(100% - var(--view-inset) - 46px)}
 .cards-button:hover{background:#e9e9e9}
 .cards-button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
@@ -78,7 +80,7 @@ canvas{display:block;width:100%;height:100%;background:#fff}
 .project-card:hover .project-thumb img{inset:8px;width:calc(100% - 16px);height:calc(100% - 16px);border-radius:22px}
 .project-body{flex-shrink:0;padding:20px 4px 0;display:flex;flex-direction:column;align-items:flex-start}
 .project-body h2{font-size:24px;line-height:1.15;letter-spacing:-.01em;font-weight:400}
-.project-body p{margin-top:12px;font-size:15px;line-height:1.4;color:#2b2b2b}
+.project-body p{margin-top:12px;font-size:var(--body-copy-size);line-height:1.4;color:#2b2b2b}
 .project-preview-status{position:absolute;inset:0;display:grid;place-items:center;background:rgba(255,255,255,.75);font-size:24px;line-height:1.15;opacity:0;transition:opacity .2s}
 .project-card[data-coming-soon]:hover .project-preview-status,.project-card[data-coming-soon]:focus-visible .project-preview-status{opacity:1}
 @container projects (max-width:720px){.project-grid{grid-template-columns:minmax(0,600px)}}
@@ -120,13 +122,13 @@ canvas{display:block;width:100%;height:100%;background:#fff}
 #signInfo{position:absolute;z-index:1;top:50%;left:clamp(24px,6%,72px);width:min(36%,400px);display:flex;flex-direction:column;align-items:flex-start;pointer-events:none;opacity:0;transform:translate(-16px,-50%);transition:opacity .35s ease,transform .35s ease}
 #signInfo.on{opacity:1;transform:translate(0,-50%)}
 #signInfo h2{font-size:32px;line-height:1.15;letter-spacing:-.01em;font-weight:400}
-#signInfo p{margin-top:12px;font-size:16px;line-height:1.4;color:#2b2b2b}
+#signInfo p{margin-top:12px;font-size:var(--body-copy-size);line-height:1.4;color:#2b2b2b}
 #signInfo p:empty,#signInfo .project-tags:empty{display:none}
 /* About Me / Playground have no card copy: just the title and button,
    centred in the column and kept close together. */
 #signInfo.no-card{align-items:center;text-align:center}
 #signInfo.no-card #lbl{margin-top:24px}
-#lbl{margin-top:64px;background:#fff;color:#000;border:2px solid #000;border-radius:999px;padding:9px 34px;font-size:20px;font-weight:450;transition:background .2s;white-space:nowrap;display:flex;align-items:center;gap:12px}
+#lbl{margin-top:64px;background:#fff;color:#000;border:2px solid #000;border-radius:999px;padding:9px 34px;font-family:inherit;font-size:var(--view-label-size);line-height:24px;font-weight:450;transition:background .2s;white-space:nowrap;display:flex;align-items:center;gap:12px}
 #lbl.clickable{pointer-events:auto;cursor:pointer}
 #lbl.clickable:hover{background:#f4f4f4}
 #wrap.focus-stacked #signInfo{top:auto;right:var(--view-inset);bottom:calc(var(--view-inset) + 58px);left:var(--view-inset);width:auto;transform:translateY(16px)}
@@ -178,10 +180,10 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 @media (prefers-reduced-motion:reduce){
   .intro-photo-flip .flip-inner,.intro-bio-stack .intro-bio{transition:none}
 }
-.intro-bio{font-size:16px;font-weight:400;line-height:1.2;color:#111}
+.intro-bio{font-size:var(--body-copy-size);font-weight:400;line-height:1.2;color:#111}
 .intro-contact{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .intro-icons{display:flex;align-items:center;gap:10px}
-.intro-email{font-size:14px;color:#111;text-decoration:none;border-bottom:1px solid rgba(17,17,17,.25);padding-bottom:2px}
+.intro-email{font-size:var(--body-copy-size);color:#111;text-decoration:none;border-bottom:1px solid rgba(17,17,17,.25);padding-bottom:2px}
 .intro-email:hover{border-color:#111}
 .intro-icon{width:30px;height:30px;flex-shrink:0;border-radius:999px;background:#f4f4f4;display:flex;align-items:center;justify-content:center;color:#111;text-decoration:none;transition:background .2s}
 .intro-icon:hover{background:#e9e9e9}
@@ -191,7 +193,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
    side-by-side. The page still fits exactly one screen (no scrolling); the
    signpost frame absorbs whatever height is left. ── */
 @media (max-width:860px){
-  :root{--sidegap:12px}
+  :root{--sidegap:12px;--body-copy-size:clamp(12.5px,min(3.6vw,2.1dvh),16px);--view-label-size:16px}
   body{height:100dvh}
   #navWrap{margin:12px var(--sidegap) 0}
   /* The rail dissolves into the shell's grid: portrait + bio share the top
@@ -259,7 +261,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     opacity:1!important;
     transition:none;
     /* Shrinks a touch on short screens so the signpost keeps its room. */
-    font-size:clamp(12.5px,min(3.6vw,2.1dvh),16px);
+    font-size:var(--body-copy-size);
     line-height:1.28;
     text-wrap:wrap
   }
@@ -270,7 +272,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     padding:8px 10px 8px 20px
   }
   .intro-contact{align-items:center;justify-content:space-between;gap:10px}
-  .intro-email{font-size:clamp(14px,3.8vw,16px);min-width:0;overflow-wrap:anywhere}
+  .intro-email{font-size:var(--body-copy-size);min-width:0;overflow-wrap:anywhere}
   .intro-icons{gap:8px}
   .intro-icon{width:36px;height:36px}
   .intro-icon svg{width:18px;height:18px}
@@ -282,7 +284,14 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     grid-row:2;
     min-height:0
   }
-  .cards-button{right:16px;bottom:16px;max-width:calc(100% - 32px);font-size:16px;padding:8px 20px}
+  .cards-button{right:16px;bottom:16px;max-width:calc(100% - 32px);font-size:var(--view-label-size);padding:8px 20px}
+  #contentWrap.sign-focused .cards-button{visibility:hidden;pointer-events:none}
+  #wrap.focus-narrow #signInfo{top:auto;right:var(--view-inset);bottom:var(--view-inset);left:var(--view-inset);width:auto;max-height:60%;overflow-y:auto;overscroll-behavior:contain;pointer-events:auto;transform:translateY(16px)}
+  #wrap.focus-narrow #signInfo.on{transform:none}
+  #wrap.focus-narrow #signInfo>*{flex-shrink:0}
+  #wrap.focus-narrow #signInfo h2{font-size:24px}
+  #wrap.focus-narrow #lbl{margin-top:20px;padding:8px 20px}
+  #wrap.focus-narrow #signInfo.no-card{align-items:flex-start;text-align:left}
   /* Card view: one project per row — square thumbnail left, copy right. */
   #projectCards{padding:calc(var(--view-inset) + 46px + 20px) var(--view-inset) 24px}
   .project-grid{grid-template-columns:minmax(0,1fr);gap:20px}
@@ -293,7 +302,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   .project-preview-status{font-size:15px}
   .project-body{flex:1;min-width:0;padding:0}
   .project-body h2{font-size:19px}
-  .project-body p{margin-top:4px;font-size:13px;line-height:1.35}
+  .project-body p{margin-top:4px;font-size:var(--body-copy-size);line-height:1.35}
   .project-tags{margin-top:8px;gap:6px}
   .project-tag{font-size:10px;padding:1px 8px}
 }
@@ -301,7 +310,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
 <link rel="stylesheet" href="nav-logo.css?v=3">
 <link rel="stylesheet" href="page-transition.css">
 <script src="page-transition.js" data-tab="work"></script>
-<link rel="icon" type="image/svg+xml" href="images/favicon-work.svg">
+<link rel="icon" type="image/svg+xml" href="images/shared/favicon-work.svg">
 </head>
 <body data-rail="pro">
 <script>
@@ -332,8 +341,8 @@ html.rail-about .bio-personal{transform:none;opacity:1}
       <div class="intro-name">Ginny Dong</div>
       <div class="intro-photo-flip">
         <div class="flip-inner">
-          <img class="intro-photo front" src="images/PersonalImage.png" alt="Illustrated portrait of Ginny Dong"/>
-          <div class="intro-photo back"><img src="images/AboutmePic.jpg" alt="Photo of Ginny Dong"/></div>
+          <img class="intro-photo front" src="images/about/PersonalImage.png" alt="Illustrated portrait of Ginny Dong"/>
+          <div class="intro-photo back"><img src="images/about/AboutmePic.webp" alt="Photo of Ginny Dong"/></div>
         </div>
       </div>
     </div>
@@ -379,7 +388,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     <section id="projectCards" aria-label="Projects as cards" aria-hidden="true" inert>
       <div class="project-grid">
         <a class="project-card" href="lumino.html">
-          <div class="project-thumb"><img src="images/LuminoCover.jpg" alt="" decoding="async"></div>
+          <div class="project-thumb"><img src="images/lumino/LuminoCover.jpg" alt="" decoding="async"></div>
           <div class="project-body">
             <h2>Lumino</h2>
             <p>A product designed to provide companion that guides young children to sleep on their own.</p>
@@ -387,7 +396,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
           </div>
         </a>
         <a class="project-card" href="remember.html">
-          <div class="project-thumb"><img src="images/RememberCover.jpg" alt="" decoding="async"></div>
+          <div class="project-thumb"><img src="images/remember/RememberCover.webp" alt="" decoding="async"></div>
           <div class="project-body">
             <h2>Remember</h2>
             <p>A collaborative memorial platform where AI weaves media into a living story of someone who's passed.</p>
@@ -395,7 +404,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
           </div>
         </a>
         <a class="project-card" href="artisk.html">
-          <div class="project-thumb"><img src="images/ArtiskCover.jpg" alt="" decoding="async"></div>
+          <div class="project-thumb"><img src="images/artisk/ArtiskCover.jpg" alt="" decoding="async"></div>
           <div class="project-body">
             <h2>Artisk</h2>
             <p>Redesigning the About and FAQ page based on Artisk's rebranding.</p>
@@ -404,7 +413,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
         </a>
         <article class="project-card" data-coming-soon tabindex="0" aria-labelledby="massRiverTitle" aria-describedby="massRiverStatus">
           <div class="project-thumb" aria-hidden="true">
-            <img src="images/MRACover.webp" alt="" decoding="async">
+            <img src="images/mra/MRACover.webp" alt="" decoding="async">
             <span class="project-preview-status">Coming soon</span>
           </div>
           <div class="project-body">
@@ -415,7 +424,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
         </article>
       </div>
     </section>
-    <button class="cards-button" type="button" aria-controls="projectCards" aria-expanded="false"><span>View projects as cards</span><span aria-hidden="true">↓</span></button>
+    <button class="cards-button" type="button" aria-controls="projectCards" aria-expanded="false"><span>View Work As Cards</span><span aria-hidden="true">↓</span></button>
   </div>
 </div>
 <!-- Pixel hands drawn on a 17-column grid, echoing the classic grab cursor. -->
@@ -437,7 +446,7 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     cards.inert=!showCards;
     cards.setAttribute('aria-hidden',String(!showCards));
     button.setAttribute('aria-expanded',String(showCards));
-    label.textContent=showCards ? 'Back to signpost' : 'View projects as cards';
+    label.textContent=showCards ? 'Back to signpost' : 'View Work As Cards';
     arrow.textContent=showCards ? '↘' : '↓';
     content.dispatchEvent(new CustomEvent('projectsviewchange',{detail:{showCards}}));
   });
@@ -600,11 +609,11 @@ const signTextureManager=new THREE.LoadingManager();
 signTextureManager.onLoad=function(){signTexturesReady=true;};
 const signTextureLoader=new THREE.TextureLoader(signTextureManager);
 const TEX = {
-  playground: signTextureLoader.load('images/PlaySign.svg'),
-  artisk: signTextureLoader.load('images/ArtiskSign.svg'),
-  lumino: signTextureLoader.load('images/LuminoSign.png'),
-  remember: signTextureLoader.load('images/RememberSign.svg'),
-  proj5: signTextureLoader.load('images/AboutMeSign.svg'),
+  playground: signTextureLoader.load('images/play/PlaySign.svg'),
+  artisk: signTextureLoader.load('images/artisk/ArtiskSign.svg'),
+  lumino: signTextureLoader.load('images/lumino/LuminoSign.svg'),
+  remember: signTextureLoader.load('images/remember/RememberSign.svg'),
+  proj5: signTextureLoader.load('images/about/AboutMeSign.svg'),
 };
 
 // Treat the artwork as printed colour rather than a reflective surface.
@@ -839,28 +848,39 @@ const FOCUS_DIST=5.8*LENS_PULLBACK;
 // the share of that area it may fill, and the gap (px) kept from the column.
 const FOCUS_FILL=.85, FOCUS_GAP=48;
 
-function focusSign(entry){
-  if(busy) return; busy=true; focused=entry;
-  savedCam.copy(camera.position); savedTgt.copy(controls.target);
-  controls.enabled=false;
-
+function focusPose(entry){
   const sgp=new THREE.Vector3();
   entry.sg.getWorldPosition(sgp);
 
   const q=new THREE.Quaternion();
   entry.sg.getWorldQuaternion(q);
   const frontDir=new THREE.Vector3(0,0,1).applyQuaternion(q);
-  // Signs are double-sided: fly to whichever face the viewer clicked.
-  if(frontDir.dot(camera.position.clone().sub(sgp))<0) frontDir.negate();
+  // The artwork is printed on both sides so either face remains clickable,
+  // but always orbit to the primary (+Z) presentation face when focusing.
+  // This keeps the pole and neighbouring signs behind the selected board.
   // Slide camera and target together so the face stays square-on while the
   // sign lands right of the project info. Narrow frames push the sign up and
   // put the info underneath instead.
   const tanHalf=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
-  const stacked=camera.aspect<1.1;
+  const narrow=window.matchMedia('(max-width:860px)').matches&&viewportWidth<=520;
+  const stacked=!narrow&&camera.aspect<1.1;
   wrap.classList.toggle('focus-stacked',stacked);
-  fillSignInfo(entry.def);
+  wrap.classList.toggle('focus-narrow',narrow);
   let dist=FOCUS_DIST, shift, lift=.22;
-  if(stacked){
+  if(narrow){
+    // Reserve the measured copy height, then fit the sign above it at right.
+    const W=viewportWidth, H=viewportHeight, inset=16, gap=20;
+    const infoTop=signInfo.offsetTop;
+    const availableHeight=Math.max(24,infoTop-gap-inset);
+    const scale=.88*Math.min(W*.58/entry.def.w,availableHeight/entry.def.h);
+    dist=H/(2*scale*tanHalf);
+    const cx=W-inset-entry.def.w*scale/2;
+    const cy=inset+entry.def.h*scale/2;
+    const halfH=dist*tanHalf;
+    shift=new THREE.Vector3().crossVectors(frontDir,camera.up).normalize()
+      .multiplyScalar(halfH*camera.aspect*(2*cx/W-1));
+    lift=halfH*(1-2*cy/H+2*SIGNPOST_DROP/H);
+  } else if(stacked){
     shift=new THREE.Vector3(0,-dist*tanHalf*.4,0);
   } else {
     // The info column stays centred in the frame (CSS); the sign centres at
@@ -885,7 +905,16 @@ function focusSign(entry){
   const focusTarget=sgp.clone().add(shift);
   focusTarget.y-=lift;
   const toCam=focusTarget.clone().addScaledVector(frontDir,dist);
+  return {toCam,focusTarget};
+}
 
+function focusSign(entry){
+  if(busy) return; busy=true; focused=entry;
+  savedCam.copy(camera.position); savedTgt.copy(controls.target);
+  controls.enabled=false;
+  document.getElementById('contentWrap').classList.add('sign-focused');
+  fillSignInfo(entry.def);
+  const {toCam,focusTarget}=focusPose(entry);
   tween(camera.position,toCam,controls.target,focusTarget,.65,function(){
     busy=false;
     signInfo.classList.add('on');
@@ -909,6 +938,8 @@ function unfocus(){
   lbl.classList.remove('clickable'); lbl.onclick=null;
   tween(camera.position,savedCam,controls.target,savedTgt,.55,function(){
     focused=null;
+    document.getElementById('contentWrap').classList.remove('sign-focused');
+    wrap.classList.remove('focus-narrow','focus-stacked');
     busy=false;
     // A return click happens while OrbitControls is disabled. Explicitly
     // release our pointer state and restart auto-rotation so the controls do
@@ -1119,6 +1150,11 @@ function resize(){
   ));
   renderer.setSize(w,h,false); camera.updateProjectionMatrix();
   applyCardsOffset();
+  if(focused&&!busy){
+    const pose=focusPose(focused);
+    camera.position.copy(pose.toCam);
+    controls.target.copy(pose.focusTarget);
+  }
   camera.lookAt(controls.target);
   renderer.render(scene,camera);
 }

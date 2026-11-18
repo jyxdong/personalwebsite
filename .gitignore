@@ -2,17 +2,28 @@
 .claude/settings.local.json
 
 # Original camera files for the About page — only the .webp versions are committed
-images/AboutMePics/*.JPG
-images/AboutMePics/*.jpg
-images/AboutMePics/*.jpeg
-images/AboutMePics/*.JPEG
-images/AboutMePics/*.HEIC
+images/about/gallery/*.JPG
+images/about/gallery/*.jpg
+images/about/gallery/*.jpeg
+images/about/gallery/*.JPEG
+images/about/gallery/*.HEIC
 
 # Original camera/mockup files for the Play page — only the .webp versions are committed
-images/PlayPics/*.JPG
-images/PlayPics/*.jpg
-images/PlayPics/*.jpeg
+images/play/gallery/*.JPG
+images/play/gallery/*.jpg
+images/play/gallery/*.jpeg
 
 # Figma exports for the Artisk case page — only the .webp versions are committed
-images/ArtiskFinal*.svg
-images/ArtiskFinal*.jpg
+images/artisk/ArtiskFinal*.svg
+images/artisk/ArtiskFinal*.jpg
+
+# Local originals; publish the WebP versions only
+/images/remember/RememberCover.jpg
+/images/remember/RememberHero.jpg
+/images/lumino/LuminoHeroAlt.jpg
+/images/artisk/ArtiskHero.jpg
+/images/play/PlaySelfPortrait.JPG
+/images/lumino/LuminoScenario.png
+/images/about/AboutmePic.jpg
+/images/lumino/LuminoNoSleep2Crop.jpg
+/images/lumino/LuminoNoSleep.jpg
