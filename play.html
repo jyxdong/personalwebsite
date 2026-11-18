@@ -69,7 +69,7 @@ nav{background:#fff;border-radius:999px;display:flex;align-items:center;gap:10px
    takes up any slack: on short viewports the photo shrinks, on tall ones the
    card grows with the photo pinned to its bottom. */
 .intro-frame.bio{padding:24px;flex:none;display:flex;align-items:center}
-.intro-frame.contact{padding:16px 24px}
+.intro-frame.contact{padding:16px 16px 16px 24px;container-type:inline-size}
 .intro-frame:nth-child(1){animation-delay:.1s}
 .intro-frame:nth-child(2){animation-delay:.22s}
 .intro-frame:nth-child(3){animation-delay:.34s}
@@ -106,9 +106,11 @@ html.rail-about .bio-personal{transform:none;opacity:1}
   .intro-photo-flip .flip-inner,.intro-bio-stack .intro-bio{transition:none}
 }
 .intro-bio{font-size:16px;font-weight:400;line-height:1.2;color:#111}
-.intro-contact{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.intro-icons{display:flex;align-items:center;gap:10px}
-.intro-email{font-size:14px;color:#111;text-decoration:none;border-bottom:1px solid rgba(17,17,17,.25);padding-bottom:2px}
+.intro-contact{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap}
+.intro-icons{display:flex;align-items:center;gap:8px;flex-shrink:0}
+/* Email and the three icons always share one line: the address shrinks to fit
+   what the icons (3×30 + 2×8) and the gap (10) leave. 12.8em ≈ its width. */
+.intro-email{font-size:min(14px,calc((100cqi - 116px) / 12.8));white-space:nowrap;min-width:0;color:#111;text-decoration:none;border-bottom:1px solid rgba(17,17,17,.25);padding-bottom:2px}
 .intro-email:hover{border-color:#111}
 .intro-icon{width:30px;height:30px;flex-shrink:0;border-radius:999px;background:#f4f4f4;display:flex;align-items:center;justify-content:center;color:#111;text-decoration:none;transition:background .2s}
 .intro-icon:hover{background:#e9e9e9}
@@ -284,10 +286,16 @@ html.rail-about .bio-personal{transform:none;opacity:1}
     padding:8px 10px 8px 20px
   }
   .intro-contact{align-items:center;justify-content:space-between;gap:10px}
-  .intro-email{font-size:clamp(14px,3.8vw,16px);min-width:0;overflow-wrap:anywhere}
+  .intro-email{font-size:min(clamp(14px,3.8vw,16px),calc((100cqi - 134px) / 12.8))}
   .intro-icons{gap:8px}
   .intro-icon{width:36px;height:36px}
   .intro-icon svg{width:18px;height:18px}
+  /* Tiny phones: slightly smaller icons so the address stays readable. */
+  @media (max-width:360px){
+    .intro-icons{gap:6px}
+    .intro-icon{width:32px;height:32px}
+    .intro-email{font-size:min(clamp(14px,3.8vw,16px),calc((100cqi - 118px) / 12.8))}
+  }
   /* Rounded and clipped again; the gallery scrolls inside the frame. */
   .content-frame{grid-column:1 / -1;grid-row:2;min-height:0;overflow:hidden;border-radius:24px}
   /* Phones: a plain two-column waterfall. The three desktop columns melt
